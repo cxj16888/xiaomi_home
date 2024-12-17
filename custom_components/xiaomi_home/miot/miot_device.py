@@ -491,7 +491,8 @@ class MIoTDevice:
             prop_access.add('read')
         if prop.writable:
             prop_access.add('write')
-        if prop_access != (SPEC_PROP_TRANS_MAP['entities'][platform]['access']):
+        if prop_access != (SPEC_PROP_TRANS_MAP[
+                'entities'][platform]['access']):
             return None
         if prop.format_ not in SPEC_PROP_TRANS_MAP[
                 'entities'][platform]['format']:
@@ -570,15 +571,7 @@ class MIoTDevice:
                 self.append_action(action=action)
 
     def unit_convert(self, spec_unit: str) -> Optional[str]:
-        """Convert MIoT unit to HA unit.
-        
-        将米家设备的单位转换为 Home Assistant 使用的单位 适配4.0版本
-        重要修改说明：
-        1. 将所有单位相关的导入移到函数内部，避免模块级别的阻塞导入
-        2. 使用 try-except 处理 UnitOfConductivity（电导率单位）的导入
-        3. 如果 UnitOfConductivity 不存在，则使用字符串 'μS/cm' 作为后备值
-        """
-        # 在函数内部导入单位类，避免启动时的阻塞导入
+        """Convert MIoT unit to Home Assistant unit."""
         from homeassistant.const import (
             UnitOfEnergy,
             UnitOfElectricCurrent,
@@ -632,13 +625,10 @@ class MIoTDevice:
             'kB': UnitOfInformation.KILOBYTES,
         }
 
-        # 特殊处理：尝试导入 UnitOfConductivity（电导率单位）
-        # 如果导入失败（在旧版本HA中不存在），则使用字符串作为后备值
         try:
             from homeassistant.const import UnitOfConductivity
             unit_map['μS/cm'] = UnitOfConductivity.MICROSIEMENS_PER_CM
         except ImportError:
-            # 在旧版本中使用字符串作为后备值
             unit_map['μS/cm'] = 'μS/cm'
 
         return unit_map.get(spec_unit, None)
@@ -1191,8 +1181,8 @@ class MIoTEventEntity(Entity):
             handler=self.__on_device_state_changed)
         # Sub value changed
         self.miot_device.sub_event(
-            handler=self.__on_event_occurred, siid=self.service.iid,
-            eiid=self.spec.iid)
+            handler=self.__on_event_occurred,
+            siid=self.service.iid, eiid=self.spec.iid)
 
     async def async_will_remove_from_hass(self) -> None:
         self.miot_device.unsub_device_state(
