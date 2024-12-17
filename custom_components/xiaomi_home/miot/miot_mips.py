@@ -105,8 +105,7 @@ class MipsMessage:
             #  string end with \x00
             match unpack_type:
                 case MipsMsgTypeOptions.ID.value:
-                    mips_msg.mid = int.from_bytes(
-                        unpack_data, byteorder='little')
+                    mips_msg.mid = struct.unpack('<I', unpack_data)[0]
                 case MipsMsgTypeOptions.RET_TOPIC.value:
                     mips_msg.ret_topic = str(
                         unpack_data.strip(b'\x00'), 'utf-8')
