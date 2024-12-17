@@ -170,6 +170,10 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         self.hass.data.setdefault(DOMAIN, {})
         loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
+        if self.hass.config.external_url:
+            global OAUTH_REDIRECT_URL 
+            _LOGGER.info(f"check OAUTH_REDIRECT_URL: {self.hass.config.external_url}")
+            OAUTH_REDIRECT_URL = self.hass.config.external_url
 
         if self._virtual_did is None:
             self._virtual_did = str(secrets.randbits(64))
