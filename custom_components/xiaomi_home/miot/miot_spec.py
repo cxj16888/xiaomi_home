@@ -79,6 +79,7 @@ class MIoTSpecBase:
     # External params
     platform: str
     device_class: any
+    state_class: any
     icon: str
     external_unit: any
 
@@ -96,6 +97,7 @@ class MIoTSpecBase:
 
         self.platform = None
         self.device_class = None
+        self.state_class = None
         self.icon = None
         self.external_unit = None
 
