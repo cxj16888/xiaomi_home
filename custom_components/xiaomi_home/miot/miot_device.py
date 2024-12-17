@@ -59,20 +59,6 @@ from homeassistant.const import (
     LIGHT_LUX,
     PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS,
-    UnitOfEnergy,
-    UnitOfElectricCurrent,
-    UnitOfElectricPotential,
-    UnitOfInformation,
-    UnitOfLength,
-    UnitOfMass,
-    UnitOfSpeed,
-    UnitOfTime,
-    UnitOfTemperature,
-    UnitOfPressure,
-    UnitOfPower,
-    UnitOfVolume,
-    UnitOfVolumeFlowRate,
-    UnitOfConductivity
 )
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.components.switch import SwitchDeviceClass
@@ -584,7 +570,32 @@ class MIoTDevice:
                 self.append_action(action=action)
 
     def unit_convert(self, spec_unit: str) -> Optional[str]:
-        return {
+        """Convert MIoT unit to HA unit.
+        
+        将米家设备的单位转换为 Home Assistant 使用的单位 适配4.0版本
+        重要修改说明：
+        1. 将所有单位相关的导入移到函数内部，避免模块级别的阻塞导入
+        2. 使用 try-except 处理 UnitOfConductivity（电导率单位）的导入
+        3. 如果 UnitOfConductivity 不存在，则使用字符串 'μS/cm' 作为后备值
+        """
+        # 在函数内部导入单位类，避免启动时的阻塞导入
+        from homeassistant.const import (
+            UnitOfEnergy,
+            UnitOfElectricCurrent,
+            UnitOfElectricPotential,
+            UnitOfInformation,
+            UnitOfLength,
+            UnitOfMass,
+            UnitOfSpeed,
+            UnitOfTime,
+            UnitOfTemperature,
+            UnitOfPressure,
+            UnitOfPower,
+            UnitOfVolume,
+            UnitOfVolumeFlowRate,
+        )
+
+        unit_map = {
             'percentage': PERCENTAGE,
             'weeks': UnitOfTime.WEEKS,
             'days': UnitOfTime.DAYS,
@@ -616,11 +627,21 @@ class MIoTDevice:
             'm': UnitOfLength.METERS,
             'km': UnitOfLength.KILOMETERS,
             'm3/h': UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR,
-            'μS/cm': UnitOfConductivity.MICROSIEMENS_PER_CM,
             'gram': UnitOfMass.GRAMS,
             'dB': SIGNAL_STRENGTH_DECIBELS,
             'kB': UnitOfInformation.KILOBYTES,
-        }.get(spec_unit, None)
+        }
+
+        # 特殊处理：尝试导入 UnitOfConductivity（电导率单位）
+        # 如果导入失败（在旧版本HA中不存在），则使用字符串作为后备值
+        try:
+            from homeassistant.const import UnitOfConductivity
+            unit_map['μS/cm'] = UnitOfConductivity.MICROSIEMENS_PER_CM
+        except ImportError:
+            # 在旧版本中使用字符串作为后备值
+            unit_map['μS/cm'] = 'μS/cm'
+
+        return unit_map.get(spec_unit, None)
 
     def icon_convert(self, spec_unit: str) -> Optional[str]:
         if spec_unit in ['percentage']:
