@@ -602,8 +602,8 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             last_step=True,
         )
 
-    @ staticmethod
-    @ callback
+    @staticmethod
+    @callback
     def async_get_options_flow(
             config_entry: config_entries.ConfigEntry,
     ) -> config_entries.OptionsFlow:
