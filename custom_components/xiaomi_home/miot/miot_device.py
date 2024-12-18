@@ -559,7 +559,7 @@ class MIoTDevice:
                         prop.external_unit = self.unit_convert(
                             prop_entity['unit_of_measurement'])
                         prop.icon = self.icon_convert(
-                            prop_entity['unit_of_measurement']) 
+                            prop_entity['unit_of_measurement'])
                 # general conversion
                 if not prop.platform:
                     if prop.writable:
