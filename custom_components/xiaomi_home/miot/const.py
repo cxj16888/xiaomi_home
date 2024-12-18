@@ -113,6 +113,7 @@ INTEGRATION_LANGUAGES = {
     'de': 'Deutsch',
     'es': 'Español',
     'fr': 'Français',
+    'it': 'Italiano',
     'ja': '日本語',
     'pt': 'Português',
     'pt-BR': 'Português (Brasil)',

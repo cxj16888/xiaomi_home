@@ -86,6 +86,10 @@
                 "true": "Vrai",
                 "false": "Faux"
             },
+            "it": {
+                "true": "Vero",
+                "false": "Falso"
+            },
             "ru": {
                 "true": "Истина",
                 "false": "Ложь"
@@ -119,6 +123,10 @@
             "fr": {
                 "true": "Ouvert",
                 "false": "Fermer"
+            },
+            "it": {
+                "true": "Aperto",
+                "false": "Chiuso"
             },
             "ru": {
                 "true": "Открыть",
@@ -154,6 +162,10 @@
                 "true": "Oui",
                 "false": "Non"
             },
+            "it": {
+                "true": "Si",
+                "false": "No"
+            },
             "ru": {
                 "true": "Да",
                 "false": "Нет"
@@ -188,6 +200,10 @@
                 "true": "Mouvement détecté",
                 "false": "Aucun mouvement détecté"
             },
+            "it": {
+                "true": "Movimento Rilevato",
+                "false": "Nessun Movimento Rilevato"
+            },
             "ru": {
                 "true": "Обнаружено движение",
                 "false": "Движение не обнаружено"
@@ -221,6 +237,10 @@
             "fr": {
                 "true": "Contact",
                 "false": "Pas de contact"
+            },
+            "it": {
+                "true": "Contatto",
+                "false": "Nessun Contatto"
             },
             "ru": {
                 "true": "Контакт",
