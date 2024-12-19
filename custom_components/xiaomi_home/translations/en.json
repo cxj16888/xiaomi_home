@@ -51,7 +51,9 @@
             "network_connect_error": "Configuration failed. The network connection is abnormal. Please check the equipment network configuration.",
             "already_configured": "Configuration for this user is already completed. Please go to the integration page and click the CONFIGURE button for modifications.",
             "invalid_auth_info": "Authentication information has expired. Please go to the integration page and click the CONFIGURE button to re-authenticate.",
-            "config_flow_error": "Integration configuration error: {error}."
+            "config_flow_error": "Integration configuration error: {error}.",
+            "reauth_failed": "Re-authorization failed",
+            "reconfigure_successful": "Reconfiguration successful"
         }
     },
     "options": {
@@ -137,8 +139,6 @@
             "network_connect_error": "Configuration failed. The network connection is abnormal. Please check the equipment network configuration.",
             "options_flow_error": "Integration re-configuration error: {error}",
             "re_add": "Please re-add the integration. Error message: {error}",
-            "reauth_failed": "Re-authorization failed",
-            "reconfigure_successful": "Reconfiguration successful",
             "storage_error": "Integration storage module exception. Please try again or re-add the integration: {error}",
             "inconsistent_account": "Account information is inconsistent. Please login with the correct account."
         }
