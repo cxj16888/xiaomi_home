@@ -1,24 +1,9 @@
 # -*- coding: utf-8 -*-
 """Common functions."""
 import json
-from os import path
 import yaml
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
-
-ROOT_PATH: str = path.dirname(path.abspath(__file__))
-SPEC_BOOL_TRANS_FILE = path.join(
-    ROOT_PATH,
-    '../custom_components/xiaomi_home/miot/specs/bool_trans.json')
-SPEC_MULTI_LANG_FILE = path.join(
-    ROOT_PATH,
-    '../custom_components/xiaomi_home/miot/specs/multi_lang.json')
-SPEC_FILTER_FILE = path.join(
-    ROOT_PATH,
-    '../custom_components/xiaomi_home/miot/specs/spec_filter.json')
-LAN_PROFILE_MODELS_FILE: str = path.join(
-    ROOT_PATH,
-    '../custom_components/xiaomi_home/miot/lan/profile_models.yaml')
 
 
 def load_yaml_file(file_path: str) -> dict:

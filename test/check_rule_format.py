@@ -146,6 +146,32 @@ def compare_dict_structure(dict1: dict, dict2: dict) -> bool:
     return True
 
 
+def sort_bool_trans(file_path: str):
+    trans_data: dict = load_json_file(file_path=file_path)
+    trans_data['data'] = dict(sorted(trans_data['data'].items()))
+    for key, trans in trans_data['translate'].items():
+        trans_data['translate'][key] = dict(sorted(trans.items()))
+    return trans_data
+
+
+def sort_multi_lang(file_path: str):
+    multi_lang: dict = load_json_file(file_path=file_path)
+    multi_lang = dict(sorted(multi_lang.items()))
+    for urn, trans in multi_lang.items():
+        multi_lang[urn] = dict(sorted(trans.items()))
+        for lang, spec in multi_lang[urn].items():
+            multi_lang[urn][lang] = dict(sorted(spec.items()))
+    return multi_lang
+
+
+def sort_spec_filter(file_path: str):
+    filter_data: dict = load_json_file(file_path=file_path)
+    filter_data = dict(sorted(filter_data.items()))
+    for urn, spec in filter_data.items():
+        filter_data[urn] = dict(sorted(spec.items()))
+    return filter_data
+
+
 @pytest.mark.github
 def test_bool_trans():
     data: dict = load_json_file(SPEC_BOOL_TRANS_FILE)
@@ -229,3 +255,40 @@ def test_miot_data_sort():
     assert list(INTEGRATION_LANGUAGES.keys()) == list(sort_langs.keys()), (
         'INTEGRATION_LANGUAGES not sorted, correct order'
         f'\r\n{list(sort_langs.keys())}')
+    assert json.dumps(
+        load_json_file(file_path=SPEC_BOOL_TRANS_FILE)) == json.dumps(
+            sort_bool_trans(file_path=SPEC_BOOL_TRANS_FILE)), (
+                f'{SPEC_BOOL_TRANS_FILE} not sorted')
+    assert json.dumps(
+        load_json_file(file_path=SPEC_MULTI_LANG_FILE)) == json.dumps(
+            sort_multi_lang(file_path=SPEC_MULTI_LANG_FILE)), (
+                f'{SPEC_MULTI_LANG_FILE} not sorted')
+    assert json.dumps(
+        load_json_file(file_path=SPEC_FILTER_FILE)) == json.dumps(
+            sort_spec_filter(file_path=SPEC_FILTER_FILE)), (
+                f'{SPEC_FILTER_FILE} not sorted')
+
+
+# @pytest.mark.github
+# def test_miot_lan_rule():
+#     data: dict = load_yaml_file(
+#         path.join(
+#             ROOT_PATH,
+#             '../custom_components/xiaomi_home/miot/lan/profile_models.yaml'))
+#     assert data
+#     assert dict_str_dict(data)
+
+
+# # @pytest.mark.update
+# def test_sort_spec_data():
+#     save_json_file(
+#         file_path=SPEC_BOOL_TRANS_FILE,
+#         data=sort_bool_trans(file_path=SPEC_BOOL_TRANS_FILE))
+#     print(SPEC_BOOL_TRANS_FILE, 'formatted.')
+#     save_json_file(
+#         file_path=SPEC_MULTI_LANG_FILE,
+#         data=sort_multi_lang(file_path=SPEC_MULTI_LANG_FILE))
+#     print(SPEC_MULTI_LANG_FILE, 'formatted.')
+#     save_json_file(
+#         file_path=SPEC_FILTER_FILE,
+#         data=sort_spec_filter(file_path=SPEC_FILTER_FILE))
