@@ -50,6 +50,7 @@ import hashlib
 import json
 import secrets
 import traceback
+from typing import Any
 from typing import Optional
 from aiohttp import web
 from aiohttp.hdrs import METH_GET
@@ -59,6 +60,8 @@ import logging
 from homeassistant import config_entries
 from homeassistant.components import zeroconf
 from homeassistant.components.zeroconf import HaAsyncZeroconf
+from homeassistant.config_entries import SOURCE_REAUTH, SOURCE_RECONFIGURE
+from homeassistant.config_entries import FlowResult 
 from homeassistant.components.webhook import (
     async_register as webhook_async_register,
     async_unregister as webhook_async_unregister,
@@ -67,6 +70,7 @@ from homeassistant.components.webhook import (
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import AbortFlow
 import homeassistant.helpers.config_validation as cv
+
 
 from .miot.const import (
     DEFAULT_CLOUD_SERVER,
@@ -374,8 +378,9 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # TASK 4: Abort if unique_id configured
         # Each MiHome account can only configure one instance
         await self.async_set_unique_id(f'{self._cloud_server}{self._uid}')
-        self._abort_if_unique_id_configured()
-
+        if self.source not in (SOURCE_REAUTH, SOURCE_RECONFIGURE):
+            self._abort_if_unique_id_configured()
+            
         # TASK 5: Query mdns info
         mips_list = None
         if self._cloud_server in SUPPORT_CENTRAL_GATEWAY_CTRL:
@@ -513,6 +518,22 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         'auth_info': self._auth_info
                     })):
                 raise MIoTError('miot_storage.update_user_config_async error')
+
+            if self.source in (SOURCE_REAUTH, SOURCE_RECONFIGURE):
+                entry = self._get_reauth_entry() if self.source == SOURCE_REAUTH else self._get_reconfigure_entry()
+                if user_input:
+                    data_updates = {
+                        "ctrl_mode": self._ctrl_mode,
+                        "home_selected": self._home_selected, 
+                        "area_name_rule": self._area_name_rule,
+                        "action_debug": self._action_debug,
+                        "hide_non_standard_entities": self._hide_non_standard_entities,
+                    }
+                    devices_list_sort = dict(sorted(devices_list.items(), key=lambda item: item[1].get('home_id', '') + item[1].get('room_id', '')))
+                    if not await self._miot_storage.save_async(domain='miot_devices', name=f'{self._uid}_{self._cloud_server}', data=devices_list_sort):
+                        return self.async_abort(reason="storage_error")
+                    return self.async_update_reload_and_abort(entry=entry, data_updates=data_updates, reason="reconfigure_successful")
+
             return self.async_create_entry(
                 title=(
                     f'{self._nick_name}: {self._uid} '
@@ -563,13 +584,35 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             },
             last_step=False,
         )
+    async def async_step_reauth(self, entry_data: dict[str, Any]) -> FlowResult:
+        """Handle reauthorization request."""
+        entry = self._get_reauth_entry()
+        self._virtual_did = entry.data["virtual_did"]
+        self._uid = entry.data["uid"]
+        self._storage_path = entry.data["storage_path"] 
+        self._cloud_server = entry.data["cloud_server"]
+        self._integration_language = entry.data["integration_language"]
+        
+        await self.async_set_unique_id(f'{self._cloud_server}{self._uid}')
+        self._abort_if_unique_id_mismatch()
 
-    @staticmethod
-    @callback
+        return await self.async_step_auth_config()
+
+    async def async_step_reconfigure(self, entry_data: dict[str, Any]) -> FlowResult:
+        """Handle a reconfigure flow."""
+        # For reconfigure, just start from the beginning like a new setup
+        return await self.async_step_user()
+
+
+    @ staticmethod
+    @ callback
     def async_get_options_flow(
             config_entry: config_entries.ConfigEntry,
     ) -> config_entries.OptionsFlow:
         return OptionsFlowHandler(config_entry)
+
+
+
 
 
 class OptionsFlowHandler(config_entries.OptionsFlow):
