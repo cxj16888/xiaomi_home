@@ -269,7 +269,7 @@ class MIoTHttpClient:
             self._client_id = client_id
         if isinstance(access_token, str):
             self._access_token = access_token
-    
+
     # pylint: disable=unused-private-member
     async def __mihome_api_get_async(
         self, url_path: str, params: dict,
