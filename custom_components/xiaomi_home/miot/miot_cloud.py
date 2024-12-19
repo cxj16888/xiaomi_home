@@ -271,6 +271,16 @@ class MIoTHttpClient:
         if isinstance(access_token, str):
             self._access_token = access_token
 
+    @property
+    def __api_request_headers(self) -> dict:
+        return {
+            'Host': self._host,
+            'X-Client-BizId': 'haapi',
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer{self._access_token}',
+            'X-Client-AppId': self._client_id,
+        }
+
     # pylint: disable=unused-private-member
     async def __mihome_api_get_async(
         self, url_path: str, params: dict,
@@ -279,6 +289,7 @@ class MIoTHttpClient:
         http_res = await self._session.get(
             url=f'{self._base_url}{url_path}',
             params=params,
+            headers=self.__api_request_headers,
             timeout=timeout)
         if http_res.status == 401:
             raise MIoTHttpError(
@@ -303,12 +314,12 @@ class MIoTHttpClient:
         self, url_path: str, data: dict,
         timeout: int = MIHOME_HTTP_API_TIMEOUT
     ) -> dict:
-        encoded_data = None
-        if data:
-            encoded_data = json.dumps(data).encode('utf-8')
+        form_data = aiohttp.FormData()
+        form_data.add_field('data', json.dumps(data))
         http_res = await self._session.post(
             url=f'{self._base_url}{url_path}',
-            data=encoded_data,
+            data=form_data,
+            headers=self.__api_request_headers,
             timeout=timeout)
         if http_res.status == 401:
             raise MIoTHttpError(
