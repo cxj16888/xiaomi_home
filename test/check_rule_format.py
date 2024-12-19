@@ -267,28 +267,3 @@ def test_miot_data_sort():
         load_json_file(file_path=SPEC_FILTER_FILE)) == json.dumps(
             sort_spec_filter(file_path=SPEC_FILTER_FILE)), (
                 f'{SPEC_FILTER_FILE} not sorted')
-
-
-# @pytest.mark.github
-# def test_miot_lan_rule():
-#     data: dict = load_yaml_file(
-#         path.join(
-#             ROOT_PATH,
-#             '../custom_components/xiaomi_home/miot/lan/profile_models.yaml'))
-#     assert data
-#     assert dict_str_dict(data)
-
-
-# # @pytest.mark.update
-# def test_sort_spec_data():
-#     save_json_file(
-#         file_path=SPEC_BOOL_TRANS_FILE,
-#         data=sort_bool_trans(file_path=SPEC_BOOL_TRANS_FILE))
-#     print(SPEC_BOOL_TRANS_FILE, 'formatted.')
-#     save_json_file(
-#         file_path=SPEC_MULTI_LANG_FILE,
-#         data=sort_multi_lang(file_path=SPEC_MULTI_LANG_FILE))
-#     print(SPEC_MULTI_LANG_FILE, 'formatted.')
-#     save_json_file(
-#         file_path=SPEC_FILTER_FILE,
-#         data=sort_spec_filter(file_path=SPEC_FILTER_FILE))

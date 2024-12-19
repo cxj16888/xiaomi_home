@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=relative-beyond-top-level
 from os import path
-from .common import (
+from common import (
     http_get,
     load_yaml_file,
     save_yaml_file)
@@ -32,6 +32,5 @@ def update_profile_model(file_path: str):
         file_path=file_path, data=local_rules)
 
 
-def test_update_profile_model():
-    update_profile_model(file_path=LAN_PROFILE_MODELS_FILE)
-    print('profile model list updated.')
+update_profile_model(file_path=LAN_PROFILE_MODELS_FILE)
+print('profile model list updated.')
