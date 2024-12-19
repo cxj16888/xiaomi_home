@@ -486,7 +486,8 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self._home_selected[home_id] = home_info
             self._area_name_rule = user_input.get('area_name_rule')
             # Check if advanced options should be shown
-            show_advanced_options = user_input.get('show_advanced_options', False)
+            show_advanced_options = user_input.get(
+                'show_advanced_options', False)
             # Storage device list
             devices_list: dict[str, dict] = {
                 did: dev_info
@@ -565,8 +566,10 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_advanced_options(self, user_input=None):
         if user_input is not None:
-            # Advanced options, the default values are specified alongside the definition of each variable
-            self._action_debug = user_input.get('action_debug', self._action_debug)
+            # Advanced options, the default values are specified alongside
+            # the definition of each variable
+            self._action_debug = user_input.get(
+                'action_debug', self._action_debug)
             self._hide_non_standard_entities = user_input.get(
                 'hide_non_standard_entities', self._hide_non_standard_entities)
             return self.async_create_entry(
