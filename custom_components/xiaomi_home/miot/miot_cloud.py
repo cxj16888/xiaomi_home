@@ -155,7 +155,8 @@ class MIoTOauthClient:
             raise MIoTOauthError(
                 f'invalid http status code, {http_res.status}')
 
-        res_obj = await http_res.json()
+        res_str = await http_res.text()
+        res_obj = json.loads(res_str)
         if (
             not res_obj
             or res_obj.get('code', None) != 0
@@ -287,7 +288,8 @@ class MIoTHttpClient:
             raise MIoTHttpError(
                 f'mihome api get failed, {http_res.status}, '
                 f'{url_path}, {params}')
-        res_obj: dict = await http_res.json()
+        res_str = await http_res.text()
+        res_obj: dict = json.loads(res_str)
         if res_obj.get('code', None) != 0:
             raise MIoTHttpError(
                 f'invalid response code, {res_obj.get("code",None)}, '
@@ -316,7 +318,8 @@ class MIoTHttpClient:
             raise MIoTHttpError(
                 f'mihome api post failed, {http_res.status}, '
                 f'{url_path}, {data}')
-        res_obj: dict = await http_res.json()
+        res_str = await http_res.text()
+        res_obj: dict = json.loads(res_str)
         if res_obj.get('code', None) != 0:
             raise MIoTHttpError(
                 f'invalid response code, {res_obj.get("code",None)}, '
@@ -335,7 +338,8 @@ class MIoTHttpClient:
             timeout=MIHOME_HTTP_API_TIMEOUT
         )
 
-        res_obj = await http_res.json()
+        res_str = await http_res.text()
+        res_obj = json.loads(res_str)
         if (
             not res_obj
             or res_obj.get('code', None) != 0
