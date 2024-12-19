@@ -622,7 +622,7 @@ class MIoTHttpClient:
         return res_obj['result']
 
 
-    async def get_prop_async(self, did: str, siid: int, piid: int) -> any:
+    async def __get_prop_async(self, did: str, siid: int, piid: int) -> any:
         results = await self.get_props_async(
             params=[{'did': did, 'siid': siid, 'piid': piid}])
         if not results:
@@ -685,7 +685,7 @@ class MIoTHttpClient:
         self, did: str, siid: int, piid: int, immediately: bool = False
     ) -> any:
         if immediately:
-            return await self.get_prop_async(did, siid, piid)
+            return await self.__get_prop_async(did, siid, piid)
         key: str = f'{did}.{siid}.{piid}'
         prop_obj = self._get_prop_list.get(key, None)
         if prop_obj:
