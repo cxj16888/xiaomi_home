@@ -107,17 +107,17 @@ SUPPORT_CENTRAL_GATEWAY_CTRL: list = ['cn']
 
 DEFAULT_INTEGRATION_LANGUAGE: str = 'en'
 INTEGRATION_LANGUAGES = {
-    'zh-Hans': '简体中文',
-    'zh-Hant': '繁體中文',
-    'en': 'English',
     'de': 'Deutsch',
+    'en': 'English',
     'es': 'Español',
     'fr': 'Français',
     'ja': '日本語',
+    'nl': 'Nederlands',
     'pt': 'Português',
     'pt-BR': 'Português (Brasil)',
     'ru': 'Русский',
-    'nl': 'Nederlands'
+    'zh-Hans': '简体中文',
+    'zh-Hant': '繁體中文'
 }
 
 DEFAULT_CTRL_MODE: str = 'auto'

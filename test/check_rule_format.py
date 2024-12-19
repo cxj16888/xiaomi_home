@@ -6,9 +6,20 @@ from typing import Optional
 import pytest
 import yaml
 
-SOURCE_PATH: str = path.dirname(path.abspath(__file__))
-TRANS_RELATIVE_PATH: str = '../custom_components/xiaomi_home/translations'
-MIOT_I18N_RELATIVE_PATH: str = '../custom_components/xiaomi_home/miot/i18n'
+ROOT_PATH: str = path.dirname(path.abspath(__file__))
+TRANS_RELATIVE_PATH: str = path.join(
+    ROOT_PATH, '../custom_components/xiaomi_home/translations')
+MIOT_I18N_RELATIVE_PATH: str = path.join(
+    ROOT_PATH, '../custom_components/xiaomi_home/miot/i18n')
+SPEC_BOOL_TRANS_FILE = path.join(
+    ROOT_PATH,
+    '../custom_components/xiaomi_home/miot/specs/bool_trans.json')
+SPEC_MULTI_LANG_FILE = path.join(
+    ROOT_PATH,
+    '../custom_components/xiaomi_home/miot/specs/multi_lang.json')
+SPEC_FILTER_FILE = path.join(
+    ROOT_PATH,
+    '../custom_components/xiaomi_home/miot/specs/spec_filter.json')
 
 
 def load_json_file(file_path: str) -> Optional[dict]:
@@ -100,6 +111,7 @@ def bool_trans(d: dict) -> bool:
         return False
     default_trans: dict = d['translate'].pop('default')
     if not default_trans:
+        print('default trans is empty')
         return False
     default_keys: set[str] = set(default_trans.keys())
     for key, trans in d['translate'].items():
@@ -136,52 +148,41 @@ def compare_dict_structure(dict1: dict, dict2: dict) -> bool:
 
 @pytest.mark.github
 def test_bool_trans():
-    data: dict = load_json_file(
-        path.join(
-            SOURCE_PATH,
-            '../custom_components/xiaomi_home/miot/specs/bool_trans.json'))
-    assert data
-    assert bool_trans(data)
+    data: dict = load_json_file(SPEC_BOOL_TRANS_FILE)
+    assert data, f'load {SPEC_BOOL_TRANS_FILE} failed'
+    assert bool_trans(data), f'{SPEC_BOOL_TRANS_FILE} format error'
 
 
 @pytest.mark.github
 def test_spec_filter():
-    data: dict = load_json_file(
-        path.join(
-            SOURCE_PATH,
-            '../custom_components/xiaomi_home/miot/specs/spec_filter.json'))
-    assert data
-    assert spec_filter(data)
+    data: dict = load_json_file(SPEC_FILTER_FILE)
+    assert data, f'load {SPEC_FILTER_FILE} failed'
+    assert spec_filter(data), f'{SPEC_FILTER_FILE} format error'
 
 
 @pytest.mark.github
 def test_multi_lang():
-    data: dict = load_json_file(
-        path.join(
-            SOURCE_PATH,
-            '../custom_components/xiaomi_home/miot/specs/multi_lang.json'))
-    assert data
-    assert nested_3_dict_str_str(data)
+    data: dict = load_json_file(SPEC_MULTI_LANG_FILE)
+    assert data, f'load {SPEC_MULTI_LANG_FILE} failed'
+    assert nested_3_dict_str_str(data), f'{SPEC_MULTI_LANG_FILE} format error'
 
 
 @pytest.mark.github
 def test_miot_i18n():
-    i18n_path: str = path.join(SOURCE_PATH, MIOT_I18N_RELATIVE_PATH)
-    for file_name in listdir(i18n_path):
-        file_path: str = path.join(i18n_path, file_name)
+    for file_name in listdir(MIOT_I18N_RELATIVE_PATH):
+        file_path: str = path.join(MIOT_I18N_RELATIVE_PATH, file_name)
         data: dict = load_json_file(file_path)
-        assert data
-        assert nested_3_dict_str_str(data)
+        assert data, f'load {file_path} failed'
+        assert nested_3_dict_str_str(data), f'{file_path} format error'
 
 
 @pytest.mark.github
 def test_translations():
-    i18n_path: str = path.join(SOURCE_PATH, TRANS_RELATIVE_PATH)
-    for file_name in listdir(i18n_path):
-        file_path: str = path.join(i18n_path, file_name)
+    for file_name in listdir(TRANS_RELATIVE_PATH):
+        file_path: str = path.join(TRANS_RELATIVE_PATH, file_name)
         data: dict = load_json_file(file_path)
-        assert data
-        assert dict_str_dict(data)
+        assert data, f'load {file_path} failed'
+        assert dict_str_dict(data), f'{file_path} format error'
 
 
 @pytest.mark.github
@@ -190,37 +191,41 @@ def test_miot_lang_integrity():
     from miot.const import INTEGRATION_LANGUAGES
     integration_lang_list: list[str] = [
         f'{key}.json' for key in list(INTEGRATION_LANGUAGES.keys())]
-    translations_names: set[str] = set(listdir(
-        path.join(SOURCE_PATH, TRANS_RELATIVE_PATH)))
+    translations_names: set[str] = set(listdir(TRANS_RELATIVE_PATH))
     assert len(translations_names) == len(integration_lang_list)
     assert translations_names == set(integration_lang_list)
-    i18n_names: set[str] = set(listdir(
-        path.join(SOURCE_PATH, MIOT_I18N_RELATIVE_PATH)))
+    i18n_names: set[str] = set(listdir(MIOT_I18N_RELATIVE_PATH))
     assert len(i18n_names) == len(translations_names)
     assert i18n_names == translations_names
-    bool_trans_data: set[str] = load_json_file(
-        path.join(
-            SOURCE_PATH,
-            '../custom_components/xiaomi_home/miot/specs/bool_trans.json'))
+    bool_trans_data: set[str] = load_json_file(SPEC_BOOL_TRANS_FILE)
     bool_trans_names: set[str] = set(
         bool_trans_data['translate']['default'].keys())
     assert len(bool_trans_names) == len(translations_names)
     # Check translation files structure
     default_dict: dict = load_json_file(
-        path.join(SOURCE_PATH, TRANS_RELATIVE_PATH, integration_lang_list[0]))
+        path.join(TRANS_RELATIVE_PATH, integration_lang_list[0]))
     for name in list(integration_lang_list)[1:]:
         compare_dict: dict = load_json_file(
-            path.join(SOURCE_PATH, TRANS_RELATIVE_PATH, name))
+            path.join(TRANS_RELATIVE_PATH, name))
         if not compare_dict_structure(default_dict, compare_dict):
             print('compare_dict_structure failed /translations, ', name)
             assert False
     # Check i18n files structure
     default_dict = load_json_file(
-        path.join(
-            SOURCE_PATH, MIOT_I18N_RELATIVE_PATH, integration_lang_list[0]))
+        path.join(MIOT_I18N_RELATIVE_PATH, integration_lang_list[0]))
     for name in list(integration_lang_list)[1:]:
         compare_dict: dict = load_json_file(
-            path.join(SOURCE_PATH, MIOT_I18N_RELATIVE_PATH, name))
+            path.join(MIOT_I18N_RELATIVE_PATH, name))
         if not compare_dict_structure(default_dict, compare_dict):
             print('compare_dict_structure failed /miot/i18n, ', name)
             assert False
+
+
+@pytest.mark.github
+def test_miot_data_sort():
+    # pylint: disable=import-outside-toplevel
+    from miot.const import INTEGRATION_LANGUAGES
+    sort_langs: dict = dict(sorted(INTEGRATION_LANGUAGES.items()))
+    assert list(INTEGRATION_LANGUAGES.keys()) == list(sort_langs.keys()), (
+        'INTEGRATION_LANGUAGES not sorted, correct order'
+        f'\r\n{list(sort_langs.keys())}')
