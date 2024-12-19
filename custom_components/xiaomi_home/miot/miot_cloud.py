@@ -270,32 +270,6 @@ class MIoTHttpClient:
         if isinstance(access_token, str):
             self._access_token = access_token
 
-    async def __mihome_api_get_async(
-        self, url_path: str, params: dict,
-        timeout: int = MIHOME_HTTP_API_TIMEOUT
-    ) -> dict:
-        http_res = await self._session.get(
-            url=f'{self._base_url}{url_path}',
-            params=params,
-            timeout=timeout)
-        if http_res.status == 401:
-            raise MIoTHttpError(
-                'mihome api get failed, unauthorized(401)',
-                MIoTErrorCode.CODE_HTTP_INVALID_ACCESS_TOKEN)
-        if http_res.status != 200:
-            raise MIoTHttpError(
-                f'mihome api get failed, {http_res.status}, '
-                f'{url_path}, {params}')
-        res_obj: dict = await http_res.json()
-        if res_obj.get('code', None) != 0:
-            raise MIoTHttpError(
-                f'invalid response code, {res_obj.get("code",None)}, '
-                f'{res_obj.get("message","")}')
-        _LOGGER.debug(
-            'mihome api get, %s%s, %s -> %s',
-            self._base_url, url_path, params, res_obj)
-        return res_obj
-
     async def __mihome_api_post_async(
         self, url_path: str, data: dict,
         timeout: int = MIHOME_HTTP_API_TIMEOUT
