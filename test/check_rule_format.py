@@ -98,6 +98,15 @@ def bool_trans(d: dict) -> bool:
         return False
     if not nested_3_dict_str_str(d['translate']):
         return False
+    default_trans: dict = d['translate'].pop('default')
+    if not default_trans:
+        return False
+    default_keys: set[str] = set(default_trans.keys())
+    for key, trans in d['translate'].items():
+        trans_keys: set[str] = set(trans.keys())
+        if set(trans.keys()) != default_keys:
+            print('bool trans inconsistent', key, default_keys, trans_keys)
+            return False
     return True
 
 
@@ -189,6 +198,13 @@ def test_miot_lang_integrity():
         path.join(SOURCE_PATH, MIOT_I18N_RELATIVE_PATH)))
     assert len(i18n_names) == len(translations_names)
     assert i18n_names == translations_names
+    bool_trans_data: set[str] = load_json_file(
+        path.join(
+            SOURCE_PATH,
+            '../custom_components/xiaomi_home/miot/specs/bool_trans.json'))
+    bool_trans_names: set[str] = set(
+        bool_trans_data['translate']['default'].keys())
+    assert len(bool_trans_names) == len(translations_names)
     # Check translation files structure
     default_dict: dict = load_json_file(
         path.join(SOURCE_PATH, TRANS_RELATIVE_PATH, integration_lang_list[0]))
