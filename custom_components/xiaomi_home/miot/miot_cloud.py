@@ -314,11 +314,9 @@ class MIoTHttpClient:
         self, url_path: str, data: dict,
         timeout: int = MIHOME_HTTP_API_TIMEOUT
     ) -> dict:
-        form_data = aiohttp.FormData()
-        form_data.add_field('data', json.dumps(data))
         http_res = await self._session.post(
             url=f'{self._base_url}{url_path}',
-            data=form_data,
+            json=data,
             headers=self.__api_request_headers,
             timeout=timeout)
         if http_res.status == 401:
@@ -365,7 +363,7 @@ class MIoTHttpClient:
         if not isinstance(csr, str):
             raise MIoTHttpError('invalid params')
 
-        res_obj: dict = self.__mihome_api_post_async(
+        res_obj: dict = await self.__mihome_api_post_async(
             url_path='/app/v2/ha/oauth/get_central_crt',
             data={
                 'csr': str(base64.b64encode(csr.encode('utf-8')), 'utf-8')
