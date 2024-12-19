@@ -50,8 +50,7 @@ import hashlib
 import json
 import secrets
 import traceback
-from typing import Any
-from typing import Optional
+from typing import Any, Optional
 from aiohttp import web
 from aiohttp.hdrs import METH_GET
 import voluptuous as vol
