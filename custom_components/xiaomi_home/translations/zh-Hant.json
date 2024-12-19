@@ -51,7 +51,9 @@
             "network_connect_error": "配置失敗。網絡連接異常，請檢查設備網絡配置。",
             "already_configured": "該用戶已配置完成。請進入集成頁面，點擊“配置”按鈕修改配置。",
             "invalid_auth_info": "認證信息已過期。請進入集成頁面，點擊“配置”按鈕重新認證。",
-            "config_flow_error": "集成配置錯誤：{error}"
+            "config_flow_error": "集成配置錯誤：{error}",
+            "reauth_failed": "重新授權失敗",
+            "reconfigure_successful": "重新配置成功"
         }
     },
     "options": {
@@ -137,8 +139,6 @@
             "network_connect_error": "配置失敗。網絡連接異常，請檢查設備網絡配置。",
             "options_flow_error": "集成重新配置錯誤：{error}",
             "re_add": "請重新添加集成，錯誤信息：{error}",
-            "reauth_failed": "重新授權失敗",
-            "reconfigure_successful": "重新配置成功",
             "storage_error": "集成存儲模塊異常。請重試或者重新添加集成：{error}",
             "inconsistent_account": "帳號信息不一致。請使用正確的帳號登錄。"
         }
