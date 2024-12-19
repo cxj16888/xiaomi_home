@@ -137,6 +137,8 @@
             "network_connect_error": "Configuration failed. The network connection is abnormal. Please check the equipment network configuration.",
             "options_flow_error": "Integration re-configuration error: {error}",
             "re_add": "Please re-add the integration. Error message: {error}",
+            "reauth_failed": "Re-authorization failed",
+            "reconfigure_successful": "Reconfiguration successful",
             "storage_error": "Integration storage module exception. Please try again or re-add the integration: {error}",
             "inconsistent_account": "Account information is inconsistent. Please login with the correct account."
         }
