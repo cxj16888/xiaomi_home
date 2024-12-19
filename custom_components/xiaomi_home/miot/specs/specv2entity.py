@@ -337,6 +337,10 @@ SPEC_PROP_TRANS_MAP: dict[str, dict | str] = {
             'format': {'int', 'float'},
             'access': {'read'}
         },
+        'binary_sensor': {                                                     
+            'format': {'bool'},                                               
+            'access': {'read'}                                                 
+        },   
         'switch': {
             'format': {'bool'},
             'access': {'read', 'write'}
