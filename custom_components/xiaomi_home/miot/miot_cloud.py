@@ -142,18 +142,18 @@ class MIoTOauthClient:
         return f'{OAUTH2_AUTH_URL}?{encoded_params}'
 
     async def __get_token_async(self, data) -> dict:
-        http_res = await aiohttp.get(
+        http_res = await self._session.get(
             url=f'https://{self._oauth_host}/app/v2/ha/oauth/get_token',
             params={'data': json.dumps(data)},
             headers={'content-type': 'application/x-www-form-urlencoded'},
             timeout=MIHOME_HTTP_API_TIMEOUT
         )
-        if http_res.status_code == 401:
+        if http_res.status == 401:
             raise MIoTOauthError(
                 'unauthorized(401)', MIoTErrorCode.CODE_OAUTH_UNAUTHORIZED)
-        if http_res.status_code != 200:
+        if http_res.status != 200:
             raise MIoTOauthError(
-                f'invalid http status code, {http_res.status_code}')
+                f'invalid http status code, {http_res.status}')
 
         res_obj = await http_res.json()
         if (
@@ -278,13 +278,13 @@ class MIoTHttpClient:
             url=f'{self._base_url}{url_path}',
             params=params,
             timeout=timeout)
-        if http_res.status_code == 401:
+        if http_res.status == 401:
             raise MIoTHttpError(
                 'mihome api get failed, unauthorized(401)',
                 MIoTErrorCode.CODE_HTTP_INVALID_ACCESS_TOKEN)
-        if http_res.status_code != 200:
+        if http_res.status != 200:
             raise MIoTHttpError(
-                f'mihome api get failed, {http_res.status_code}, '
+                f'mihome api get failed, {http_res.status}, '
                 f'{url_path}, {params}')
         res_obj: dict = await http_res.json()
         if res_obj.get('code', None) != 0:
@@ -307,13 +307,13 @@ class MIoTHttpClient:
             url=f'{self._base_url}{url_path}',
             data=encoded_data,
             timeout=timeout)
-        if http_res.status_code == 401:
+        if http_res.status == 401:
             raise MIoTHttpError(
                 'mihome api get failed, unauthorized(401)',
                 MIoTErrorCode.CODE_HTTP_INVALID_ACCESS_TOKEN)
-        if http_res.status_code != 200:
+        if http_res.status != 200:
             raise MIoTHttpError(
-                f'mihome api post failed, {http_res.status_code}, '
+                f'mihome api post failed, {http_res.status}, '
                 f'{url_path}, {data}')
         res_obj: dict = await http_res.json()
         if res_obj.get('code', None) != 0:
