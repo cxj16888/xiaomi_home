@@ -554,7 +554,7 @@ class MIoTHttpClient:
         self, dids: list[str]
     ) -> dict[str, dict]:
         results: list[dict[str, dict]] = await asyncio.gather(
-            *[self.__get_device_list_page_async, dids[index:index+150]
+            [self.__get_device_list_page_async, dids[index:index+150]
                 for index in range(0, len(dids), 150)])
         devices = {}
         for result in results:
