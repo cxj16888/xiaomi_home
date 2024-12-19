@@ -51,7 +51,9 @@
             "network_connect_error": "配置失败。网络连接异常，请检查设备网络配置。",
             "already_configured": "该用户已配置完成。请进入集成页面，点击“配置”按钮修改配置。",
             "invalid_auth_info": "认证信息已过期。请进入集成页面，点击“配置”按钮重新认证。",
-            "config_flow_error": "集成配置错误：{error}"
+            "config_flow_error": "集成配置错误：{error}",
+            "reauth_failed": "重新授权失败",
+            "reconfigure_successful": "重新配置成功"
         }
     },
     "options": {
