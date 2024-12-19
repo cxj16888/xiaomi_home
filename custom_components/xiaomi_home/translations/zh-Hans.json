@@ -139,8 +139,6 @@
             "network_connect_error": "配置失败。网络连接异常，请检查设备网络配置。",
             "options_flow_error": "集成重新配置错误：{error}",
             "re_add": "请重新添加集成，错误信息：{error}",
-            "reauth_failed": "重新授权失败",
-            "reconfigure_successful": "重新配置成功",
             "storage_error": "集成存储模块异常。请重试或者重新添加集成：{error}",
             "inconsistent_account": "账号信息不一致。请使用正确的账号登录。"
         }
