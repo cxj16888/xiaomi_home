@@ -70,9 +70,9 @@ TOKEN_EXPIRES_TS_RATIO = 0.7
 
 class MIoTOauthClient:
     """oauth agent url, default: product env."""
-    _main_loop: asyncio.AbstractEventLoop = None
-    _session: aiohttp.ClientSession = None
-    _oauth_host: str = None
+    _main_loop: asyncio.AbstractEventLoop
+    _session: aiohttp.ClientSession
+    _oauth_host: str
     _client_id: int
     _redirect_url: str
 
@@ -94,11 +94,10 @@ class MIoTOauthClient:
             self._oauth_host = DEFAULT_OAUTH2_API_HOST
         else:
             self._oauth_host = f'{cloud_server}.{DEFAULT_OAUTH2_API_HOST}'
-        self._session = asyncio.ClientSession()
+        self._session = aiohttp.ClientSession()
 
     def __del__(self):
-        if self._session is not None:
-            self._session.close()
+        self._session.close()
 
     def set_redirect_url(self, redirect_url: str) -> None:
         if not isinstance(redirect_url, str) or redirect_url.strip() == '':
@@ -253,8 +252,7 @@ class MIoTHttpClient:
         self._session = aiohttp.ClientSession()
 
     def __del__(self):
-        if self._session is not None:
-            self._session.close()
+        self._session.close()
 
     def update_http_header(
         self, cloud_server: Optional[str] = None,
