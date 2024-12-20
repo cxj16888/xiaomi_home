@@ -481,7 +481,7 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     'no_family_selected')
             self._ctrl_mode = user_input.get('ctrl_mode')
             for home_id, home_info in self._home_info_buffer[
-                'homes']['home_list'].items():
+                    'homes']['home_list'].items():
                 if home_id in home_selected:
                     self._home_selected[home_id] = home_info
             self._area_name_rule = user_input.get('area_name_rule')
@@ -497,7 +497,7 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return await self.display_device_filter_form('no_devices')
             devices_list_sort = dict(sorted(
                 devices_list.items(), key=lambda item:
-                item[1].get('home_id', '') + item[1].get('room_id', '')))
+                    item[1].get('home_id', '')+item[1].get('room_id', '')))
             if not await self._miot_storage.save_async(
                     domain='miot_devices',
                     name=f'{self._uid}_{self._cloud_server}',
