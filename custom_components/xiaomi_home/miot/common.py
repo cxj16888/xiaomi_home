@@ -89,12 +89,12 @@ class MIoTMatcher(MQTTMatcher):
 
     def iter_all_nodes(self) -> any:
         """Return an iterator on all nodes with their paths and contents."""
-        def rec(node, path):
+        def rec(node, path_):
             # pylint: disable=protected-access
             if node._content:
-                yield ('/'.join(path), node._content)
+                yield ('/'.join(path_), node._content)
             for part, child in node._children.items():
-                yield from rec(child, path + [part])
+                yield from rec(child, path_ + [part])
         return rec(self._root, [])
 
     def get(self, topic: str) -> Optional[any]:
