@@ -376,7 +376,7 @@ siid、piid、eiid、aiid、およびvalueはすべて10進数の3桁の整数�
 ## ドキュメント
 
 - [ライセンス](../LICENSE.md)
-- 貢献ガイドライン：[English](./CONTRIBUTING.md) | [简体中文](./CONTRIBUTING_zh.md)
+- 貢献ガイドライン：[English](../CONTRIBUTING.md) | [简体中文](./CONTRIBUTING_zh.md)
 - [変更履歴](./CHANGELOG.md)
 - 開発ドキュメント：https://developers.home-assistant.io/docs/creating_component_index
 
