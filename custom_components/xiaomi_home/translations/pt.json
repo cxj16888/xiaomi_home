@@ -40,7 +40,6 @@
                     "hide_non_standard_entities": "Ocultar Entidades Não Padrão"
                 }
             }
-
         },
         "progress": {
             "oauth": "### {link_left}Clique aqui para iniciar sessão{link_right}\r\n(Será automaticamente redirecionado após um login bem-sucedido)"

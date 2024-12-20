@@ -40,7 +40,6 @@
                     "hide_non_standard_entities": "Ocultar entidades generadas no estándar"
                 }
             }
-
         },
         "progress": {
             "oauth": "### {link_left}Haga clic aquí para iniciar sesión de nuevo{link_right}\r\n(Será redirigido automáticamente a la siguiente página después de un inicio de sesión exitoso)"
