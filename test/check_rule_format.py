@@ -34,6 +34,11 @@ def load_json_file(file_path: str) -> Optional[dict]:
         return None
 
 
+def save_json_file(file_path: str, data: dict) -> None:
+    with open(file_path, 'w', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+
+
 def load_yaml_file(file_path: str) -> Optional[dict]:
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -253,17 +258,36 @@ def test_miot_data_sort():
     from miot.const import INTEGRATION_LANGUAGES
     sort_langs: dict = dict(sorted(INTEGRATION_LANGUAGES.items()))
     assert list(INTEGRATION_LANGUAGES.keys()) == list(sort_langs.keys()), (
-        'INTEGRATION_LANGUAGES not sorted, correct order'
-        f'\r\n{list(sort_langs.keys())}')
+        'INTEGRATION_LANGUAGES not sorted, correct order\r\n'
+        f'{list(sort_langs.keys())}')
     assert json.dumps(
         load_json_file(file_path=SPEC_BOOL_TRANS_FILE)) == json.dumps(
             sort_bool_trans(file_path=SPEC_BOOL_TRANS_FILE)), (
-                f'{SPEC_BOOL_TRANS_FILE} not sorted')
+                f'{SPEC_BOOL_TRANS_FILE} not sorted, goto project root path'
+                ' and run the following command sorting, ',
+                'pytest -s -v -m update ./test/check_rule_format.py')
     assert json.dumps(
         load_json_file(file_path=SPEC_MULTI_LANG_FILE)) == json.dumps(
             sort_multi_lang(file_path=SPEC_MULTI_LANG_FILE)), (
-                f'{SPEC_MULTI_LANG_FILE} not sorted')
+                f'{SPEC_MULTI_LANG_FILE} not sorted, goto project root path'
+                ' and run the following command sorting, ',
+                'pytest -s -v -m update ./test/check_rule_format.py')
     assert json.dumps(
         load_json_file(file_path=SPEC_FILTER_FILE)) == json.dumps(
             sort_spec_filter(file_path=SPEC_FILTER_FILE)), (
-                f'{SPEC_FILTER_FILE} not sorted')
+                f'{SPEC_FILTER_FILE} not sorted, goto project root path'
+                ' and run the following command sorting, ',
+                'pytest -s -v -m update ./test/check_rule_format.py')
+
+
+@pytest.mark.update
+def test_sort_spec_data():
+    sort_data: dict = sort_bool_trans(file_path=SPEC_BOOL_TRANS_FILE)
+    save_json_file(file_path=SPEC_BOOL_TRANS_FILE, data=sort_data)
+    print(SPEC_BOOL_TRANS_FILE, 'formatted.')
+    sort_data = sort_multi_lang(file_path=SPEC_MULTI_LANG_FILE)
+    save_json_file(file_path=SPEC_MULTI_LANG_FILE, data=sort_data)
+    print(SPEC_MULTI_LANG_FILE, 'formatted.')
+    sort_data = sort_spec_filter(file_path=SPEC_FILTER_FILE)
+    save_json_file(file_path=SPEC_FILTER_FILE, data=sort_data)
+    print(SPEC_FILTER_FILE, 'formatted.')
