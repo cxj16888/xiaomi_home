@@ -14,9 +14,6 @@ LAN_PROFILE_MODELS_FILE: str = path.join(
     '../custom_components/xiaomi_home/miot/lan/profile_models.yaml')
 
 
-# SpecialModels
-
-
 SPECIAL_MODELS: list[str] = [
     # model2class-v2
     'chuangmi.camera.ipc007b', 'chuangmi.camera.ipc019b',
@@ -63,7 +60,7 @@ def update_profile_model(file_path: str):
             profile_rules['models'], dict):
         raise ValueError('Failed to get profile rule')
     local_rules: dict = load_yaml_file(
-        file_path=file_path) or {}
+        yaml_file=file_path) or {}
     for rule, ts in profile_rules['models'].items():
         if rule not in local_rules:
             local_rules[rule] = {'ts': ts}
@@ -76,7 +73,7 @@ def update_profile_model(file_path: str):
             local_rules[mode]['ts'] = 1531108800
     local_rules = dict(sorted(local_rules.items()))
     save_yaml_file(
-        file_path=file_path, data=local_rules)
+        yaml_file=file_path, data=local_rules)
 
 
 update_profile_model(file_path=LAN_PROFILE_MODELS_FILE)

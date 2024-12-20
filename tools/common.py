@@ -6,24 +6,24 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
-def load_yaml_file(file_path: str) -> dict:
-    with open(file_path, 'r', encoding='utf-8') as file:
+def load_yaml_file(yaml_file: str) -> dict:
+    with open(yaml_file, 'r', encoding='utf-8') as file:
         return yaml.safe_load(file)
 
 
-def save_yaml_file(file_path: str, data: dict) -> None:
-    with open(file_path, 'w', encoding='utf-8') as file:
+def save_yaml_file(yaml_file: str, data: dict) -> None:
+    with open(yaml_file, 'w', encoding='utf-8') as file:
         yaml.safe_dump(
             data=data, stream=file, allow_unicode=True)
 
 
-def load_json_file(file_path: str) -> dict:
-    with open(file_path, 'r', encoding='utf-8') as file:
+def load_json_file(json_file: str) -> dict:
+    with open(json_file, 'r', encoding='utf-8') as file:
         return json.load(file)
 
 
-def save_json_file(file_path: str, data: dict) -> None:
-    with open(file_path, 'w', encoding='utf-8') as file:
+def save_json_file(json_file: str, data: dict) -> None:
+    with open(json_file, 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
