@@ -180,7 +180,11 @@ class MIoTLanDevice:
 # All functions SHOULD be called from the internal loop
 
     def __init__(
-            self, manager: 'MIoTLan',  did: str, token: str, ip: Optional[str] = None
+        self,
+        manager: 'MIoTLan',
+        did: str,
+        token: str,
+        ip: Optional[str] = None
     ) -> None:
         self._manager: MIoTLan = manager
         self.did = did
@@ -427,9 +431,10 @@ class MIoTLanDevice:
                 self.online = True
             else:
                 _LOGGER.info('unstable device detected, %s', self.did)
-                self._online_offline_timer = self._manager.internal_loop.call_later(
-                    self.NETWORK_UNSTABLE_RESUME_TH,
-                    self.__online_resume_handler)
+                self._online_offline_timer = \
+                    self._manager.internal_loop.call_later(
+                        self.NETWORK_UNSTABLE_RESUME_TH,
+                        self.__online_resume_handler)
 
     def __online_resume_handler(self) -> None:
         _LOGGER.info('unstable resume threshold past, %s', self.did)
@@ -491,13 +496,13 @@ class MIoTLan:
 # The following should be called from the main loop
 
     def __init__(
-            self,
-            net_ifs: list[str],
-            network: MIoTNetwork,
-            mips_service: MipsService,
-            enable_subscribe: bool = False,
-            virtual_did: Optional[int] = None,
-            loop: Optional[asyncio.AbstractEventLoop] = None
+        self,
+        net_ifs: list[str],
+        network: MIoTNetwork,
+        mips_service: MipsService,
+        enable_subscribe: bool = False,
+        virtual_did: Optional[int] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None
     ) -> None:
         if not network:
             raise ValueError('network is required')
@@ -513,7 +518,9 @@ class MIoTLan:
             key='miot_lan', group_id='*',
             handler=self.__on_mips_service_change)
         self._enable_subscribe = enable_subscribe
-        self._virtual_did = str(virtual_did) if (virtual_did is not None) else str(secrets.randbits(64))
+        self._virtual_did = str(virtual_did) \
+            if (virtual_did is not None) \
+            else str(secrets.randbits(64))
         # Init socket probe message
         probe_bytes = bytearray(self.OT_PROBE_LEN)
         probe_bytes[:20] = (
@@ -600,7 +607,7 @@ class MIoTLan:
             self._main_loop.create_task(handler(True))
         _LOGGER.info(
             'miot lan init, %s ,%s', self._net_ifs, self._available_net_ifs)
-    
+
     def __internal_loop_thread(self) -> None:
         _LOGGER.info('miot lan thread start')
         self._internal_loop = asyncio.new_event_loop()
@@ -718,8 +725,12 @@ class MIoTLan:
 
     @final
     def sub_prop(
-        self, did: str, handler: Callable[[dict, Any], None],
-        siid: Optional[int] = None, piid: Optional[int] = None, handler_ctx: Any = None
+        self,
+        did: str,
+        handler: Callable[[dict, Any], None],
+        siid: Optional[int] = None,
+        piid: Optional[int] = None,
+        handler_ctx: Any = None
     ) -> bool:
         if not self._enable_subscribe:
             return False
@@ -733,21 +744,30 @@ class MIoTLan:
         return True
 
     @final
-    def unsub_prop(self, did: str, siid: Optional[int] = None, piid: Optional[int] = None) -> bool:
+    def unsub_prop(
+        self,
+        did: str,
+        siid: Optional[int] = None,
+        piid: Optional[int] = None
+    ) -> bool:
         if not self._enable_subscribe:
             return False
         key = (
             f'{did}/p/'
             f'{"#" if siid is None or piid is None else f"{siid}/{piid}"}')
         self._internal_loop.call_soon_threadsafe(
-            self.__unsub_broadcast, 
+            self.__unsub_broadcast,
             MIoTLanUnregisterBroadcastData(key=key))
         return True
 
     @final
     def sub_event(
-        self, did: str, handler: Callable[[dict, Any], None],
-        siid: Optional[int] = None, eiid: Optional[int] = None, handler_ctx: Any = None
+        self,
+        did: str,
+        handler: Callable[[dict, Any], None],
+        siid: Optional[int] = None,
+        eiid: Optional[int] = None,
+        handler_ctx: Any = None
     ) -> bool:
         if not self._enable_subscribe:
             return False
@@ -761,7 +781,12 @@ class MIoTLan:
         return True
 
     @final
-    def unsub_event(self, did: str, siid: Optional[int] = None, eiid: Optional[int] = None) -> bool:
+    def unsub_event(
+        self,
+        did: str,
+        siid: Optional[int] = None,
+        eiid: Optional[int] = None
+    ) -> bool:
         if not self._enable_subscribe:
             return False
         key = (
@@ -908,7 +933,7 @@ class MIoTLan:
             _LOGGER.info('no central service, init miot lan')
             await self.init_async()
 
-# The folowing methods SHOULD ONLY be called in the internal loop 
+# The folowing methods SHOULD ONLY be called in the internal loop
 
     def ping(self, if_name: str | None, target_ip: str) -> None:
         if not target_ip:
@@ -985,8 +1010,8 @@ class MIoTLan:
     def broadcast_device_state(self, did: str, state: dict) -> None:
         for handler in self._device_state_sub_map.values():
             self._main_loop.call_soon_threadsafe(
-                lambda: self._main_loop.create_task(
-                    handler.handler(did, state, handler.handler_ctx)))
+                self._main_loop.create_task,
+                handler.handler(did, state, handler.handler_ctx))
 
     def __gen_msg_id(self) -> int:
         if not self._msg_id_counter:
@@ -996,7 +1021,14 @@ class MIoTLan:
             self._msg_id_counter = 1
         return self._msg_id_counter
 
-    def __call_api(self, did: str, msg: dict, handler: Callable, handler_ctx: Any, timeout_ms: int = 10000) -> None:
+    def __call_api(
+        self,
+        did: str,
+        msg: dict,
+        handler: Callable,
+        handler_ctx: Any,
+        timeout_ms: int = 10000
+    ) -> None:
         try:
             self.send2device(
                 did=did,
@@ -1304,11 +1336,11 @@ class MIoTLan:
     def __scan_devices(self) -> None:
         if self._scan_timer:
             self._scan_timer.cancel()
-        # Ignore any exceptions to avoid blocking the loop
         try:
             # Scan devices
             self.ping(if_name=None, target_ip='255.255.255.255')
         except:
+            # Ignore any exceptions to avoid blocking the loop
             pass
         scan_time = self.__get_next_scan_time()
         self._scan_timer = self._internal_loop.call_later(
