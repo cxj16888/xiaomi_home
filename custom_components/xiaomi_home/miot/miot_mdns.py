@@ -50,7 +50,7 @@ import base64
 import binascii
 import copy
 from enum import Enum
-from typing import Callable, Optional
+from typing import Callable, Optional, Coroutine
 import logging
 
 from zeroconf import (
@@ -151,7 +151,7 @@ class MipsService:
     _services: dict[str, dict]
     # key = (key, group_id)
     _sub_list: dict[(str, str), Callable[[
-        str, MipsServiceState, dict], asyncio.Future]]
+        str, MipsServiceState, dict], Coroutine]]
 
     def __init__(
         self, aiozc: AsyncZeroconf,
@@ -207,7 +207,7 @@ class MipsService:
 
     def sub_service_change(
             self, key: str, group_id: str,
-            handler: Callable[[str, MipsServiceState, dict], asyncio.Future]
+            handler: Callable[[str, MipsServiceState, dict], Coroutine]
     ) -> None:
         if key is None or group_id is None or handler is None:
             raise MipsServiceError('invalid params')
