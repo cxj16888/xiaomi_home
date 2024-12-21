@@ -1341,8 +1341,9 @@ class MIoTLan:
         try:
             # Scan devices
             self.ping(if_name=None, target_ip='255.255.255.255')
-        except Exception:
+        except Exception as err: # pylint: disable=broad-exception-caught
             # Ignore any exceptions to avoid blocking the loop
+            _LOGGER.error('ping device error, %s', err)
             pass
         scan_time = self.__get_next_scan_time()
         self._scan_timer = self._internal_loop.call_later(
