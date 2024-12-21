@@ -10,30 +10,30 @@ hereby grants you a personal, limited, non-exclusive, non-transferable,
 non-sublicensable, and royalty-free license to reproduce, use, modify, and
 distribute the Licensed Work only for your use of Home Assistant for
 non-commercial purposes. For the avoidance of doubt, Xiaomi does not authorize
-you to use the Licensed Work for Any other purpose, including but not limited
+you to use the Licensed Work for any other purpose, including but not limited
 to use Licensed Work to develop applications (APP), Web services, and other
 forms of software.
 
 You may reproduce and distribute copies of the Licensed Work, with or without
 modifications, whether in source or object form, provided that you must give
-Any other recipients of the Licensed Work a copy of this License and retain all
+any other recipients of the Licensed Work a copy of this License and retain all
 copyright and disclaimers.
 
 Xiaomi provides the Licensed Work on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied, including, without
-limitation, Any warranties, undertakes, or conditions of TITLE, NO ERROR OR
+limitation, any warranties, undertakes, or conditions of TITLE, NO ERROR OR
 OMISSION, CONTINUITY, RELIABILITY, NON-INFRINGEMENT, MERCHANTABILITY, or
-FITNESS FOR A PARTICULAR PURPOSE. In Any event, you are solely responsible
-for Any direct, indirect, special, incidental, or consequential damages or
+FITNESS FOR A PARTICULAR PURPOSE. In any event, you are solely responsible
+for any direct, indirect, special, incidental, or consequential damages or
 losses arising from the use or inability to use the Licensed Work.
 
 Xiaomi reserves all rights not expressly granted to you in this License.
 Except for the rights expressly granted by Xiaomi under this License, Xiaomi
-does not authorize you in Any form to use the trademarks, copyrights, or other
+does not authorize you in any form to use the trademarks, copyrights, or other
 forms of intellectual property rights of Xiaomi and its affiliates, including,
 without limitation, without obtaining other written permission from Xiaomi, you
 shall not use "Xiaomi", "Mijia" and other words related to Xiaomi or words that
-may make the public associate with Xiaomi in Any form to publicize or promote
+may make the public associate with Xiaomi in any form to publicize or promote
 the software or hardware devices that use the Licensed Work.
 
 Xiaomi has the right to immediately terminate all your authorization under this
@@ -598,6 +598,7 @@ class MIoTLan:
         except Exception as err:  # pylint: disable=broad-exception-caught
             _LOGGER.error('load profile models error, %s', err)
             self._profile_models = {}
+        self._internal_loop = asyncio.new_event_loop()
         # All tasks meant for the internal loop should happen in this thread
         self._thread = threading.Thread(target=self.__internal_loop_thread)
         self._thread.name = 'miot_lan'
@@ -611,13 +612,11 @@ class MIoTLan:
 
     def __internal_loop_thread(self) -> None:
         _LOGGER.info('miot lan thread start')
-        self._internal_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self._internal_loop)
         self.__init_socket()
         self._scan_timer = self._internal_loop.call_later(
             int(3*random.random()), self.__scan_devices)
         self._internal_loop.run_forever()
-        self._internal_loop.close()
         _LOGGER.info('miot lan thread exit')
 
     async def deinit_async(self) -> None:
@@ -627,6 +626,7 @@ class MIoTLan:
         self._init_done = False
         self._internal_loop.call_soon_threadsafe(self.__deinit)
         self._thread.join()
+        self._internal_loop.close()
 
         self._profile_models = {}
         self._lan_devices = {}
