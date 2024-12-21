@@ -612,7 +612,6 @@ class MIoTLan:
 
     def __internal_loop_thread(self) -> None:
         _LOGGER.info('miot lan thread start')
-        asyncio.set_event_loop(self._internal_loop)
         self.__init_socket()
         self._scan_timer = self._internal_loop.call_later(
             int(3*random.random()), self.__scan_devices)
