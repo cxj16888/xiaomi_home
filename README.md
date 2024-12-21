@@ -32,6 +32,8 @@ git checkout v1.0.0
 
 ### Method 2: [HACS](https://hacs.xyz/)
 
+[![Install repository](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=XiaoMi&repository=ha_xiaomi_home&category=integration)
+
 HACS > Overflow Menu > Custom repositories > Repository: https://github.com/XiaoMi/ha_xiaomi_home.git & Category: Integration > ADD
 
 > Xiaomi Home has not been added to the HACS store as a default yet. It's coming soon.
