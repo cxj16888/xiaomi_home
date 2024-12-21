@@ -512,7 +512,8 @@ class MIoTLan:
         self._net_ifs = set(net_ifs)
         self._network = network
         self._network.sub_network_info(
-            key='miot_lan', handler=self.__on_network_info_change_external_async)
+            key='miot_lan',
+            handler=self.__on_network_info_change_external_async)
         self._mips_service = mips_service
         self._mips_service.sub_service_change(
             key='miot_lan', group_id='*',
@@ -1258,7 +1259,8 @@ class MIoTLan:
             _LOGGER.warning('invalid message, no id, %s, %s', did, msg)
             return
         # Reply
-        req: MIoTLanRequestData | None = self._pending_requests.pop(msg['id'], None)
+        req: MIoTLanRequestData | None = \
+            self._pending_requests.pop(msg['id'], None)
         if req:
             if req.timeout:
                 req.timeout.cancel()
@@ -1339,7 +1341,7 @@ class MIoTLan:
         try:
             # Scan devices
             self.ping(if_name=None, target_ip='255.255.255.255')
-        except:
+        except Exception:
             # Ignore any exceptions to avoid blocking the loop
             pass
         scan_time = self.__get_next_scan_time()
