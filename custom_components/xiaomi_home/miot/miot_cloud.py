@@ -96,9 +96,6 @@ class MIoTOauthClient:
             self._oauth_host = f'{cloud_server}.{DEFAULT_OAUTH2_API_HOST}'
         self._session = aiohttp.ClientSession()
 
-    def __del__(self):
-        self._main_loop.create_task(self._session.close())
-
     def set_redirect_url(self, redirect_url: str) -> None:
         if not isinstance(redirect_url, str) or redirect_url.strip() == '':
             raise MIoTOauthError('invalid redirect_url')
@@ -251,9 +248,6 @@ class MIoTHttpClient:
             access_token=access_token)
 
         self._session = aiohttp.ClientSession()
-
-    def __del__(self):
-        self._main_loop.create_task(self._session.close())
 
     def update_http_header(
         self, cloud_server: Optional[str] = None,
