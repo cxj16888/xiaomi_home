@@ -23,14 +23,29 @@
                 "description": "Clique em AVANÇAR para tentar novamente."
             },
             "homes_select": {
-                "title": "Selecione a Casa e os Dispositivos",
-                "description": "## Instruções de Uso\r\n### Modo de controle\r\n- Auto: Quando houver um gateway central Xiaomi disponível na rede local, o Home Assistant priorizará o envio de comandos de controle do dispositivo através do gateway central, obtendo assim controle local. Se não houver gateway central na rede local, ele tentará enviar comandos através da função de controle LAN da Xiaomi. Somente quando as condições de controle local acima não forem atendidas, os comandos serão enviados pela nuvem.\r\n- Nuvem: Todos os comandos de controle são enviados através da nuvem.\r\n### Importar dispositivos da casa\r\nA integração adicionará dispositivos das casas selecionadas.\n### Modo de sincronização do nome do cômodo\r\nAo importar dispositivos do aplicativo Xiaomi Home para o Home Assistant, a convenção de nomeação da área onde o dispositivo é adicionado é a seguinte. Observe que o processo de sincronização do dispositivo não altera as configurações de casa ou cômodo no aplicativo Xiaomi Home.\r\n- Não sincronizar: O dispositivo não será adicionado a nenhuma área.\r\n- Outras opções: O dispositivo será adicionado a uma área nomeada de acordo com o nome da casa e/ou do cômodo que já existem no aplicativo Xiaomi Home.\r\n### Modo de depuração para ação\r\nPara as ações definidas no MIoT-Spec-V2 do dispositivo, será criada uma entidade de texto juntamente com uma entidade de notificação, nas quais você poderá enviar comandos de controle ao dispositivo para fins de depuração.\r\n### Ocultar entidades criadas não padrão\r\nOculta as entidades geradas a partir de instâncias não padrão do MIoT-Spec-V2, cujos nomes começam com \"*\".\r\n\r\n&emsp;\r\n### Olá {nick_name}, selecione o modo de controle da integração e a casa onde estão os dispositivos que você deseja importar.",
+                "title": "Selecionar Família e Dispositivo",
+                "description": "## Introdução\r\n### Importar a Família do Dispositivo\r\nA integração adicionará dispositivos da família selecionada.\r\n### Modo de Sincronização do Nome da Sala\r\nAo sincronizar dispositivos do APP Mi Home para o Home Assistant, a nomeação da área no Home Assistant seguirá as regras abaixo. Observe que o processo de sincronização não alterará as configurações de família e sala no APP Mi Home.\r\n- Não sincronizar: O dispositivo não será adicionado a nenhuma área.\r\n- Outras opções: A área à qual o dispositivo é adicionado será nomeada de acordo com o nome da família ou da sala no APP Mi Home.\r\n### Configurações Avançadas\r\nMostrar configurações avançadas para modificar as opções de configuração profissional da integração.\r\n\r\n&emsp;\r\n### {nick_name} Olá! Por favor, selecione a família à qual você deseja adicionar o dispositivo.",
                 "data": {
-                    "ctrl_mode": "Modo de controle",
-                    "home_infos": "Importar dispositivos da casa",
-                    "area_name_rule": "Modo de sincronização do nome do cômodo",
-                    "action_debug": "Modo de depuração para ação",
-                    "hide_non_standard_entities": "Ocultar entidades não padrão criadas"
+                    "home_infos": "Importar a Família do Dispositivo",
+                    "area_name_rule": "Modo de Sincronização do Nome da Sala",
+                    "advanced_options": "Configurações Avançadas"
+                }
+            },
+            "advanced_options": {
+                "title": "Configurações Avançadas",
+                "description": "## Introdução\r\n### Mantenha as configurações padrão, a menos que você entenda completamente o significado das seguintes opções.\r\n### Modo de Controle\r\n- Automático: Quando houver um hub Xiaomi disponível na rede local, o Home Assistant priorizará o envio de comandos de controle através do hub para obter controle local. Se não houver hub, tentará enviar comandos de controle pelo protocolo Xiaomi OT. Somente se essas condições de controle local não forem atendidas, os comandos serão enviados através da nuvem.\r\n- Nuvem: Os comandos de controle são enviados exclusivamente pela nuvem.\r\n### Filtragem de Dispositivos\r\nFiltre dispositivos indesejados por família.\r\n### Modo de Depuração de Ações\r\nPara métodos definidos por dispositivos MIoT-Spec-V2, além de gerar uma entidade de notificação, será criada uma entidade de entrada de texto para que você possa enviar comandos de controle ao dispositivo durante a depuração.\r\n### Ocultar Entidades Geradas Não Padrão\r\nOculte entidades geradas por instâncias não padrão do MIoT-Spec-V2 cujos nomes começam com \"*\".",
+                "data": {
+                    "ctrl_mode": "Modo de Controle",
+                    "action_debug": "Modo de Depuração de Ações",
+                    "hide_non_standard_entities": "Ocultar Entidades Geradas Não Padrão",
+                    "devices_filter": "Filtragem de Dispositivos"
+                }
+            },
+            "devices_filter": {
+                "title": "Filtragem de Dispositivos",
+                "description": "## Introdução\r\nFiltre dispositivos indesejados por família.",
+                "data": {
+                    "filter_mode": "Modo de Filtro"
                 }
             }
         },

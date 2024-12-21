@@ -479,16 +479,11 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if not home_selected:
                 return await self.display_homes_select_form(
                     'no_family_selected')
-            self._ctrl_mode = user_input.get('ctrl_mode')
             for home_id, home_info in self._home_info_buffer[
                     'homes']['home_list'].items():
                 if home_id in home_selected:
                     self._home_selected[home_id] = home_info
             self._area_name_rule = user_input.get('area_name_rule')
-            self._action_debug = user_input.get(
-                'action_debug', self._action_debug)
-            self._hide_non_standard_entities = user_input.get(
-                'hide_non_standard_entities', self._hide_non_standard_entities)
             # Storage device list
             devices_list: dict[str, dict] = {
                 did: dev_info
@@ -513,26 +508,9 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         'auth_info': self._auth_info
                     })):
                 raise MIoTError('miot_storage.update_user_config_async error')
-            return self.async_create_entry(
-                title=(
-                    f'{self._nick_name}: {self._uid} '
-                    f'[{CLOUD_SERVERS[self._cloud_server]}]'),
-                data={
-                    'virtual_did': self._virtual_did,
-                    'uuid': self._uuid,
-                    'integration_language': self._integration_language,
-                    'storage_path': self._storage_path,
-                    'uid': self._uid,
-                    'nick_name': self._nick_name,
-                    'cloud_server': self._cloud_server,
-                    'oauth_redirect_url': self._oauth_redirect_url,
-                    'ctrl_mode': self._ctrl_mode,
-                    'home_selected': self._home_selected,
-                    'area_name_rule': self._area_name_rule,
-                    'action_debug': self._action_debug,
-                    'hide_non_standard_entities':
-                        self._hide_non_standard_entities,
-                })
+            if user_input.get('advanced_options', False):
+                return await self.async_step_advanced_options()
+            return await self.config_flow_done()
         except Exception as err:
             _LOGGER.error(
                 'async_step_homes_select, %s, %s',
@@ -547,15 +525,10 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id='homes_select',
             data_schema=vol.Schema({
-                vol.Required('ctrl_mode', default=DEFAULT_CTRL_MODE): vol.In(
-                    self._miot_i18n.translate(key='config.control_mode')),
                 vol.Required('home_infos'): cv.multi_select(self._home_list),
                 vol.Required('area_name_rule', default='room'): vol.In(
                     self._miot_i18n.translate(key='config.room_name_rule')),
-                vol.Required('action_debug', default=self._action_debug): bool,
-                vol.Required(
-                    'hide_non_standard_entities',
-                    default=self._hide_non_standard_entities): bool,
+                vol.Required('advanced_options', default=False): bool,
             }),
             errors={'base': reason},
             description_placeholders={
@@ -563,6 +536,68 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             },
             last_step=False,
         )
+
+    async def async_step_advanced_options(self, user_input: dict = None):
+        if user_input:
+            self._ctrl_mode = user_input.get('ctrl_mode', self._ctrl_mode)
+            self._action_debug = user_input.get(
+                'action_debug', self._action_debug)
+            self._hide_non_standard_entities = user_input.get(
+                'hide_non_standard_entities', self._hide_non_standard_entities)
+            # Device filter
+            if user_input.get('devices_filter', False):
+                return await self.async_step_devices_filter()
+            return await self.config_flow_done()
+        return self.async_show_form(
+            step_id='advanced_options',
+            data_schema=vol.Schema({
+                vol.Required('ctrl_mode', default=DEFAULT_CTRL_MODE): vol.In(
+                    self._miot_i18n.translate(key='config.control_mode')),
+                vol.Required('action_debug', default=self._action_debug): bool,
+                vol.Required(
+                    'hide_non_standard_entities',
+                    default=self._hide_non_standard_entities): bool,
+                vol.Required('devices_filter', default=False): bool,
+            }),
+            last_step=False,
+        )
+
+    async def async_step_devices_filter(self, user_input: dict = None):
+        if user_input:
+            return await self.config_flow_done()
+
+        return self.async_show_form(
+            step_id='devices_filter',
+            data_schema=vol.Schema({
+                vol.Required('filter_mode', default='include'): vol.In(
+                    self._miot_i18n.translate(key='config.filter_mode')),
+                vol.Required('filter_mode', default='include'): vol.In(
+                    self._miot_i18n.translate(key='config.filter_mode'))
+            }),
+            last_step=False,
+        )
+
+    async def config_flow_done(self):
+        return self.async_create_entry(
+            title=(
+                f'{self._nick_name}: {self._uid} '
+                f'[{CLOUD_SERVERS[self._cloud_server]}]'),
+            data={
+                'virtual_did': self._virtual_did,
+                'uuid': self._uuid,
+                'integration_language': self._integration_language,
+                'storage_path': self._storage_path,
+                'uid': self._uid,
+                'nick_name': self._nick_name,
+                'cloud_server': self._cloud_server,
+                'oauth_redirect_url': self._oauth_redirect_url,
+                'ctrl_mode': self._ctrl_mode,
+                'home_selected': self._home_selected,
+                'area_name_rule': self._area_name_rule,
+                'action_debug': self._action_debug,
+                'hide_non_standard_entities':
+                self._hide_non_standard_entities,
+            })
 
     @staticmethod
     @callback

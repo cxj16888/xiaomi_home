@@ -23,14 +23,29 @@
                 "description": "Klik OP VOLGENDE om het opnieuw te proberen."
             },
             "homes_select": {
-                "title": "Selecteer Huis en Apparaten",
-                "description": "## Gebruiksinstructies\r\n### Controlemodus\r\n- Auto: Wanneer er een beschikbare Xiaomi centrale hubgateway in het lokale netwerk is, geeft Home Assistant de voorkeur aan het verzenden van apparaatbedieningscommando's via de centrale hubgateway om lokale controle te bereiken. Als er geen centrale hubgateway in het lokale netwerk is, zal het proberen bedieningscommando's te verzenden via de Xiaomi LAN-controlefunctie. Alleen wanneer de bovenstaande lokale controlevoorwaarden niet zijn vervuld, worden de apparaatbedieningscommando's via de cloud verzonden.\r\n- Cloud: Alle bedieningscommando's worden via de cloud verzonden.\r\n### Apparaten importeren vanuit huis\r\nDe integratie voegt apparaten toe van de geselecteerde huizen.\n### Ruimtenaamsynchronisatiemodus\nBij het importeren van apparaten vanuit de Xiaomi Home APP naar Home Assistant is de naamgevingsconventie van het gebied waarin het apparaat wordt toegevoegd als volgt. Opmerking: het synchronisatieproces van het apparaat verandert de huis- of ruimte-instellingen in de Xiaomi Home APP niet.\r\n- Niet synchroniseren: Het apparaat wordt aan geen enkel gebied toegevoegd.\r\n- Andere opties: Het apparaat wordt toegevoegd aan een gebied dat is genoemd naar de huis- en/of ruimtenamen die al bestaan in de Xiaomi Home APP.\r\n### Debugmodus voor actie\r\nVoor de actie gedefinieerd in MIoT-Spec-V2 van het apparaat, wordt er een Tekstentiteit samen met een Notificatie-entiteit aangemaakt, waarin u bedieningscommando's naar het apparaat kunt sturen voor debugging.\r\n### Verberg niet-standaard gemaakte entiteiten\r\nVerberg de entiteiten die zijn gegenereerd vanuit niet-standaard MIoT-Spec-V2-instanties, waarvan de namen beginnen met \"*\".\r\n\r\n&emsp;\r\n### Hallo {nick_name}, selecteer alstublieft de integratie controlemethodiek en het huis waar het apparaat dat u wilt importeren zich bevindt.",
+                "title": "Selecteer Familie en Apparaat",
+                "description": "## Inleiding\r\n### Importeer de familie van het apparaat\r\nDe integratie voegt apparaten toe uit de geselecteerde familie.\r\n### Kamernaam Synchronisatiemodus\r\nBij het synchroniseren van apparaten van de Mi Home-app naar Home Assistant, wordt de naam van het gebied in Home Assistant volgens de volgende regels genoemd. Houd er rekening mee dat het synchronisatieproces de instellingen van familie en kamer in de Mi Home-app niet zal wijzigen.\r\n- Niet synchroniseren: Het apparaat wordt niet aan een gebied toegevoegd.\r\n- Andere opties: Het gebied waaraan het apparaat wordt toegevoegd, wordt genoemd naar de familie- of kamernaam in de Mi Home-app.\r\n### Geavanceerde instellingen\r\nToon geavanceerde instellingen om de professionele configuratie-opties van de integratie te wijzigen.\r\n\r\n&emsp;\r\n### {nick_name} Hallo! Selecteer de familie waaraan u het apparaat wilt toevoegen.",
                 "data": {
-                    "ctrl_mode": "Controlemodus",
-                    "home_infos": "Importeer apparaten uit huis",
-                    "area_name_rule": "Ruimtenaamsynchronisatiemodus",
-                    "action_debug": "Debugmodus voor actie",
-                    "hide_non_standard_entities": "Verberg niet-standaard gemaakte entiteiten"
+                    "home_infos": "Importeer de familie van het apparaat",
+                    "area_name_rule": "Kamernaam Synchronisatiemodus",
+                    "advanced_options": "Geavanceerde instellingen"
+                }
+            },
+            "advanced_options": {
+                "title": "Geavanceerde Instellingen",
+                "description": "## Inleiding\r\n### Houd de standaardinstellingen aan, tenzij u de betekenis van de volgende opties volledig begrijpt.\r\n### Besturingsmodus\r\n- Automatisch: Wanneer er een beschikbare Xiaomi-hub in het lokale netwerk is, zal Home Assistant voorrang geven aan het verzenden van besturingsopdrachten via de hub voor lokale besturing. Als er geen hub beschikbaar is, zal het proberen besturingsopdrachten te verzenden via het Xiaomi OT-protocol. Alleen als aan deze lokale besturingsvoorwaarden niet wordt voldaan, worden de opdrachten via de cloud verzonden.\r\n- Cloud: Besturingsopdrachten worden uitsluitend via de cloud verzonden.\r\n### Apparaatfiltering\r\nFilter ongewenste apparaten per familie.\r\n### Actie-debugmodus\r\nVoor methoden gedefinieerd door MIoT-Spec-V2-apparaten wordt, naast een meldingsentiteit, ook een tekstinvoerentiteit gemaakt waarmee u tijdens het debuggen besturingsopdrachten naar het apparaat kunt sturen.\r\n### Niet-standaard entiteiten verbergen\r\nVerberg entiteiten die door niet-standaard MIoT-Spec-V2-instanties worden gegenereerd en waarvan de naam begint met \"*\".",
+                "data": {
+                    "ctrl_mode": "Besturingsmodus",
+                    "action_debug": "Actie-debugmodus",
+                    "hide_non_standard_entities": "Niet-standaard entiteiten verbergen",
+                    "devices_filter": "Apparaatfiltering"
+                }
+            },
+            "devices_filter": {
+                "title": "Apparaatfiltering",
+                "description": "## Inleiding\r\nFilter ongewenste apparaten per familie.",
+                "data": {
+                    "filter_mode": "Filtermodus"
                 }
             }
         },

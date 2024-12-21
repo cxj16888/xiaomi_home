@@ -23,14 +23,29 @@
                 "description": "Haga clic en \"Siguiente\" para volver a intentarlo"
             },
             "homes_select": {
-                "title": "Seleccionar hogares y dispositivos",
-                "description": "## Instrucciones de uso\r\n### Modo de control\r\n- Automático: Cuando hay un gateway central de Xiaomi disponible en la red local, Home Assistant priorizará el envío de comandos de control de dispositivos a través del gateway central para lograr un control localizado. Si no hay un gateway central en la red local, intentará enviar comandos de control a través del protocolo Xiaomi OT para lograr un control localizado. Solo cuando no se cumplan las condiciones anteriores de control localizado, los comandos de control del dispositivo se enviarán a través de la nube.\r\n- Nube: Los comandos de control solo se envían a través de la nube.\r\n### Hogares de dispositivos importados\r\nLa integración agregará los dispositivos en los hogares seleccionados.\r\n### Modo de sincronización del nombre de la habitación\r\nCuando se sincronizan los dispositivos desde la aplicación Xiaomi Home a Home Assistant, los nombres de las áreas donde se encuentran los dispositivos en Home Assistant seguirán las reglas de nomenclatura a continuación. Tenga en cuenta que el proceso de sincronización de dispositivos no cambiará la configuración de hogares y habitaciones en la aplicación Xiaomi Home.\r\n- Sin sincronización: el dispositivo no se agregará a ninguna área.\r\n- Otras opciones: la zona donde se agrega el dispositivo tendrá el mismo nombre que el hogar o la habitación en la aplicación Xiaomi Home.\r\n### Modo de depuración de Action\r\nPara los métodos definidos por MIoT-Spec-V2, además de generar una entidad de notificación, también se generará una entidad de cuadro de entrada de texto que se puede utilizar para enviar comandos de control al dispositivo durante la depuración.\r\n### Ocultar entidades generadas no estándar\r\nOcultar las entidades generadas por la instancia no estándar MIoT-Spec-V2 que comienzan con \"*\".\r\n\r\n&emsp;\r\n### ¡Hola, {nick_name}! Seleccione el modo de control de integración y el hogar donde se encuentran los dispositivos que desea agregar.",
+                "title": "Seleccionar familia y dispositivo",
+                "description": "## Introducción\r\n### Importar la familia del dispositivo\r\nLa integración añadirá dispositivos de la familia seleccionada.\r\n### Modo de sincronización del nombre de la habitación\r\nAl sincronizar dispositivos desde la APP Mi Home a Home Assistant, el nombre del área en Home Assistant seguirá las siguientes reglas. Tenga en cuenta que el proceso de sincronización no cambiará la configuración de la familia y la habitación en la APP Mi Home.\r\n- No sincronizar: El dispositivo no se añadirá a ninguna área.\r\n- Otras opciones: El área a la que se añade el dispositivo se nombrará según el nombre de la familia o la habitación en la APP Mi Home.\r\n### Configuración avanzada\r\nMostrar configuración avanzada para modificar las opciones de configuración profesional de la integración.\r\n\r\n&emsp;\r\n### {nick_name} ¡Hola! Por favor, seleccione la familia a la que desea añadir el dispositivo.",
                 "data": {
-                    "ctrl_mode": "Modo de control",
-                    "home_infos": "Hogares de dispositivos importados",
+                    "home_infos": "Importar la familia del dispositivo",
                     "area_name_rule": "Modo de sincronización del nombre de la habitación",
-                    "action_debug": "Modo de depuración de Action",
-                    "hide_non_standard_entities": "Ocultar entidades generadas no estándar"
+                    "advanced_options": "Configuración avanzada"
+                }
+            },
+            "advanced_options": {
+                "title": "Opciones Avanzadas",
+                "description": "## Introducción\r\n### Mantenga la configuración predeterminada a menos que conozca completamente el significado de las siguientes opciones.\r\n### Modo de Control\r\n- Automático: Cuando haya un hub Xiaomi disponible en la red local, Home Assistant priorizará el envío de comandos de control a través del hub para lograr un control local. Si no hay un hub, intentará enviar los comandos a través del protocolo Xiaomi OT. Solo si no se cumplen esas condiciones de control local, los comandos se enviarán a través de la nube.\r\n- Nube: Los comandos se envían exclusivamente a través de la nube.\r\n### Filtrado de Dispositivos\r\nFiltre dispositivos no deseados por familia.\r\n### Modo de Depuración de Acciones\r\nPara los métodos definidos por dispositivos MIoT-Spec-V2, además de generar una entidad de notificación, se creará una entidad de entrada de texto para que pueda enviar comandos de control durante la depuración.\r\n### Ocultar Entidades Generadas No Estándar\r\nOculte entidades generadas por instancias no estándar de MIoT-Spec-V2 cuyos nombres comiencen con \"*\".",
+                "data": {
+                    "ctrl_mode": "Modo de Control",
+                    "action_debug": "Modo de Depuración de Acciones",
+                    "hide_non_standard_entities": "Ocultar Entidades Generadas No Estándar",
+                    "devices_filter": "Filtrado de Dispositivos"
+                }
+            },
+            "devices_filter": {
+                "title": "Filtrado de Dispositivos",
+                "description": "## Introducción\r\nFiltre dispositivos no deseados por familia.",
+                "data": {
+                    "filter_mode": "Modo de Filtrado"
                 }
             }
         },

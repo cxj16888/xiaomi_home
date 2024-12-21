@@ -8,6 +8,10 @@
             "auto": "Automatisch",
             "cloud": "Cloud"
         },
+        "filter_mode": {
+            "include": "Inclusief",
+            "exclude": "Uitsluiten"
+        },
         "room_name_rule": {
             "none": "Niet synchroniseren",
             "home_room": "Huisnaam en Kamernaam (Xiaomi Home Slaapkamer)",

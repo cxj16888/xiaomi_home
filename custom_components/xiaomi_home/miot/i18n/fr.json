@@ -8,6 +8,10 @@
             "auto": "automatique",
             "cloud": "cloud"
         },
+        "filter_mode": {
+            "include": "inclure",
+            "exclude": "exclure"
+        },
         "room_name_rule": {
             "none": "ne pas synchroniser",
             "home_room": "nom de la maison et nom de la pièce (Xiaomi Home Chambre)",

@@ -8,6 +8,10 @@
             "auto": "自動",
             "cloud": "クラウド"
         },
+        "filter_mode": {
+            "include": "含む",
+            "exclude": "除外"
+        },
         "room_name_rule": {
             "none": "同期しない",
             "home_room": "家の名前と部屋の名前 （Xiaomi Home 寝室）",

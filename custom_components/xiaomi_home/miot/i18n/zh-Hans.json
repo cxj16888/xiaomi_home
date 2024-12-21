@@ -8,6 +8,10 @@
             "auto": "自动",
             "cloud": "云端"
         },
+        "filter_mode": {
+            "include": "包含",
+            "exclude": "排除"
+        },
         "room_name_rule": {
             "none": "不同步",
             "home_room": "家庭名 和 房间名 （米家 卧室）",
