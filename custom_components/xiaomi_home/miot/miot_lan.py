@@ -76,51 +76,51 @@ _LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
-class MIoTLanGetDevListData:
+class _MIoTLanGetDevListData:
     handler: Callable[[dict, Any], None]
     handler_ctx: Any
     timeout_ms: int
 
 
 @dataclass
-class MIoTLanUnregisterBroadcastData:
+class _MIoTLanUnregisterBroadcastData:
     key: str
 
 
 @dataclass
-class MIoTLanRegisterBroadcastData:
+class _MIoTLanRegisterBroadcastData:
     key: str
     handler: Callable[[dict, Any], None]
     handler_ctx: Any
 
 
 @dataclass
-class MIoTLanUnsubDeviceData:
+class _MIoTLanUnsubDeviceData:
     key: str
 
 
 @dataclass
-class MIoTLanSubDeviceData:
+class _MIoTLanSubDeviceData:
     key: str
     handler: Callable[[str, dict, Any], Coroutine]
     handler_ctx: Any
 
 
 @dataclass
-class MIoTLanNetworkUpdateData:
+class _MIoTLanNetworkUpdateData:
     status: InterfaceStatus
     if_name: str
 
 
 @dataclass
-class MIoTLanRequestData:
+class _MIoTLanRequestData:
     msg_id: int
     handler: Optional[Callable[[dict, Any], None]]
     handler_ctx: Any
     timeout: Optional[asyncio.TimerHandle]
 
 
-class MIoTLanDeviceState(Enum):
+class _MIoTLanDeviceState(Enum):
     FRESH = 0
     PING1 = auto()
     PING2 = auto()
@@ -128,7 +128,7 @@ class MIoTLanDeviceState(Enum):
     DEAD = auto()
 
 
-class MIoTLanDevice:
+class _MIoTLanDevice:
     """MIoT lan device."""
     # pylint: disable=unused-argument
     OT_HEADER: int = 0x2131
@@ -154,7 +154,7 @@ class MIoTLanDevice:
     _manager: 'MIoTLan'
     _if_name: Optional[str]
     _sub_locked: bool
-    _state: MIoTLanDeviceState
+    _state: _MIoTLanDeviceState
     _online: bool
     _online_offline_history: list[dict[str, Any]]
     _online_offline_timer: Optional[asyncio.TimerHandle]
@@ -185,14 +185,14 @@ class MIoTLanDevice:
         self.supported_wildcard_sub = False
         self._if_name = None
         self._sub_locked = False
-        self._state = MIoTLanDeviceState.DEAD
+        self._state = _MIoTLanDeviceState.DEAD
         self._online = False
         self._online_offline_history = []
         self._online_offline_timer = None
 
         def ka_init_handler() -> None:
             self._ka_internal = self.KA_INTERVAL_MIN
-            self.__update_keep_alive(state=MIoTLanDeviceState.DEAD)
+            self.__update_keep_alive(state=_MIoTLanDeviceState.DEAD)
         self._ka_timer = self._manager.internal_loop.call_later(
             randomize_float(self.CONSTRUCT_STATE_PENDING, 0.5),
             ka_init_handler,)
@@ -204,7 +204,7 @@ class MIoTLanDevice:
             self._if_name = if_name
             _LOGGER.info(
                 'device if_name change, %s, %s', self._if_name, self.did)
-        self.__update_keep_alive(state=MIoTLanDeviceState.FRESH)
+        self.__update_keep_alive(state=_MIoTLanDeviceState.FRESH)
 
     @property
     def online(self) -> bool:
@@ -352,31 +352,31 @@ class MIoTLanDevice:
             return
         _LOGGER.info('unsubscribe success, %s, %s', self._if_name, self.did)
 
-    def __update_keep_alive(self, state: MIoTLanDeviceState) -> None:
-        last_state: MIoTLanDeviceState = self._state
+    def __update_keep_alive(self, state: _MIoTLanDeviceState) -> None:
+        last_state: _MIoTLanDeviceState = self._state
         self._state = state
-        if self._state != MIoTLanDeviceState.FRESH:
+        if self._state != _MIoTLanDeviceState.FRESH:
             _LOGGER.debug('device status, %s, %s', self.did, self._state)
         if self._ka_timer:
             self._ka_timer.cancel()
             self._ka_timer = None
         match state:
-            case MIoTLanDeviceState.FRESH:
-                if last_state == MIoTLanDeviceState.DEAD:
+            case _MIoTLanDeviceState.FRESH:
+                if last_state == _MIoTLanDeviceState.DEAD:
                     self._ka_internal = self.KA_INTERVAL_MIN
                     self.__change_online(True)
                 self._ka_timer = self._manager.internal_loop.call_later(
                     self.__get_next_ka_timeout(), self.__update_keep_alive,
-                    MIoTLanDeviceState.PING1)
+                    _MIoTLanDeviceState.PING1)
             case (
-                    MIoTLanDeviceState.PING1
-                    | MIoTLanDeviceState.PING2
-                    | MIoTLanDeviceState.PING3
+                    _MIoTLanDeviceState.PING1
+                    | _MIoTLanDeviceState.PING2
+                    | _MIoTLanDeviceState.PING3
             ):
                 # Set the timer first to avoid Any early returns
                 self._ka_timer = self._manager.internal_loop.call_later(
                     self.FAST_PING_INTERVAL, self.__update_keep_alive,
-                    MIoTLanDeviceState(state.value+1))
+                    _MIoTLanDeviceState(state.value+1))
                 # Fast ping
                 if self._if_name is None:
                     _LOGGER.error('if_name is Not set for device, %s', self.did)
@@ -385,8 +385,8 @@ class MIoTLanDevice:
                     _LOGGER.error('ip is Not set for device, %s', self.did)
                     return
                 self._manager.ping(if_name=self._if_name, target_ip=self.ip)
-            case MIoTLanDeviceState.DEAD:
-                if last_state == MIoTLanDeviceState.PING3:
+            case _MIoTLanDeviceState.DEAD:
+                if last_state == _MIoTLanDeviceState.PING3:
                     self._ka_internal = self.KA_INTERVAL_MIN
                     self.__change_online(False)
             case _:
@@ -451,7 +451,7 @@ class MIoTLan:
     _network: MIoTNetwork
     _mips_service: MipsService
     _enable_subscribe: bool
-    _lan_devices: dict[str, MIoTLanDevice]
+    _lan_devices: dict[str, _MIoTLanDevice]
     _virtual_did: str
     _probe_msg: bytes
     _write_buffer: bytearray
@@ -466,9 +466,9 @@ class MIoTLan:
     _scan_timer: Optional[asyncio.TimerHandle]
     _last_scan_interval: Optional[float]
     _msg_id_counter: int
-    _pending_requests: dict[int, MIoTLanRequestData]
+    _pending_requests: dict[int, _MIoTLanRequestData]
     _device_msg_matcher: MIoTMatcher
-    _device_state_sub_map: dict[str, MIoTLanSubDeviceData]
+    _device_state_sub_map: dict[str, _MIoTLanSubDeviceData]
     _reply_msg_buffer: dict[str, asyncio.TimerHandle]
 
     _lan_state_sub_map: dict[str, Callable[[bool], Coroutine]]
@@ -702,14 +702,14 @@ class MIoTLan:
     ) -> bool:
         self._internal_loop.call_soon_threadsafe(
             self.__sub_device_state,
-            MIoTLanSubDeviceData(
+            _MIoTLanSubDeviceData(
                 key=key, handler=handler, handler_ctx=handler_ctx))
         return True
 
     @final
     def unsub_device_state(self, key: str) -> bool:
         self._internal_loop.call_soon_threadsafe(
-            self.__unsub_device_state, MIoTLanUnsubDeviceData(key=key))
+            self.__unsub_device_state, _MIoTLanUnsubDeviceData(key=key))
         return True
 
     @final
@@ -728,7 +728,7 @@ class MIoTLan:
             f'{"#" if siid is None or piid is None else f"{siid}/{piid}"}')
         self._internal_loop.call_soon_threadsafe(
             self.__sub_broadcast,
-            MIoTLanRegisterBroadcastData(
+            _MIoTLanRegisterBroadcastData(
                 key=key, handler=handler, handler_ctx=handler_ctx))
         return True
 
@@ -746,7 +746,7 @@ class MIoTLan:
             f'{"#" if siid is None or piid is None else f"{siid}/{piid}"}')
         self._internal_loop.call_soon_threadsafe(
             self.__unsub_broadcast,
-            MIoTLanUnregisterBroadcastData(key=key))
+            _MIoTLanUnregisterBroadcastData(key=key))
         return True
 
     @final
@@ -765,7 +765,7 @@ class MIoTLan:
             f'{"#" if siid is None or eiid is None else f"{siid}/{eiid}"}')
         self._internal_loop.call_soon_threadsafe(
             self.__sub_broadcast,
-            MIoTLanRegisterBroadcastData(
+            _MIoTLanRegisterBroadcastData(
                 key=key, handler=handler, handler_ctx=handler_ctx))
         return True
 
@@ -783,7 +783,7 @@ class MIoTLan:
             f'{"#" if siid is None or eiid is None else f"{siid}/{eiid}"}')
         self._internal_loop.call_soon_threadsafe(
             self.__unsub_broadcast,
-            MIoTLanUnregisterBroadcastData(key=key))
+            _MIoTLanUnregisterBroadcastData(key=key))
         return True
 
     @final
@@ -865,7 +865,7 @@ class MIoTLan:
         fut: asyncio.Future = self._main_loop.create_future()
         self._internal_loop.call_soon_threadsafe(
             self.__get_dev_list,
-            MIoTLanGetDevListData(
+            _MIoTLanGetDevListData(
                 handler=get_device_list_handler,
                 handler_ctx=fut,
                 timeout_ms=timeout_ms))
@@ -908,7 +908,7 @@ class MIoTLan:
             return
         self._internal_loop.call_soon_threadsafe(
             self.__on_network_info_chnage,
-            MIoTLanNetworkUpdateData(status=status, if_name=info.name))
+            _MIoTLanNetworkUpdateData(status=status, if_name=info.name))
 
     async def __on_mips_service_change(
         self, group_id: str,  state: MipsServiceState, data: dict
@@ -940,7 +940,7 @@ class MIoTLan:
     ) -> None:
         if timeout_ms and not handler:
             raise ValueError('handler is required when timeout_ms is set')
-        device: MIoTLanDevice | None = self._lan_devices.get(did)
+        device: _MIoTLanDevice | None = self._lan_devices.get(did)
         if not device:
             raise ValueError('invalid device')
         if not device.cipher:
@@ -975,7 +975,7 @@ class MIoTLan:
         handler_ctx: Any = None,
         timeout_ms: Optional[int] = None
     ) -> None:
-        def request_timeout_handler(req_data: MIoTLanRequestData):
+        def request_timeout_handler(req_data: _MIoTLanRequestData):
             self._pending_requests.pop(req_data.msg_id, None)
             if req_data and req_data.handler:
                 req_data.handler({
@@ -984,7 +984,7 @@ class MIoTLan:
                     req_data.handler_ctx)
 
         timer: Optional[asyncio.TimerHandle] = None
-        request_data = MIoTLanRequestData(
+        request_data = _MIoTLanRequestData(
             msg_id=msg_id,
             handler=handler,
             handler_ctx=handler_ctx,
@@ -1032,22 +1032,22 @@ class MIoTLan:
                 'error': str(err)},
                 handler_ctx)
 
-    def __sub_device_state(self, data: MIoTLanSubDeviceData) -> None:
+    def __sub_device_state(self, data: _MIoTLanSubDeviceData) -> None:
         self._device_state_sub_map[data.key] = data
 
-    def __unsub_device_state(self, data: MIoTLanUnsubDeviceData) -> None:
+    def __unsub_device_state(self, data: _MIoTLanUnsubDeviceData) -> None:
         self._device_state_sub_map.pop(data.key, None)
 
-    def __sub_broadcast(self, data: MIoTLanRegisterBroadcastData) -> None:
+    def __sub_broadcast(self, data: _MIoTLanRegisterBroadcastData) -> None:
         self._device_msg_matcher[data.key] = data
         _LOGGER.debug('lan register broadcast, %s', data.key)
 
-    def __unsub_broadcast(self, data: MIoTLanUnregisterBroadcastData) -> None:
+    def __unsub_broadcast(self, data: _MIoTLanUnregisterBroadcastData) -> None:
         if self._device_msg_matcher.get(topic=data.key):
             del self._device_msg_matcher[data.key]
         _LOGGER.debug('lan unregister broadcast, %s', data.key)
 
-    def __get_dev_list(self, data: MIoTLanGetDevListData) -> None:
+    def __get_dev_list(self, data: _MIoTLanGetDevListData) -> None:
         dev_list = {
             device.did: {
                 'online': device.online,
@@ -1082,7 +1082,7 @@ class MIoTLan:
                     _LOGGER.error(
                         'invalid device token, %s, %s', did, info)
                     continue
-                self._lan_devices[did] = MIoTLanDevice(
+                self._lan_devices[did] = _MIoTLanDevice(
                     manager=self, did=did, token=info['token'],
                     ip=info.get('ip', None))
             else:
@@ -1095,7 +1095,7 @@ class MIoTLan:
                 continue
             lan_device.on_delete()
 
-    def __on_network_info_chnage(self, data: MIoTLanNetworkUpdateData) -> None:
+    def __on_network_info_chnage(self, data: _MIoTLanNetworkUpdateData) -> None:
         if data.status == InterfaceStatus.ADD:
             self._available_net_ifs.add(data.if_name)
             if data.if_name in self._net_ifs:
@@ -1207,7 +1207,7 @@ class MIoTLan:
             return
         # Keep alive message
         did: str = str(struct.unpack('>Q', data[4:12])[0])
-        device: MIoTLanDevice | None = self._lan_devices.get(did)
+        device: _MIoTLanDevice | None = self._lan_devices.get(did)
         if not device:
             return
         timestamp: int = struct.unpack('>I', data[12:16])[0]
@@ -1247,7 +1247,7 @@ class MIoTLan:
             _LOGGER.warning('invalid message, no id, %s, %s', did, msg)
             return
         # Reply
-        req: MIoTLanRequestData | None = \
+        req: _MIoTLanRequestData | None = \
             self._pending_requests.pop(msg['id'], None)
         if req:
             if req.timeout:
@@ -1274,7 +1274,7 @@ class MIoTLan:
                         'invalid message, no siid or piid, %s, %s', did, msg)
                     continue
                 key = f'{did}/p/{param["siid"]}/{param["piid"]}'
-                subs: list[MIoTLanRegisterBroadcastData] = list(
+                subs: list[_MIoTLanRegisterBroadcastData] = list(
                     self._device_msg_matcher.iter_match(key))
                 for sub in subs:
                     self._main_loop.call_soon_threadsafe(
@@ -1285,7 +1285,7 @@ class MIoTLan:
                 and 'eiid' in msg['params']
         ):
             key = f'{did}/e/{msg["params"]["siid"]}/{msg["params"]["eiid"]}'
-            subs: list[MIoTLanRegisterBroadcastData] = list(
+            subs: list[_MIoTLanRegisterBroadcastData] = list(
                 self._device_msg_matcher.iter_match(key))
             for sub in subs:
                 self._main_loop.call_soon_threadsafe(
