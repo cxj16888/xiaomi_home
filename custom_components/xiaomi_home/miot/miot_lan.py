@@ -491,6 +491,7 @@ class MIoTLan:
 
     _profile_models: dict[str, dict]
 
+    _init_lock: asyncio.Lock
     _init_done: bool
 
 # The following should be called from the main loop
@@ -547,6 +548,7 @@ class MIoTLan:
         self._lan_state_sub_map = {}
         self._lan_ctrl_vote_map = {}
 
+        self._init_lock = asyncio.Lock()
         self._init_done = False
 
         if (
@@ -571,44 +573,46 @@ class MIoTLan:
         return self._init_done
 
     async def init_async(self) -> None:
-        if self._init_done:
-            _LOGGER.info('miot lan already init')
-            return
-        if len(self._net_ifs) == 0:
-            _LOGGER.info('no net_ifs')
-            return
-        if not any(self._lan_ctrl_vote_map.values()):
-            _LOGGER.info('no vote for lan ctrl')
-            return
-        if len(self._mips_service.get_services()) > 0:
-            _LOGGER.info('central hub gateway service exist')
-            return
-        for if_name in list(self._network.network_info.keys()):
-            self._available_net_ifs.add(if_name)
-        if len(self._available_net_ifs) == 0:
-            _LOGGER.info('no available net_ifs')
-            return
-        if self._net_ifs.isdisjoint(self._available_net_ifs):
-            _LOGGER.info('no valid net_ifs')
-            return
-        try:
-            self._profile_models = await self._main_loop.run_in_executor(
-                None, load_yaml_file,
-                gen_absolute_path(self.PROFILE_MODELS_FILE))
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            _LOGGER.error('load profile models error, %s', err)
-            self._profile_models = {}
-        self._internal_loop = asyncio.new_event_loop()
-        # All tasks meant for the internal loop should happen in this thread
-        self._thread = threading.Thread(target=self.__internal_loop_thread)
-        self._thread.name = 'miot_lan'
-        self._thread.daemon = True
-        self._thread.start()
-        self._init_done = True
-        for handler in list(self._lan_state_sub_map.values()):
-            self._main_loop.create_task(handler(True))
-        _LOGGER.info(
-            'miot lan init, %s ,%s', self._net_ifs, self._available_net_ifs)
+        # Avoid race condition
+        async with self._init_lock:
+            if self._init_done:
+                _LOGGER.info('miot lan already init')
+                return
+            if len(self._net_ifs) == 0:
+                _LOGGER.info('no net_ifs')
+                return
+            if not any(self._lan_ctrl_vote_map.values()):
+                _LOGGER.info('no vote for lan ctrl')
+                return
+            if len(self._mips_service.get_services()) > 0:
+                _LOGGER.info('central hub gateway service exist')
+                return
+            for if_name in list(self._network.network_info.keys()):
+                self._available_net_ifs.add(if_name)
+            if len(self._available_net_ifs) == 0:
+                _LOGGER.info('no available net_ifs')
+                return
+            if self._net_ifs.isdisjoint(self._available_net_ifs):
+                _LOGGER.info('no valid net_ifs')
+                return
+            try:
+                self._profile_models = await self._main_loop.run_in_executor(
+                    None, load_yaml_file,
+                    gen_absolute_path(self.PROFILE_MODELS_FILE))
+            except Exception as err:  # pylint: disable=broad-exception-caught
+                _LOGGER.error('load profile models error, %s', err)
+                self._profile_models = {}
+            self._internal_loop = asyncio.new_event_loop()
+            # All tasks meant for the internal loop should happen in this thread
+            self._thread = threading.Thread(target=self.__internal_loop_thread)
+            self._thread.name = 'miot_lan'
+            self._thread.daemon = True
+            self._thread.start()
+            self._init_done = True
+            for handler in list(self._lan_state_sub_map.values()):
+                self._main_loop.create_task(handler(True))
+            _LOGGER.info(
+                'miot lan init, %s ,%s', self._net_ifs, self._available_net_ifs)
 
     def __internal_loop_thread(self) -> None:
         _LOGGER.info('miot lan thread start')
@@ -1347,7 +1351,7 @@ class MIoTLan:
         scan_time = self.__get_next_scan_time()
         self._scan_timer = self._internal_loop.call_later(
             scan_time, self.__scan_devices)
-        _LOGGER.debug('next scan time: %sms', scan_time)
+        _LOGGER.debug('next scan time: %ss', scan_time)
 
     def __get_next_scan_time(self) -> float:
         if not self._last_scan_interval:
