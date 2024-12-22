@@ -390,6 +390,8 @@ class MIoTClient:
         if self._show_devices_changed_notify_timer:
             self._show_devices_changed_notify_timer.cancel()
             self._show_devices_changed_notify_timer = None
+        await self._oauth.deinit_async()
+        await self._http.deinit_async()
         # Remove notify
         self._persistence_notify(
             self.__gen_notify_key('dev_list_changed'), None, None)
