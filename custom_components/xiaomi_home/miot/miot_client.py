@@ -239,14 +239,14 @@ class MIoTClient:
             # Integration need to be add again
             raise MIoTClientError('load_user_config_async error')
         _LOGGER.debug('user config, %s', json.dumps(self._user_config))
-        # Load cache device list
-        await self.__load_cache_device_async()
         # MIoT i18n client
         self._i18n = MIoTI18n(
             lang=self._entry_data.get(
                 'integration_language', DEFAULT_INTEGRATION_LANGUAGE),
             loop=self._main_loop)
         await self._i18n.init_async()
+        # Load cache device list
+        await self.__load_cache_device_async()
         # MIoT oauth client instance
         self._oauth = MIoTOauthClient(
             client_id=OAUTH2_CLIENT_ID,
