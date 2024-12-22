@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "dispositivos",
-            "found_central_gateway": ", encontrou a central de gateway local"
+            "found_central_gateway": ", encontrou a central de gateway local",
+            "without_room": "Sem quarto atribuído"
         },
         "control_mode": {
             "auto": "Automático",
             "cloud": "Nuvem"
         },
         "filter_mode": {
-            "include": "Incluir",
-            "exclude": "Excluir"
+            "exclude": "Excluir",
+            "include": "Incluir"
         },
         "room_name_rule": {
             "none": "Não sincronizar",

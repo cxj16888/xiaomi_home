@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "устройства",
-            "found_central_gateway": ", найден локальный центральный шлюз"
+            "found_central_gateway": ", найден локальный центральный шлюз",
+            "without_room": "без комнаты"
         },
         "control_mode": {
             "auto": "автоматический",
             "cloud": "облако"
         },
         "filter_mode": {
-            "include": "включить",
-            "exclude": "исключить"
+            "exclude": "исключить",
+            "include": "включить"
         },
         "room_name_rule": {
             "none": "не синхронизировать",

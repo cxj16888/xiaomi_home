@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "デバイス",
-            "found_central_gateway": "、ローカル中央ゲートウェイが見つかりました"
+            "found_central_gateway": "、ローカル中央ゲートウェイが見つかりました",
+            "without_room": "部屋が割り当てられていません"
         },
         "control_mode": {
             "auto": "自動",
             "cloud": "クラウド"
         },
         "filter_mode": {
-            "include": "含む",
-            "exclude": "除外"
+            "exclude": "除外",
+            "include": "含む"
         },
         "room_name_rule": {
             "none": "同期しない",

@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "個設備",
-            "found_central_gateway": "，發現本地中樞網關"
+            "found_central_gateway": "，發現本地中樞網關",
+            "without_room": "未分配房間"
         },
         "control_mode": {
             "auto": "自動",
             "cloud": "雲端"
         },
         "filter_mode": {
-            "include": "包含",
-            "exclude": "排除"
+            "exclude": "排除",
+            "include": "包含"
         },
         "room_name_rule": {
             "none": "不同步",

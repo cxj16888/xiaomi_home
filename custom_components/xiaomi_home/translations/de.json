@@ -35,10 +35,10 @@
                 "title": "Erweiterte Einstellungen",
                 "description": "## Einführung\r\n### Behalten Sie die Standardeinstellungen bei, es sei denn, Sie verstehen die folgenden Optionen vollständig.\r\n### Steuerungsmodus\r\n- Automatisch: Wenn ein verfügbarer Xiaomi-Hub im lokalen Netzwerk vorhanden ist, priorisiert Home Assistant das Senden von Steuerbefehlen über den Hub, um eine lokale Steuerung zu ermöglichen. Wenn kein Hub vorhanden ist, wird versucht, Steuerbefehle über das Xiaomi-OT-Protokoll zu senden. Nur wenn diese Bedingungen für die lokale Steuerung nicht erfüllt sind, werden die Befehle über die Cloud gesendet.\r\n- Cloud: Steuerbefehle werden ausschließlich über die Cloud gesendet.\r\n### Gerätefilterung\r\nFiltern Sie unerwünschte Geräte nach Familien.\r\n### Action-Debug-Modus\r\nFür Methoden, die von MIoT-Spec-V2-Geräten definiert werden, wird neben der Benachrichtigungsentität auch eine Texteingabe-Entität erstellt, mit der Sie während des Debuggens Steuerbefehle an das Gerät senden können.\r\n### Nicht standardmäßige Entitäten ausblenden\r\nBlendet Entitäten aus, die von nicht-standardmäßigen MIoT-Spec-V2-Instanzen generiert werden und deren Name mit „*“ beginnt.",
                 "data": {
+                    "devices_filter": "Gerätefilterung",
                     "ctrl_mode": "Steuerungsmodus",
                     "action_debug": "Action-Debug-Modus",
-                    "hide_non_standard_entities": "Nicht standardmäßige Entitäten ausblenden",
-                    "devices_filter": "Gerätefilterung"
+                    "hide_non_standard_entities": "Nicht standardmäßige Entitäten ausblenden"
                 }
             },
             "devices_filter": {

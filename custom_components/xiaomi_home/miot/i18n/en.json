@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "Devices",
-            "found_central_gateway": ", Found Local Central Hub Gateway"
+            "found_central_gateway": ", Found Local Central Hub Gateway",
+            "without_room": "No room assigned"
         },
         "control_mode": {
             "auto": "Auto",
             "cloud": "Cloud"
         },
         "filter_mode": {
-            "include": "Include",
-            "exclude": "Exclude"
+            "exclude": "Exclude",
+            "include": "Include"
         },
         "room_name_rule": {
             "none": "Do not synchronize",

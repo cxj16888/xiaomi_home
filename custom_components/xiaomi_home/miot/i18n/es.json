@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "dispositivos",
-            "found_central_gateway": ", se encontró la puerta de enlace central local"
+            "found_central_gateway": ", se encontró la puerta de enlace central local",
+            "without_room": "Sin habitación asignada"
         },
         "control_mode": {
             "auto": "automático",
             "cloud": "nube"
         },
         "filter_mode": {
-            "include": "incluir",
-            "exclude": "excluir"
+            "exclude": "excluir",
+            "include": "incluir"
         },
         "room_name_rule": {
             "none": "no sincronizar",

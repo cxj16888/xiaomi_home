@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "Apparaten",
-            "found_central_gateway": ", Lokale centrale hub-gateway gevonden"
+            "found_central_gateway": ", Lokale centrale hub-gateway gevonden",
+            "without_room": "Niet toegewezen kamer"
         },
         "control_mode": {
             "auto": "Automatisch",
             "cloud": "Cloud"
         },
         "filter_mode": {
-            "include": "Inclusief",
-            "exclude": "Uitsluiten"
+            "exclude": "Uitsluiten",
+            "include": "Inclusief"
         },
         "room_name_rule": {
             "none": "Niet synchroniseren",

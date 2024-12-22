@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "appareils",
-            "found_central_gateway": ", passerelle centrale locale trouvée"
+            "found_central_gateway": ", passerelle centrale locale trouvée",
+            "without_room": "Aucune pièce attribuée"
         },
         "control_mode": {
             "auto": "automatique",
             "cloud": "cloud"
         },
         "filter_mode": {
-            "include": "inclure",
-            "exclude": "exclure"
+            "exclude": "exclure",
+            "include": "inclure"
         },
         "room_name_rule": {
             "none": "ne pas synchroniser",

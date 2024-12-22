@@ -2,15 +2,16 @@
     "config": {
         "other": {
             "devices": "Geräte",
-            "found_central_gateway": ", lokales zentrales Gateway gefunden"
+            "found_central_gateway": ", lokales zentrales Gateway gefunden",
+            "without_room": "Kein Raum zugewiesen"
         },
         "control_mode": {
             "auto": "automatisch",
             "cloud": "Cloud"
         },
         "filter_mode": {
-            "include": "einschließen",
-            "exclude": "ausschließen"
+            "exclude": "ausschließen",
+            "include": "einschließen"
         },
         "room_name_rule": {
             "none": "nicht synchronisieren",

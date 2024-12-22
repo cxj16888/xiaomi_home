@@ -2,21 +2,27 @@
     "config": {
         "other": {
             "devices": "个设备",
-            "found_central_gateway": "，发现本地中枢网关"
+            "found_central_gateway": "，发现本地中枢网关",
+            "without_room": "未分配房间"
         },
         "control_mode": {
             "auto": "自动",
             "cloud": "云端"
-        },
-        "filter_mode": {
-            "include": "包含",
-            "exclude": "排除"
         },
         "room_name_rule": {
             "none": "不同步",
             "home_room": "家庭名 和 房间名 （米家 卧室）",
             "room": "房间名 （卧室）",
             "home": "家庭名 （米家）"
+        },
+        "filter_mode": {
+            "exclude": "排除",
+            "include": "包含"
+        },
+        "connect_type": {
+            "0": "WiFi设备",
+            "1": "蓝牙设备",
+            "2": "其它类型"
         },
         "option_status": {
             "enable": "启用",

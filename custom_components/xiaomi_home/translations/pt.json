@@ -35,14 +35,14 @@
                 "title": "Opções Avançadas",
                 "description": "## Introdução\r\n### Mantenha as configurações padrão, a menos que compreenda totalmente o significado das seguintes opções.\r\n### Modo de Controlo\r\n- Automático: Quando existir um hub Xiaomi disponível na rede local, o Home Assistant irá priorizar o envio de comandos de controlo através do hub para permitir controlo local. Se não houver hub na rede local, irá tentar enviar comandos de controlo através do protocolo Xiaomi OT. Apenas quando estas condições de controlo local não forem satisfeitas, os comandos serão enviados através da nuvem.\r\n- Nuvem: Os comandos de controlo são enviados exclusivamente através da nuvem.\r\n### Filtragem de Dispositivos\r\nFiltre dispositivos indesejados por família.\r\n### Modo de Depuração de Ações\r\nPara métodos definidos por dispositivos MIoT-Spec-V2, além de gerar uma entidade de notificação, também será criada uma entidade de entrada de texto para enviar comandos ao dispositivo durante a depuração.\r\n### Ocultar Entidades Geradas Não Padrão\r\nOculte entidades geradas por instâncias não padrão do MIoT-Spec-V2 cujos nomes começam com \"*\".",
                 "data": {
+                    "devices_filter": "Filtrar Dispositivos",
                     "ctrl_mode": "Modo de Controlo",
                     "action_debug": "Modo de Depuração de Ações",
-                    "hide_non_standard_entities": "Ocultar Entidades Geradas Não Padrão",
-                    "devices_filter": "Filtragem de Dispositivos"
+                    "hide_non_standard_entities": "Ocultar Entidades Geradas Não Padrão"
                 }
             },
             "devices_filter": {
-                "title": "Filtragem de Dispositivos",
+                "title": "Filtrar Dispositivos",
                 "description": "## Introdução\r\nFiltre dispositivos indesejados por família.",
                 "data": {
                     "filter_mode": "Modo de Filtro"
