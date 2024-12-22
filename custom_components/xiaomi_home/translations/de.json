@@ -33,7 +33,7 @@
             },
             "advanced_options": {
                 "title": "Erweiterte Einstellungen",
-                "description": "## Einführung\r\n### Behalten Sie die Standardeinstellungen bei, es sei denn, Sie verstehen die folgenden Optionen vollständig.\r\n### Steuerungsmodus\r\n- Automatisch: Wenn ein verfügbarer Xiaomi-Hub im lokalen Netzwerk vorhanden ist, priorisiert Home Assistant das Senden von Steuerbefehlen über den Hub, um eine lokale Steuerung zu ermöglichen. Wenn kein Hub vorhanden ist, wird versucht, Steuerbefehle über das Xiaomi-OT-Protokoll zu senden. Nur wenn diese Bedingungen für die lokale Steuerung nicht erfüllt sind, werden die Befehle über die Cloud gesendet.\r\n- Cloud: Steuerbefehle werden ausschließlich über die Cloud gesendet.\r\n### Gerätefilterung\r\nFiltern Sie unerwünschte Geräte nach Familien.\r\n### Action-Debug-Modus\r\nFür Methoden, die von MIoT-Spec-V2-Geräten definiert werden, wird neben der Benachrichtigungsentität auch eine Texteingabe-Entität erstellt, mit der Sie während des Debuggens Steuerbefehle an das Gerät senden können.\r\n### Nicht standardmäßige Entitäten ausblenden\r\nBlendet Entitäten aus, die von nicht-standardmäßigen MIoT-Spec-V2-Instanzen generiert werden und deren Name mit „*“ beginnt.",
+                "description": "## Gebrauchsanweisung\r\n### Behalten Sie die Standardeinstellungen bei, es sei denn, Sie verstehen die folgenden Optionen vollständig.\r\n### Steuerungsmodus\r\n- Automatisch: Wenn ein verfügbarer Xiaomi-Hub im lokalen Netzwerk vorhanden ist, priorisiert Home Assistant das Senden von Steuerbefehlen über den Hub, um eine lokale Steuerung zu ermöglichen. Wenn kein Hub vorhanden ist, wird versucht, Steuerbefehle über das Xiaomi-OT-Protokoll zu senden. Nur wenn diese Bedingungen für die lokale Steuerung nicht erfüllt sind, werden die Befehle über die Cloud gesendet.\r\n- Cloud: Steuerbefehle werden ausschließlich über die Cloud gesendet.\r\n### Gerätefilterung\r\nFiltern Sie unerwünschte Geräte nach Familien.\r\n### Action-Debug-Modus\r\nFür Methoden, die von MIoT-Spec-V2-Geräten definiert werden, wird neben der Benachrichtigungsentität auch eine Texteingabe-Entität erstellt, mit der Sie während des Debuggens Steuerbefehle an das Gerät senden können.\r\n### Nicht standardmäßige Entitäten ausblenden\r\nBlendet Entitäten aus, die von nicht-standardmäßigen MIoT-Spec-V2-Instanzen generiert werden und deren Name mit „*“ beginnt.",
                 "data": {
                     "devices_filter": "Geräte filtern",
                     "ctrl_mode": "Steuerungsmodus",
@@ -43,9 +43,16 @@
             },
             "devices_filter": {
                 "title": "Geräte filtern",
-                "description": "## Einführung\r\nFiltern Sie unerwünschte Geräte nach Familien.",
+                "description": "## Gebrauchsanweisung\r\n- Unterstützt das Filtern von Geräten nach Raumnamen und Gerätetypen sowie das Filtern nach Gerätedimensionen.\r\n- Sie können auch die entsprechende Integrationsoption \"Konfiguration> Geräteliste aktualisieren\" aufrufen, um die Filterung erneut durchzuführen.",
                 "data": {
-                    "filter_mode": "Filtermodus"
+                    "room_filter_mode": "Familienraum filtern",
+                    "room_list": "Familienraum",
+                    "type_filter_mode": "Gerätetyp filtern",
+                    "type_list": "Gerätetyp",
+                    "model_filter_mode": "Gerätemodell filtern",
+                    "model_list": "Gerätemodell",
+                    "devices_filter_mode": "Geräte filtern",
+                    "device_list": "Geräteliste"
                 }
             }
         },

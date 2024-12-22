@@ -121,7 +121,8 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     _home_selected: Optional[dict]
     _home_info_buffer: Optional[dict[str, str | dict[str, dict]]]
     _home_list: Optional[dict]
-    _device_list_sorted: Optional[dict]
+    _device_list_sorted: dict
+    _device_list_filter: dict
 
     _cloud_server: Optional[str]
     _oauth_redirect_url: Optional[str]
@@ -573,25 +574,86 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             last_step=False,
         )
 
-    async def async_step_devices_filter(self, user_input: dict = None):
+    async def async_step_devices_filter(
+        self, user_input: Optional[dict] = None
+    ):
         if user_input:
+            # Room filter
             room_list_in: list = user_input.get('room_list', [])
             if room_list_in:
-                room_filter_mode: str = user_input.get('room_filter_mode')
-
+                room_filter_mode: str = user_input.get(
+                    'room_filter_mode', None)
+                if room_filter_mode == 'exclude':
+                    self._device_list_filter = {
+                        did: dev_info
+                        for did, dev_info in self._device_list_sorted.items()
+                        if dev_info['room_id'] not in room_list_in}
+                elif room_filter_mode == 'include':
+                    self._device_list_filter = {
+                        did: dev_info
+                        for did, dev_info in self._device_list_sorted.items()
+                        if dev_info['room_id'] in room_list_in}
+            # Type filter
             type_list_in: list = user_input.get('type_list', [])
             if type_list_in:
-                type_filter_mode: str = user_input.get('type_filter_mode')
-
+                type_filter_mode: str = user_input.get(
+                    'type_filter_mode', None)
+                if type_filter_mode == 'exclude':
+                    self._device_list_filter = {
+                        did: dev_info
+                        for did, dev_info in self._device_list_sorted.items()
+                        if dev_info['connect_type'] not in type_list_in}
+                elif type_filter_mode == 'include':
+                    self._device_list_filter = {
+                        did: dev_info
+                        for did, dev_info in self._device_list_sorted.items()
+                        if dev_info['connect_type'] in type_list_in}
+            # Model filter
             model_list_in: list = user_input.get('model_list', [])
             if model_list_in:
-                model_filter_mode: str = user_input.get('model_filter_mode')
-
+                model_filter_mode: str = user_input.get(
+                    'model_filter_mode', None)
+                if model_filter_mode == 'exclude':
+                    self._device_list_filter = {
+                        did: dev_info
+                        for did, dev_info in self._device_list_sorted.items()
+                        if dev_info['model'] not in model_list_in}
+                elif model_filter_mode == 'include':
+                    self._device_list_filter = {
+                        did: dev_info
+                        for did, dev_info in self._device_list_sorted.items()
+                        if dev_info['model'] in model_list_in}
+            # Device filter
             device_list_in: list = user_input.get('device_list', [])
             if device_list_in:
                 devices_filter_mode: str = user_input.get(
-                    'devices_filter_mode')
-
+                    'devices_filter_mode', None)
+                if devices_filter_mode == 'exclude':
+                    self._device_list_filter = {
+                        did: dev_info
+                        for did, dev_info in self._device_list_sorted.items()
+                        if did not in device_list_in}
+                elif devices_filter_mode == 'include':
+                    self._device_list_filter = {
+                        did: dev_info
+                        for did, dev_info in self._device_list_sorted.items()
+                        if did in device_list_in}
+                else:
+                    raise MIoTError('invalid devices_filter_mode')
+            self._device_list_sorted = dict(sorted(
+                self._device_list_filter.items(), key=lambda item:
+                    item[1].get('home_id', '')+item[1].get('room_id', '')))
+            if not await self._miot_storage.save_async(
+                    domain='miot_devices',
+                    name=f'{self._uid}_{self._cloud_server}',
+                    data=self._device_list_sorted):
+                _LOGGER.error(
+                    'save devices async failed, %s, %s',
+                    self._uid, self._cloud_server)
+                raise AbortFlow(
+                    reason='config_flow_error',
+                    description_placeholders={
+                        'error': 'save devices failed'})
             return await self.config_flow_done()
 
         tip_devices: str = self._miot_i18n.translate(

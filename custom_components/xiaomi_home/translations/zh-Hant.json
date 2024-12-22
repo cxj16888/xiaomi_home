@@ -43,9 +43,16 @@
             },
             "devices_filter": {
                 "title": "篩選設備",
-                "description": "## 使用介紹\r\n按照家庭維度，過濾不需要的設備。",
+                "description": "## 使用介紹\r\n- 支持按照房間名稱和設備類型篩選設備，同時也支持設備維度篩選。\r\n- 您也可以進入對應集成項【配置>更新設備列表】頁面重新篩選。",
                 "data": {
-                    "filter_mode": "過濾模式"
+                    "room_filter_mode": "篩選家庭房間",
+                    "room_list": "家庭房間",
+                    "type_filter_mode": "篩選設備類型",
+                    "type_list": "設備類型",
+                    "model_filter_mode": "篩選設備型號",
+                    "model_list": "設備型號",
+                    "devices_filter_mode": "篩選設備",
+                    "device_list": "設備列表"
                 }
             }
         },

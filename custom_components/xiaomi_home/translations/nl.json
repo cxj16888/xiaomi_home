@@ -43,9 +43,16 @@
             },
             "devices_filter": {
                 "title": "Apparaten filteren",
-                "description": "## Inleiding\r\nFilter ongewenste apparaten per familie.",
+                "description": "## Inleiding\r\n- Ondersteunt het filteren van apparaten op basis van kamer- en apparaattypen, en ondersteunt ook apparaatdimensiefiltering.\r\n- U kunt ook naar de overeenkomstige integratie-item [Configuratie>Apparaatlijst bijwerken] pagina gaan om opnieuw te filteren.",
                 "data": {
-                    "filter_mode": "Filtermodus"
+                    "room_filter_mode": "Kamerfiltermodus",
+                    "room_list": "Kamers",
+                    "type_filter_mode": "Apparaattypen filteren",
+                    "type_list": "Apparaattypen",
+                    "model_filter_mode": "Apparaatmodel filteren",
+                    "model_list": "Apparaatmodellen",
+                    "devices_filter_mode": "Apparaten filteren",
+                    "device_list": "Apparaatlijst"
                 }
             }
         },

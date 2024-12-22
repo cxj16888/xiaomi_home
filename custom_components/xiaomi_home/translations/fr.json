@@ -43,9 +43,16 @@
             },
             "devices_filter": {
                 "title": "Filtrer les Appareils",
-                "description": "## Introduction\r\nFiltrez les appareils indésirables en fonction de la famille.",
+                "description": "## Introduction\r\n- Prend en charge le filtrage des appareils en fonction du nom de la pièce et du type d'appareil, ainsi que le filtrage basé sur les appareils.\r\n- Vous pouvez également accéder à la page de filtrage correspondante de l'intégration [Configuration> Mettre à jour la liste des appareils] pour refiltrer.",
                 "data": {
-                    "filter_mode": "Mode de Filtrage"
+                    "room_filter_mode": "Filtrer les Pièces",
+                    "room_list": "Pièces",
+                    "type_filter_mode": "Filtrer les Types d'Appareils",
+                    "type_list": "Types d'Appareils",
+                    "model_filter_mode": "Filtrer les Modèles d'Appareils",
+                    "model_list": "Modèles d'Appareils",
+                    "devices_filter_mode": "Filtrer les Appareils",
+                    "device_list": "Liste des Appareils"
                 }
             }
         },

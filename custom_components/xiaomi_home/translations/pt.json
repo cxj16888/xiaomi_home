@@ -43,9 +43,16 @@
             },
             "devices_filter": {
                 "title": "Filtrar Dispositivos",
-                "description": "## Introdução\r\nFiltre dispositivos indesejados por família.",
+                "description": "## Introdução\r\n- Suporta a filtragem de dispositivos por nome de sala e tipo de dispositivo, bem como a filtragem por família.\r\n- Pode também aceder à página de configuração correspondente da integração [Configuração > Atualizar Lista de Dispositivos] para refazer a filtragem.",
                 "data": {
-                    "filter_mode": "Modo de Filtro"
+                    "room_filter_mode": "Filtrar por Sala",
+                    "room_list": "Salas",
+                    "type_filter_mode": "Filtrar por Tipo de Dispositivo",
+                    "type_list": "Tipos de Dispositivo",
+                    "model_filter_mode": "Filtrar por Modelo de Dispositivo",
+                    "model_list": "Modelos de Dispositivo",
+                    "devices_filter_mode": "Filtrar Dispositivos",
+                    "device_list": "Lista de Dispositivos"
                 }
             }
         },
