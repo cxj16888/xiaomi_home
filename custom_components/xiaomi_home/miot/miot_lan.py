@@ -76,25 +76,10 @@ _LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
-class MIoTLanCmdData:
+class MIoTLanGetDevListData:
     handler: Callable[[dict, Any], None]
     handler_ctx: Any
     timeout_ms: int
-
-
-@dataclass
-class MIoTLanGetDevListData(MIoTLanCmdData):
-    ...
-
-
-@dataclass
-class MIoTLanCallApiData(MIoTLanCmdData):
-    did: str
-    msg: dict
-
-
-class MIoTLanSendBroadcastData(MIoTLanCallApiData):
-    ...
 
 
 @dataclass
@@ -110,12 +95,12 @@ class MIoTLanRegisterBroadcastData:
 
 
 @dataclass
-class MIoTLanUnsubDeviceState:
+class MIoTLanUnsubDeviceData:
     key: str
 
 
 @dataclass
-class MIoTLanSubDeviceState:
+class MIoTLanSubDeviceData:
     key: str
     handler: Callable[[str, dict, Any], Coroutine]
     handler_ctx: Any
@@ -483,7 +468,7 @@ class MIoTLan:
     _msg_id_counter: int
     _pending_requests: dict[int, MIoTLanRequestData]
     _device_msg_matcher: MIoTMatcher
-    _device_state_sub_map: dict[str, MIoTLanSubDeviceState]
+    _device_state_sub_map: dict[str, MIoTLanSubDeviceData]
     _reply_msg_buffer: dict[str, asyncio.TimerHandle]
 
     _lan_state_sub_map: dict[str, Callable[[bool], Coroutine]]
@@ -717,14 +702,14 @@ class MIoTLan:
     ) -> bool:
         self._internal_loop.call_soon_threadsafe(
             self.__sub_device_state,
-            MIoTLanSubDeviceState(
+            MIoTLanSubDeviceData(
                 key=key, handler=handler, handler_ctx=handler_ctx))
         return True
 
     @final
     def unsub_device_state(self, key: str) -> bool:
         self._internal_loop.call_soon_threadsafe(
-            self.__unsub_device_state, MIoTLanUnsubDeviceState(key=key))
+            self.__unsub_device_state, MIoTLanUnsubDeviceData(key=key))
         return True
 
     @final
@@ -1047,10 +1032,10 @@ class MIoTLan:
                 'error': str(err)},
                 handler_ctx)
 
-    def __sub_device_state(self, data: MIoTLanSubDeviceState) -> None:
+    def __sub_device_state(self, data: MIoTLanSubDeviceData) -> None:
         self._device_state_sub_map[data.key] = data
 
-    def __unsub_device_state(self, data: MIoTLanUnsubDeviceState) -> None:
+    def __unsub_device_state(self, data: MIoTLanUnsubDeviceData) -> None:
         self._device_state_sub_map.pop(data.key, None)
 
     def __sub_broadcast(self, data: MIoTLanRegisterBroadcastData) -> None:
