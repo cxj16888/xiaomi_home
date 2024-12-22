@@ -47,15 +47,15 @@ MIoT device instance.
 """
 import asyncio
 from abc import abstractmethod
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 import logging
 
 from homeassistant.helpers.entity import Entity
 from homeassistant.const import (
     CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
     CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER,
-    CONCENTRATION_PARTS_PER_MILLION,
     CONCENTRATION_PARTS_PER_BILLION,
+    CONCENTRATION_PARTS_PER_MILLION,
     LIGHT_LUX,
     PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS,
@@ -72,7 +72,6 @@ from homeassistant.const import (
     UnitOfPower,
     UnitOfVolume,
     UnitOfVolumeFlowRate,
-    UnitOfConductivity
 )
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.components.switch import SwitchDeviceClass
@@ -104,7 +103,7 @@ _LOGGER = logging.getLogger(__name__)
 class MIoTEntityData:
     """MIoT Entity Data."""
     platform: str
-    device_class: any
+    device_class: Any
     spec: MIoTSpecInstance | MIoTSpecService
 
     props: set[MIoTSpecProperty]
@@ -244,8 +243,8 @@ class MIoTDevice:
         return True
 
     def sub_property(
-        self, handler: Callable[[dict, any], None], siid: int = None,
-        piid: int = None, handler_ctx: any = None
+        self, handler: Callable[[dict, Any], None], siid: int = None,
+        piid: int = None, handler_ctx: Any = None
     ) -> bool:
         return self.miot_client.sub_prop(
             did=self._did, handler=handler, siid=siid, piid=piid,
@@ -255,8 +254,8 @@ class MIoTDevice:
         return self.miot_client.unsub_prop(did=self._did, siid=siid, piid=piid)
 
     def sub_event(
-        self, handler: Callable[[dict, any], None], siid: int = None,
-        eiid: int = None, handler_ctx: any = None
+        self, handler: Callable[[dict, Any], None], siid: int = None,
+        eiid: int = None, handler_ctx: Any = None
     ) -> bool:
         return self.miot_client.sub_event(
             did=self._did, handler=handler, siid=siid, eiid=eiid,
@@ -505,7 +504,8 @@ class MIoTDevice:
             prop_access.add('read')
         if prop.writable:
             prop_access.add('write')
-        if prop_access != (SPEC_PROP_TRANS_MAP['entities'][platform]['access']):
+        if prop_access != (SPEC_PROP_TRANS_MAP[
+                'entities'][platform]['access']):
             return None
         if prop.format_ not in SPEC_PROP_TRANS_MAP[
                 'entities'][platform]['format']:
@@ -584,7 +584,8 @@ class MIoTDevice:
                 self.append_action(action=action)
 
     def unit_convert(self, spec_unit: str) -> Optional[str]:
-        return {
+        """Convert MIoT unit to Home Assistant unit."""
+        unit_map = {
             'percentage': PERCENTAGE,
             'weeks': UnitOfTime.WEEKS,
             'days': UnitOfTime.DAYS,
@@ -616,11 +617,21 @@ class MIoTDevice:
             'm': UnitOfLength.METERS,
             'km': UnitOfLength.KILOMETERS,
             'm3/h': UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR,
-            'μS/cm': UnitOfConductivity.MICROSIEMENS_PER_CM,
             'gram': UnitOfMass.GRAMS,
             'dB': SIGNAL_STRENGTH_DECIBELS,
             'kB': UnitOfInformation.KILOBYTES,
-        }.get(spec_unit, None)
+        }
+
+        # Handle UnitOfConductivity separately since
+        # it might not be available in all HA versions
+        try:
+            # pylint: disable=import-outside-toplevel
+            from homeassistant.const import UnitOfConductivity
+            unit_map['μS/cm'] = UnitOfConductivity.MICROSIEMENS_PER_CM
+        except ImportError:
+            unit_map['μS/cm'] = 'μS/cm'
+
+        return unit_map.get(spec_unit, None)
 
     def icon_convert(self, spec_unit: str) -> Optional[str]:
         if spec_unit in ['percentage']:
@@ -677,7 +688,7 @@ class MIoTDevice:
         return None
 
     def __on_device_state_changed(
-        self, did: str, state: MIoTDeviceState, ctx: any
+        self, did: str, state: MIoTDeviceState, ctx: Any
     ) -> None:
         self._online = state
         for key, handler in self._device_state_sub_list.items():
@@ -693,11 +704,11 @@ class MIoTServiceEntity(Entity):
     entity_data: MIoTEntityData
 
     _main_loop: asyncio.AbstractEventLoop
-    _prop_value_map: dict[MIoTSpecProperty, any]
+    _prop_value_map: dict[MIoTSpecProperty, Any]
 
     _event_occurred_handler: Callable[[MIoTSpecEvent, dict], None]
     _prop_changed_subs: dict[
-        MIoTSpecProperty, Callable[[MIoTSpecProperty, any], None]]
+        MIoTSpecProperty, Callable[[MIoTSpecProperty, Any], None]]
 
     _pending_write_ha_state_timer: Optional[asyncio.TimerHandle]
 
@@ -748,7 +759,7 @@ class MIoTServiceEntity(Entity):
 
     def sub_prop_changed(
         self, prop: MIoTSpecProperty,
-        handler: Callable[[MIoTSpecProperty, any], None]
+        handler: Callable[[MIoTSpecProperty, Any], None]
     ) -> None:
         if not prop or not handler:
             _LOGGER.error(
@@ -805,13 +816,13 @@ class MIoTServiceEntity(Entity):
             self.miot_device.unsub_event(
                 siid=event.service.iid, eiid=event.iid)
 
-    def get_map_description(self, map_: dict[int, any], key: int) -> any:
+    def get_map_description(self, map_: dict[int, Any], key: int) -> Any:
         if map_ is None:
             return None
         return map_.get(key, None)
 
     def get_map_value(
-        self, map_: dict[int, any], description: any
+        self, map_: dict[int, Any], description: Any
     ) -> Optional[int]:
         if map_ is None:
             return None
@@ -820,7 +831,7 @@ class MIoTServiceEntity(Entity):
                 return key
         return None
 
-    def get_prop_value(self, prop: MIoTSpecProperty) -> any:
+    def get_prop_value(self, prop: MIoTSpecProperty) -> Any:
         if not prop:
             _LOGGER.error(
                 'get_prop_value error, property is None, %s, %s',
@@ -828,7 +839,7 @@ class MIoTServiceEntity(Entity):
             return None
         return self._prop_value_map.get(prop, None)
 
-    def set_prop_value(self, prop: MIoTSpecProperty, value: any) -> None:
+    def set_prop_value(self, prop: MIoTSpecProperty, value: Any) -> None:
         if not prop:
             _LOGGER.error(
                 'set_prop_value error, property is None, %s, %s',
@@ -837,7 +848,7 @@ class MIoTServiceEntity(Entity):
         self._prop_value_map[prop] = value
 
     async def set_property_async(
-        self, prop: MIoTSpecProperty, value: any, update: bool = True
+        self, prop: MIoTSpecProperty, value: Any, update: bool = True
     ) -> bool:
         value = prop.value_format(value)
         if not prop:
@@ -864,7 +875,7 @@ class MIoTServiceEntity(Entity):
             self.async_write_ha_state()
         return True
 
-    async def get_property_async(self, prop: MIoTSpecProperty) -> any:
+    async def get_property_async(self, prop: MIoTSpecProperty) -> Any:
         if not prop:
             _LOGGER.error(
                 'get property failed, property is None, %s, %s',
@@ -903,7 +914,7 @@ class MIoTServiceEntity(Entity):
                 f'{e}, {self.entity_id}, {self.name}, {action.name}') from e
         return True
 
-    def __on_properties_changed(self, params: dict, ctx: any) -> None:
+    def __on_properties_changed(self, params: dict, ctx: Any) -> None:
         _LOGGER.debug('properties changed, %s', params)
         for prop in self.entity_data.props:
             if (
@@ -911,7 +922,7 @@ class MIoTServiceEntity(Entity):
                 or prop.service.iid != params['siid']
             ):
                 continue
-            value: any = prop.value_format(params['value'])
+            value: Any = prop.value_format(params['value'])
             self._prop_value_map[prop] = value
             if prop in self._prop_changed_subs:
                 self._prop_changed_subs[prop](prop, value)
@@ -919,7 +930,7 @@ class MIoTServiceEntity(Entity):
         if not self._pending_write_ha_state_timer:
             self.async_write_ha_state()
 
-    def __on_event_occurred(self, params: dict, ctx: any) -> None:
+    def __on_event_occurred(self, params: dict, ctx: Any) -> None:
         _LOGGER.debug('event occurred, %s', params)
         if self._event_occurred_handler is None:
             return
@@ -977,9 +988,9 @@ class MIoTPropertyEntity(Entity):
     _main_loop: asyncio.AbstractEventLoop
     # {'min':int, 'max':int, 'step': int}
     _value_range: dict[str, int]
-    # {any: any}
-    _value_list: dict[any, any]
-    _value: any
+    # {Any: Any}
+    _value_list: dict[Any, Any]
+    _value: Any
 
     _pending_write_ha_state_timer: Optional[asyncio.TimerHandle]
 
@@ -1043,12 +1054,12 @@ class MIoTPropertyEntity(Entity):
         self.miot_device.unsub_property(
             siid=self.service.iid, piid=self.spec.iid)
 
-    def get_vlist_description(self, value: any) -> str:
+    def get_vlist_description(self, value: Any) -> str:
         if not self._value_list:
             return None
         return self._value_list.get(value, None)
 
-    def get_vlist_value(self, description: str) -> any:
+    def get_vlist_value(self, description: str) -> Any:
         if not self._value_list:
             return None
         for key, value in self._value_list.items():
@@ -1056,7 +1067,7 @@ class MIoTPropertyEntity(Entity):
                 return key
         return None
 
-    async def set_property_async(self, value: any) -> bool:
+    async def set_property_async(self, value: Any) -> bool:
         if not self.spec.writable:
             raise RuntimeError(
                 f'set property failed, not writable, '
@@ -1073,7 +1084,7 @@ class MIoTPropertyEntity(Entity):
         self.async_write_ha_state()
         return True
 
-    async def get_property_async(self) -> any:
+    async def get_property_async(self) -> Any:
         if not self.spec.readable:
             _LOGGER.error(
                 'get property failed, not readable, %s, %s',
@@ -1084,7 +1095,7 @@ class MIoTPropertyEntity(Entity):
                 did=self.miot_device.did, siid=self.spec.service.iid,
                 piid=self.spec.iid))
 
-    def __on_value_changed(self, params: dict, ctx: any) -> None:
+    def __on_value_changed(self, params: dict, ctx: Any) -> None:
         _LOGGER.debug('property changed, %s', params)
         self._value = self.spec.value_format(params['value'])
         if not self._pending_write_ha_state_timer:
@@ -1124,7 +1135,7 @@ class MIoTEventEntity(Entity):
     service: MIoTSpecService
 
     _main_loop: asyncio.AbstractEventLoop
-    _value: any
+    _value: Any
     _attr_event_types: list[str]
     _arguments_map: dict[int, str]
 
@@ -1170,8 +1181,8 @@ class MIoTEventEntity(Entity):
             handler=self.__on_device_state_changed)
         # Sub value changed
         self.miot_device.sub_event(
-            handler=self.__on_event_occurred, siid=self.service.iid,
-            eiid=self.spec.iid)
+            handler=self.__on_event_occurred,
+            siid=self.service.iid, eiid=self.spec.iid)
 
     async def async_will_remove_from_hass(self) -> None:
         self.miot_device.unsub_device_state(
@@ -1181,10 +1192,10 @@ class MIoTEventEntity(Entity):
 
     @abstractmethod
     def on_event_occurred(
-        self, name: str, arguments: list[dict[int, any]]
+        self, name: str, arguments: list[dict[int, Any]]
     ): ...
 
-    def __on_event_occurred(self, params: dict, ctx: any) -> None:
+    def __on_event_occurred(self, params: dict, ctx: Any) -> None:
         _LOGGER.debug('event occurred, %s',  params)
         trans_arg = {}
         try:

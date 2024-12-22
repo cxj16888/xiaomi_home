@@ -8,7 +8,7 @@
 
 > Home Assistant 版本要求：
 >
-> - Core $\geq$ 2024.11.0
+> - Core $\geq$ 2024.4.4
 > - Operating System $\geq$ 13.0
 
 ### 方法 1：使用 git clone 命令从 GitHub 下载
@@ -329,7 +329,7 @@ event instance name 下的值表示转换后实体所用的 `_attr_device_class`
 
 ## 多语言支持
 
-米家集成配置选项中可选择的集成使用的语言有简体中文、繁体中文、英文、西班牙语、俄语、法语、德语、日语这八种语言。目前，米家集成配置页面的简体中文和英文已经过人工校审，其他语言由机器翻译。如果您希望修改配置页面的词句，则需要修改 `custom_components/xiaomi_home/translations/` 目录下相应语言的 json 文件。
+米家集成配置选项中可选择的集成使用的语言有简体中文、繁体中文、英文、西班牙语、俄语、法语、德语、日语这八种语言。目前，米家集成配置页面的简体中文和英文已经过人工校审，其他语言由机器翻译。如果您希望修改配置页面的词句，则需要修改 `custom_components/xiaomi_home/translations/` 以及 `custom_components/xiaomi_home/miot/i18n/` 目录下相应语言的 json 文件。
 
 在显示 Home Assistant 实体名称时，米家集成会从小米云下载设备厂商为设备配置的多语言文件，该文件包含设备 MIoT-Spec-V2 实例的多语言翻译。 `multi_lang.json` 是本地维护的多语言配置字典，其优先级高于从云端获取的多语言文件，可用于补充或修改设备的多语言翻译。
 
@@ -382,8 +382,8 @@ siid、piid、eiid、aiid、value 均为十进制三位整数。
 ## 文档
 
 - [许可证](../LICENSE.md)
-- 贡献指南： [English](./CONTRIBUTING.md) | [简体中文](./CONTRIBUTING_zh.md)
-- [更新日志](./CHANGELOG.md)
+- 贡献指南： [English](../CONTRIBUTING.md) | [简体中文](./CONTRIBUTING_zh.md)
+- [更新日志](../CHANGELOG.md)
 - 开发文档： https://developers.home-assistant.io/docs/creating_component_index
 
 ## 目录结构

@@ -47,12 +47,14 @@ Water heater entities for Xiaomi Home.
 """
 from __future__ import annotations
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.components.water_heater import (
+    STATE_ON,
+    STATE_OFF,
     ATTR_TEMPERATURE,
     WaterHeaterEntity,
     WaterHeaterEntityFeature
@@ -91,7 +93,7 @@ class WaterHeater(MIoTServiceEntity, WaterHeaterEntity):
     _prop_target_temp: Optional[MIoTSpecProperty]
     _prop_mode: Optional[MIoTSpecProperty]
 
-    _mode_list: Optional[dict[any, any]]
+    _mode_list: Optional[dict[Any, Any]]
 
     def __init__(
         self, miot_device: MIoTDevice, entity_data: MIoTEntityData
@@ -114,8 +116,6 @@ class WaterHeater(MIoTServiceEntity, WaterHeaterEntity):
             # temperature
             if prop.name == 'temperature':
                 if isinstance(prop.value_range, dict):
-                    self._attr_min_temp = prop.value_range['min']
-                    self._attr_max_temp = prop.value_range['max']
                     if (
                         self._attr_temperature_unit is None
                         and prop.external_unit
@@ -128,6 +128,9 @@ class WaterHeater(MIoTServiceEntity, WaterHeaterEntity):
                         self.entity_id)
             # target-temperature
             if prop.name == 'target-temperature':
+                self._attr_min_temp = prop.value_range['min']
+                self._attr_max_temp = prop.value_range['max']
+                self._attr_precision = prop.value_range['step']
                 if self._attr_temperature_unit is None and prop.external_unit:
                     self._attr_temperature_unit = prop.external_unit
                 self._attr_supported_features |= (
@@ -149,6 +152,9 @@ class WaterHeater(MIoTServiceEntity, WaterHeaterEntity):
                 self._attr_supported_features |= (
                     WaterHeaterEntityFeature.OPERATION_MODE)
                 self._prop_mode = prop
+        if not self._attr_operation_list:
+            self._attr_operation_list = [STATE_ON]
+        self._attr_operation_list.append(STATE_OFF)
 
     async def async_turn_on(self) -> None:
         """Turn the water heater on."""
@@ -158,7 +164,7 @@ class WaterHeater(MIoTServiceEntity, WaterHeaterEntity):
         """Turn the water heater off."""
         await self.set_property_async(prop=self._prop_on, value=False)
 
-    async def async_set_temperature(self, **kwargs: any) -> None:
+    async def async_set_temperature(self, **kwargs: Any) -> None:
         """Set the temperature the water heater should heat water to."""
         await self.set_property_async(
             prop=self._prop_target_temp, value=kwargs[ATTR_TEMPERATURE])
@@ -167,6 +173,15 @@ class WaterHeater(MIoTServiceEntity, WaterHeaterEntity):
         """Set the operation mode of the water heater.
         Must be in the operation_list.
         """
+        if operation_mode == STATE_OFF:
+            await self.set_property_async(prop=self._prop_on, value=False)
+            return
+        if operation_mode == STATE_ON:
+            await self.set_property_async(prop=self._prop_on, value=True)
+            return
+        if self.get_prop_value(prop=self._prop_on) is False:
+            await self.set_property_async(
+                prop=self._prop_on, value=True, update=False)
         await self.set_property_async(
             prop=self._prop_mode,
             value=self.__get_mode_value(description=operation_mode))
@@ -188,6 +203,10 @@ class WaterHeater(MIoTServiceEntity, WaterHeaterEntity):
     @property
     def current_operation(self) -> Optional[str]:
         """Return the current mode."""
+        if self.get_prop_value(prop=self._prop_on) is False:
+            return STATE_OFF
+        if not self._prop_mode and self.get_prop_value(prop=self._prop_on):
+            return STATE_ON
         return self.__get_mode_description(
             key=self.get_prop_value(prop=self._prop_mode))
 

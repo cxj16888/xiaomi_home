@@ -47,7 +47,7 @@ Light entities for Xiaomi Home.
 """
 from __future__ import annotations
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -102,7 +102,7 @@ class Light(MIoTServiceEntity, LightEntity):
     _prop_mode: Optional[MIoTSpecProperty]
 
     _brightness_scale: Optional[tuple[int, int]]
-    _mode_list: Optional[dict[any, any]]
+    _mode_list: Optional[dict[Any, Any]]
 
     def __init__(
         self, miot_device: MIoTDevice,  entity_data: MIoTEntityData
@@ -236,7 +236,7 @@ class Light(MIoTServiceEntity, LightEntity):
         """Return the color temperature."""
         return self.get_prop_value(prop=self._prop_color_temp)
 
-    @ property
+    @property
     def rgb_color(self) -> Optional[tuple[int, int, int]]:
         """Return the rgb color value."""
         rgb = self.get_prop_value(prop=self._prop_color)
@@ -247,7 +247,7 @@ class Light(MIoTServiceEntity, LightEntity):
         b = rgb & 0xFF
         return r, g, b
 
-    @ property
+    @property
     def effect(self) -> Optional[str]:
         """Return the current mode."""
         return self.__get_mode_description(
