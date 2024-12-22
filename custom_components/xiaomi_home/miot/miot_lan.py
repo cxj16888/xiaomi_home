@@ -308,8 +308,10 @@ class _MIoTLanDevice:
     def on_delete(self) -> None:
         if self._ka_timer:
             self._ka_timer.cancel()
+            self._ka_timer = None
         if self._online_offline_timer:
             self._online_offline_timer.cancel()
+            self._online_offline_timer = None
         _LOGGER.debug('miot lan device delete, %s', self.did)
 
     def update_info(self, info: dict) -> None:
@@ -404,6 +406,7 @@ class _MIoTLanDevice:
             self._online_offline_history.pop(0)
         if self._online_offline_timer:
             self._online_offline_timer.cancel()
+            self._online_offline_timer = None
         if not online:
             self.online = False
         else:
@@ -1133,6 +1136,7 @@ class MIoTLan:
         for req_data in self._pending_requests.values():
             if req_data.timeout:
                 req_data.timeout.cancel()
+                req_data.timeout = None
         self._pending_requests.clear()
         for timer in self._reply_msg_buffer.values():
             timer.cancel()
@@ -1252,6 +1256,7 @@ class MIoTLan:
         if req:
             if req.timeout:
                 req.timeout.cancel()
+                req.timeout = None
             if req.handler is not None:
                 self._main_loop.call_soon_threadsafe(
                     req.handler, msg, req.handler_ctx)
@@ -1326,6 +1331,7 @@ class MIoTLan:
     def __scan_devices(self) -> None:
         if self._scan_timer:
             self._scan_timer.cancel()
+            self._scan_timer = None
         try:
             # Scan devices
             self.ping(if_name=None, target_ip='255.255.255.255')
