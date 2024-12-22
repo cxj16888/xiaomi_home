@@ -423,7 +423,7 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 home_info['central_did'] = mips_list[group_id].get('did', None)
             home_list[home_id] = (
                 f'{home_info["home_name"]} '
-                f'[ {len(dev_list)} {tip_devices}{tip_central} ]')
+                f'[ {len(dev_list)} {tip_devices} {tip_central} ]')
 
         self._home_list = dict(sorted(home_list.items()))
 
@@ -658,15 +658,16 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         tip_devices: str = self._miot_i18n.translate(
             key='config.other.devices')
-        tip_filter_mode: str = self._miot_i18n.translate(
-            key='config.filter_mode')
-        tip_connect_type: dict = self._miot_i18n.translate(
-            key='config.connect_type')
         tip_without_room: str = self._miot_i18n.translate(
             key='config.other.without_room')
+        trans_filter_mode: dict = self._miot_i18n.translate(
+            key='config.filter_mode')
+        trans_connect_type: dict = self._miot_i18n.translate(
+            key='config.connect_type')
 
         room_device_count: dict = {}
         model_device_count: dict = {}
+        connect_type_count: dict = {}
         device_list: dict = {}
         for did, info in self._device_list_sorted.items():
             device_list[did] = (
@@ -676,10 +677,17 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             room_device_count[info['room_id']] += 1
             model_device_count.setdefault(info['model'], 0)
             model_device_count[info['model']] += 1
+            connect_type_count.setdefault(str(info['connect_type']), 0)
+            connect_type_count[str(info['connect_type'])] += 1
 
         model_list: dict = {}
         for model, count in model_device_count.items():
-            model_list[model] = f'{model} [ {count}{tip_devices} ]'
+            model_list[model] = f'{model} [ {count} {tip_devices} ]'
+
+        type_list: dict = {
+            k: f'{trans_connect_type.get(k, f"Connect Type ({k})")} '
+            f'[ {v} {tip_devices} ]'
+            for k, v in connect_type_count.items()}
 
         room_list: dict = {}
         for home_id, home_info in self._home_selected.items():
@@ -698,17 +706,17 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id='devices_filter',
             data_schema=vol.Schema({
                 vol.Required('room_filter_mode', default='exclude'):
-                    vol.In(tip_filter_mode),
+                    vol.In(trans_filter_mode),
                 vol.Optional('room_list'): cv.multi_select(room_list),
                 vol.Required('type_filter_mode', default='exclude'):
-                    vol.In(tip_filter_mode),
-                vol.Optional('type_list'): cv.multi_select(tip_connect_type),
+                    vol.In(trans_filter_mode),
+                vol.Optional('type_list'): cv.multi_select(type_list),
                 vol.Required('model_filter_mode', default='exclude'):
-                    vol.In(tip_filter_mode),
+                    vol.In(trans_filter_mode),
                 vol.Optional('model_list'): cv.multi_select(dict(sorted(
                     model_list.items(), key=lambda item: item[0]))),
                 vol.Required('devices_filter_mode', default='exclude'):
-                    vol.In(tip_filter_mode),
+                    vol.In(trans_filter_mode),
                 vol.Optional('device_list'): cv.multi_select(dict(sorted(
                     device_list.items(), key=lambda device: device[1])))
             }),
@@ -1183,7 +1191,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         'did', None)
                 home_list[home_id] = (
                     f'{home_info["home_name"]} '
-                    f'[ {len(did_list)} {tip_devices}{tip_central} ]')
+                    f'[ {len(did_list)} {tip_devices} {tip_central} ]')
             # Remove deleted item
             self._home_selected_list = [
                 home_id for home_id in self._home_selected_list
