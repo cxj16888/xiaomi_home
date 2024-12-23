@@ -654,7 +654,7 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     include_items['did'] = device_list_in
                 else:
                     exclude_items['did'] = device_list_in
-            device_filter_list = self.__devices_filter(
+            device_filter_list = _handle_devices_filter(
                 devices=self._device_list_sorted,
                 logic_or=(user_input.get('statistics_logic', 'or') == 'or'),
                 item_in=include_items, item_ex=exclude_items)
@@ -750,39 +750,6 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors={'base': reason},
             last_step=False
         )
-
-    def __devices_filter(
-            self, devices: dict, logic_or: bool, item_in: dict, item_ex: dict
-    ) -> dict:
-        include_set: Set = set([])
-        if not item_in:
-            include_set = set(devices.keys())
-        else:
-            filter_item: list[set] = []
-            for key, value in item_in.items():
-                filter_item.append(set([
-                    did for did, info in devices.items()
-                    if str(info[key]) in value]))
-            include_set = (
-                set.union(*filter_item)
-                if logic_or else set.intersection(*filter_item))
-        if not include_set:
-            return {}
-        if item_ex:
-            filter_item: list[set] = []
-            for key, value in item_ex.items():
-                filter_item.append(set([
-                    did for did, info in devices.items()
-                    if str(info[key]) in value]))
-            exclude_set: Set = (
-                set.union(*filter_item)
-                if logic_or else set.intersection(*filter_item))
-            if exclude_set:
-                include_set = include_set-exclude_set
-        if not include_set:
-            return {}
-        return {
-            did: info for did, info in devices.items() if did in include_set}
 
     async def config_flow_done(self):
         return self.async_create_entry(
@@ -1293,12 +1260,12 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             step_id='homes_select',
             data_schema=vol.Schema({
                 vol.Required(
-                    'devices_filter', default=False  # type: ignore
-                ): bool,
-                vol.Required(
                     'home_infos',
                     default=self._home_selected_list  # type: ignore
                 ): cv.multi_select(self._home_list_show),
+                vol.Required(
+                    'devices_filter', default=False  # type: ignore
+                ): bool,
                 vol.Required(
                     'ctrl_mode', default=self._ctrl_mode  # type: ignore
                 ): vol.In(self._miot_i18n.translate(key='config.control_mode')),
@@ -1314,6 +1281,52 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         self, user_input: Optional[dict] = None
     ):
         if user_input:
+            # Room filter
+            include_items: dict = {}
+            exclude_items: dict = {}
+            room_list_in: list = user_input.get('room_list', [])
+            if room_list_in:
+                if user_input.get(
+                        'room_filter_mode', 'include') == 'include':
+                    include_items['room_id'] = room_list_in
+                else:
+                    exclude_items['room_id'] = room_list_in
+            # Connect Type filter
+            type_list_in: list = user_input.get('type_list', [])
+            if type_list_in:
+                if user_input.get(
+                        'type_filter_mode', 'include') == 'include':
+                    include_items['connect_type'] = type_list_in
+                else:
+                    exclude_items['connect_type'] = type_list_in
+            # Model filter
+            model_list_in: list = user_input.get('model_list', [])
+            if model_list_in:
+                if user_input.get(
+                        'model_filter_mode', 'include') == 'include':
+                    include_items['model'] = model_list_in
+                else:
+                    exclude_items['model'] = model_list_in
+            # Device filter
+            device_list_in: list = user_input.get('device_list', [])
+            if device_list_in:
+                if user_input.get(
+                        'devices_filter_mode', 'include') == 'include':
+                    include_items['did'] = device_list_in
+                else:
+                    exclude_items['did'] = device_list_in
+            device_filter_list = _handle_devices_filter(
+                devices=self._device_list_sorted,
+                logic_or=(user_input.get('statistics_logic', 'or') == 'or'),
+                item_in=include_items, item_ex=exclude_items)
+            if not device_filter_list:
+                raise AbortFlow(
+                    reason='config_flow_error',
+                    description_placeholders={
+                        'error': 'invalid devices_filter'})
+            self._device_list_sorted = dict(sorted(
+                device_filter_list.items(), key=lambda item:
+                    item[1].get('home_id', '')+item[1].get('room_id', '')))
             return await self.update_devices_done_async()
         return await self.__display_devices_filter_form(reason='')
 
@@ -1388,6 +1401,8 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 ): vol.In(trans_statistics_logic),
             }),
             errors={'base': reason},
+            description_placeholders={
+                'devices_count': str(len(self._device_list_sorted))},
             last_step=False
         )
 
@@ -1598,6 +1613,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
 
 async def handle_oauth_webhook(hass, webhook_id, request):
+    """Webhook to handle oauth2 callback."""
     # pylint: disable=inconsistent-quotes
     try:
         data = dict(request.query)
@@ -1623,3 +1639,38 @@ async def handle_oauth_webhook(hass, webhook_id, request):
         return web.Response(
             body=oauth_redirect_page(hass.config.language, 'fail'),
             content_type='text/html')
+
+
+def _handle_devices_filter(
+    devices: dict, logic_or: bool, item_in: dict, item_ex: dict
+) -> dict:
+    """Private method to filter devices."""
+    include_set: Set = set([])
+    if not item_in:
+        include_set = set(devices.keys())
+    else:
+        filter_item: list[set] = []
+        for key, value in item_in.items():
+            filter_item.append(set([
+                did for did, info in devices.items()
+                if str(info[key]) in value]))
+        include_set = (
+            set.union(*filter_item)
+            if logic_or else set.intersection(*filter_item))
+    if not include_set:
+        return {}
+    if item_ex:
+        filter_item: list[set] = []
+        for key, value in item_ex.items():
+            filter_item.append(set([
+                did for did, info in devices.items()
+                if str(info[key]) in value]))
+        exclude_set: Set = (
+            set.union(*filter_item)
+            if logic_or else set.intersection(*filter_item))
+        if exclude_set:
+            include_set = include_set-exclude_set
+    if not include_set:
+        return {}
+    return {
+        did: info for did, info in devices.items() if did in include_set}
