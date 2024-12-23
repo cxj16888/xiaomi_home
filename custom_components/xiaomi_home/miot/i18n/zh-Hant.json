@@ -9,6 +9,10 @@
             "auto": "自動",
             "cloud": "雲端"
         },
+        "statistics_logic": {
+            "or": "或邏輯",
+            "and": "與邏輯"
+        },
         "filter_mode": {
             "exclude": "排除",
             "include": "包含"

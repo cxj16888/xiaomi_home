@@ -9,6 +9,10 @@
             "auto": "Auto",
             "cloud": "Cloud"
         },
+        "statistics_logic": {
+            "or": "OR logic",
+            "and": "AND logic"
+        },
         "filter_mode": {
             "exclude": "Exclude",
             "include": "Include"

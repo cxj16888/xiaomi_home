@@ -9,6 +9,10 @@
             "auto": "Automatisch",
             "cloud": "Cloud"
         },
+        "statistics_logic": {
+            "or": "OF-logica",
+            "and": "EN-logica"
+        },
         "filter_mode": {
             "exclude": "Uitsluiten",
             "include": "Inclusief"

@@ -9,6 +9,10 @@
             "auto": "自動",
             "cloud": "クラウド"
         },
+        "statistics_logic": {
+            "or": "ORロジック",
+            "and": "ANDロジック"
+        },
         "filter_mode": {
             "exclude": "除外",
             "include": "含む"

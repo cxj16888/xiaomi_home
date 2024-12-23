@@ -45,6 +45,7 @@
                 "title": "Filtrar Dispositivos",
                 "description": "## Introducción\r\n- Admite la filtración de dispositivos por nombre de habitación y tipo de dispositivo, y también admite la filtración por familia.\r\n- También puede volver a filtrar en la página correspondiente de la integración [Configuración>Actualizar lista de dispositivos].",
                 "data": {
+                    "statistics_logic": "Lógica de Estadísticas",
                     "room_filter_mode": "Filtrar Habitaciones de la Familia",
                     "room_list": "Habitaciones de la Familia",
                     "type_filter_mode": "Filtrar Tipo de Dispositivo",

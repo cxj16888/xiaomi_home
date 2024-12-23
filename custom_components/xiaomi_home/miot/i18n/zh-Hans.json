@@ -15,6 +15,10 @@
             "room": "房间名 （卧室）",
             "home": "家庭名 （米家）"
         },
+        "statistics_logic": {
+            "or": "或逻辑",
+            "and": "与逻辑"
+        },
         "filter_mode": {
             "exclude": "排除",
             "include": "包含"

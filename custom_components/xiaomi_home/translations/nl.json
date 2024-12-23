@@ -45,6 +45,7 @@
                 "title": "Apparaten filteren",
                 "description": "## Inleiding\r\n- Ondersteunt het filteren van apparaten op basis van kamer- en apparaattypen, en ondersteunt ook apparaatdimensiefiltering.\r\n- U kunt ook naar de overeenkomstige integratie-item [Configuratie>Apparaatlijst bijwerken] pagina gaan om opnieuw te filteren.",
                 "data": {
+                    "statistics_logic": "Statistische logica",
                     "room_filter_mode": "Kamerfiltermodus",
                     "room_list": "Kamers",
                     "type_filter_mode": "Apparaattypen filteren",

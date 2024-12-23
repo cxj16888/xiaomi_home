@@ -45,6 +45,7 @@
                 "title": "Geräte filtern",
                 "description": "## Gebrauchsanweisung\r\n- Unterstützt das Filtern von Geräten nach Raumnamen und Gerätetypen sowie das Filtern nach Gerätedimensionen.\r\n- Sie können auch die entsprechende Integrationsoption \"Konfiguration> Geräteliste aktualisieren\" aufrufen, um die Filterung erneut durchzuführen.",
                 "data": {
+                    "statistics_logic": "Statistiklogik",
                     "room_filter_mode": "Familienraum filtern",
                     "room_list": "Familienraum",
                     "type_filter_mode": "Gerätetyp filtern",

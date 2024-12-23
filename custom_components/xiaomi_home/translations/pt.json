@@ -45,6 +45,7 @@
                 "title": "Filtrar Dispositivos",
                 "description": "## Introdução\r\n- Suporta a filtragem de dispositivos por nome de sala e tipo de dispositivo, bem como a filtragem por família.\r\n- Pode também aceder à página de configuração correspondente da integração [Configuração > Atualizar Lista de Dispositivos] para refazer a filtragem.",
                 "data": {
+                    "statistics_logic": "Lógica de Estatísticas",
                     "room_filter_mode": "Filtrar por Sala",
                     "room_list": "Salas",
                     "type_filter_mode": "Filtrar por Tipo de Dispositivo",

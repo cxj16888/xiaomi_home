@@ -9,6 +9,10 @@
             "auto": "автоматический",
             "cloud": "облако"
         },
+        "statistics_logic": {
+            "or": "логика ИЛИ",
+            "and": "логика И"
+        },
         "filter_mode": {
             "exclude": "исключить",
             "include": "включить"

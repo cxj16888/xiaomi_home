@@ -45,6 +45,7 @@
                 "title": "Filter Devices",
                 "description": "## Introduction\r\n- Supports filtering devices by room name and device type, and also supports device dimension filtering.\r\n- You can also re-filter on the corresponding integration page [Configuration>Update Device List].",
                 "data": {
+                    "statistics_logic": "Statistics Logic",
                     "room_filter_mode": "Filter Family Rooms",
                     "room_list": "Family Rooms",
                     "type_filter_mode": "Filter Device Connect Type",
