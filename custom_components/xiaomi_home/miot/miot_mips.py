@@ -73,7 +73,7 @@ from .miot_error import MIoTErrorCode, MIoTMipsError
 _LOGGER = logging.getLogger(__name__)
 
 
-class MipsMsgTypeOptions(Enum):
+class _MipsMsgTypeOptions(Enum):
     """MIoT Pub/Sub message type."""
     ID = 0
     RET_TOPIC = auto()
@@ -82,7 +82,7 @@ class MipsMsgTypeOptions(Enum):
     MAX = auto()
 
 
-class MipsMessage:
+class _MipsMessage:
     """MIoT Pub/Sub message."""
     mid: int = 0
     msg_from: str | None = None
@@ -90,8 +90,8 @@ class MipsMessage:
     payload: str | None = None
 
     @staticmethod
-    def unpack(data: bytes) -> 'MipsMessage':
-        mips_msg = MipsMessage()
+    def unpack(data: bytes) -> '_MipsMessage':
+        mips_msg = _MipsMessage()
         data_len = len(data)
         data_start = 0
         data_end = 0
@@ -102,15 +102,15 @@ class MipsMessage:
             unpack_data = data[data_end:data_end+unpack_len]
             #  string end with \x00
             match unpack_type:
-                case MipsMsgTypeOptions.ID.value:
+                case _MipsMsgTypeOptions.ID.value:
                     mips_msg.mid = int.from_bytes(
                         unpack_data, byteorder='little')
-                case MipsMsgTypeOptions.RET_TOPIC.value:
+                case _MipsMsgTypeOptions.RET_TOPIC.value:
                     mips_msg.ret_topic = str(
                         unpack_data.strip(b'\x00'), 'utf-8')
-                case MipsMsgTypeOptions.PAYLOAD.value:
+                case _MipsMsgTypeOptions.PAYLOAD.value:
                     mips_msg.payload = str(unpack_data.strip(b'\x00'), 'utf-8')
-                case MipsMsgTypeOptions.FROM.value:
+                case _MipsMsgTypeOptions.FROM.value:
                     mips_msg.msg_from = str(
                         unpack_data.strip(b'\x00'), 'utf-8')
                 case _:
@@ -129,24 +129,24 @@ class MipsMessage:
             raise MIoTMipsError('invalid mid or payload')
         pack_msg: bytes = b''
         # mid
-        pack_msg += struct.pack('<IBI', 4, MipsMsgTypeOptions.ID.value, mid)
+        pack_msg += struct.pack('<IBI', 4, _MipsMsgTypeOptions.ID.value, mid)
         # msg_from
         if msg_from:
             pack_len = len(msg_from)
             pack_msg += struct.pack(
                 f'<IB{pack_len}sx', pack_len+1,
-                MipsMsgTypeOptions.FROM.value, msg_from.encode('utf-8'))
+                _MipsMsgTypeOptions.FROM.value, msg_from.encode('utf-8'))
         # ret_topic
         if ret_topic:
             pack_len = len(ret_topic)
             pack_msg += struct.pack(
                 f'<IB{pack_len}sx', pack_len+1,
-                MipsMsgTypeOptions.RET_TOPIC.value, ret_topic.encode('utf-8'))
+                _MipsMsgTypeOptions.RET_TOPIC.value, ret_topic.encode('utf-8'))
         # payload
         pack_len = len(payload)
         pack_msg += struct.pack(
             f'<IB{pack_len}sx', pack_len+1,
-            MipsMsgTypeOptions.PAYLOAD.value, payload.encode('utf-8'))
+            _MipsMsgTypeOptions.PAYLOAD.value, payload.encode('utf-8'))
         return pack_msg
 
     def __str__(self) -> str:
@@ -154,7 +154,7 @@ class MipsMessage:
 
 
 @dataclass
-class MipsRequest:
+class _MipsRequest:
     """MIoT Pub/Sub request."""
     mid: int
     on_reply: Callable[[str, Any], None]
@@ -162,16 +162,9 @@ class MipsRequest:
     timer: asyncio.TimerHandle | None
 
 
-@dataclass
-class MipsIncomingApiCall:
-    """MIoT Pub/Sub incoming API call."""
-    mid: int | None = None
-    ret_topic: str | None = None
-    timer: asyncio.TimerHandle | None = None
-
 
 @dataclass
-class MipsBroadcast:
+class _MipsBroadcast:
     """MIoT Pub/Sub broadcast."""
     topic: str
     """
@@ -187,7 +180,7 @@ class MipsBroadcast:
 
 
 @dataclass
-class MipsState:
+class _MipsState:
     """MIoT Pub/Sub state."""
     key: str
     """
@@ -204,7 +197,7 @@ class MIoTDeviceState(Enum):
     ONLINE = auto()
 
 
-class MipsClient(ABC):
+class _MipsClient(ABC):
     """MIoT Pub/Sub client."""
     # pylint: disable=unused-argument
     MQTT_INTERVAL_S = 1
@@ -238,7 +231,7 @@ class MipsClient(ABC):
     _mips_reconnect_tag: bool
     _mips_reconnect_interval: float
     _mips_reconnect_timer: Optional[asyncio.TimerHandle]
-    _mips_state_sub_map: dict[str, MipsState]
+    _mips_state_sub_map: dict[str, _MipsState]
     _mips_sub_pending_map: dict[str, int]
     _mips_sub_pending_timer: Optional[asyncio.TimerHandle]
 
@@ -770,7 +763,7 @@ class MipsClient(ABC):
     def __sub_mips_state(
         self, key: str, handler: Callable[[str, bool], Coroutine]
     ) -> None:
-        state = MipsState(key=key, handler=handler)
+        state = _MipsState(key=key, handler=handler)
         self._mips_state_sub_map[key] = state
         self.log_debug(f'mips register mips state, {key}')
 
@@ -788,7 +781,7 @@ class MipsClient(ABC):
         return self._mips_reconnect_interval
 
 
-class MipsCloudClient(MipsClient):
+class MipsCloudClient(_MipsClient):
     """MIoT Pub/Sub Cloud Client."""
     # pylint: disable=unused-argument
     # pylint: disable=inconsistent-quotes
@@ -1006,7 +999,7 @@ class MipsCloudClient(MipsClient):
         handler_ctx: Any = None
     ) -> None:
         if not self._msg_matcher.get(topic=topic):
-            sub_bc: MipsBroadcast = MipsBroadcast(
+            sub_bc: _MipsBroadcast = _MipsBroadcast(
                 topic=topic, handler=handler,
                 handler_ctx=handler_ctx)
             self._msg_matcher[topic] = sub_bc
@@ -1034,7 +1027,7 @@ class MipsCloudClient(MipsClient):
         NOTICE thread safe, this function will be called at the **mips** thread
         """
         # broadcast
-        bc_list: list[MipsBroadcast] = list(
+        bc_list: list[_MipsBroadcast] = list(
             self._msg_matcher.iter_match(topic))
         if not bc_list:
             return
@@ -1049,7 +1042,7 @@ class MipsCloudClient(MipsClient):
                 item.handler, topic, payload_str, item.handler_ctx)
 
 
-class MipsLocalClient(MipsClient):
+class MipsLocalClient(_MipsClient):
     """MIoT Pub/Sub Local Client."""
     # pylint: disable=unused-argument
     # pylint: disable=inconsistent-quotes
@@ -1063,7 +1056,7 @@ class MipsLocalClient(MipsClient):
     _mips_seed_id: int
     _reply_topic: str
     _dev_list_change_topic: str
-    _request_map: dict[str, MipsRequest]
+    _request_map: dict[str, _MipsRequest]
     _msg_matcher: MIoTMatcher
     _get_prop_queue: dict[str, list]
     _get_prop_timer: asyncio.TimerHandle | None
@@ -1398,7 +1391,7 @@ class MipsLocalClient(MipsClient):
             on_reply: Callable[[str, Any], None],
             on_reply_ctx: Any = None, timeout_ms: int = 10000
     ) -> None:
-        req = MipsRequest(
+        req = _MipsRequest(
             mid=self.__gen_mips_id,
             on_reply=on_reply,
             on_reply_ctx=on_reply_ctx,
@@ -1411,7 +1404,7 @@ class MipsLocalClient(MipsClient):
             f'mips local call api, {result}, {req.mid}, {pub_topic}, '
             f'{payload}')
 
-        def on_request_timeout(req: MipsRequest):
+        def on_request_timeout(req: _MipsRequest):
             self.log_error(
                 f'on mips request timeout, {req.mid}, {pub_topic}'
                 f', {payload}')
@@ -1429,7 +1422,7 @@ class MipsLocalClient(MipsClient):
     ) -> None:
         sub_topic: str = f'{self._did}/{topic}'
         if not self._msg_matcher.get(sub_topic):
-            sub_bc: MipsBroadcast = MipsBroadcast(
+            sub_bc: _MipsBroadcast = _MipsBroadcast(
                 topic=sub_topic, handler=handler,
                 handler_ctx=handler_ctx)
             self._msg_matcher[sub_topic] = sub_bc
@@ -1465,13 +1458,13 @@ class MipsLocalClient(MipsClient):
 
     @final
     def _on_mips_message(self, topic: str, payload: bytes) -> None:
-        mips_msg: MipsMessage = MipsMessage.unpack(payload)
+        mips_msg: _MipsMessage = _MipsMessage.unpack(payload)
         # self.log_debug(
         #     f"mips local client, on_message, {topic} -> {mips_msg}")
         # Reply
         if topic == self._reply_topic:
             self.log_debug(f'on request reply, {mips_msg}')
-            req: MipsRequest | None = self._request_map.pop(
+            req: _MipsRequest | None = self._request_map.pop(
                 str(mips_msg.mid), None)
             if req:
                 # Cancel timer
@@ -1483,7 +1476,7 @@ class MipsLocalClient(MipsClient):
                         req.on_reply_ctx)
             return
         # Broadcast
-        bc_list: list[MipsBroadcast] = list(self._msg_matcher.iter_match(
+        bc_list: list[_MipsBroadcast] = list(self._msg_matcher.iter_match(
             topic=topic))
         if bc_list:
             self.log_debug(f'on broadcast, {topic}, {mips_msg}')
@@ -1529,7 +1522,7 @@ class MipsLocalClient(MipsClient):
         wait_for_publish: bool = False,
         timeout_ms: int = 10000
     ) -> bool:
-        mips_msg: bytes = MipsMessage.pack(
+        mips_msg: bytes = _MipsMessage.pack(
             mid=mid or self.__gen_mips_id, payload=payload,
             msg_from='local', ret_topic=ret_topic)
         return self._mips_publish_internal(
