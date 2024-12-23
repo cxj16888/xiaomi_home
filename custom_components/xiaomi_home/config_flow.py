@@ -497,10 +497,9 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if home_id in home_selected:
                     self._home_selected[home_id] = home_info
             self._area_name_rule = user_input.get('area_name_rule')
-            self._action_debug = user_input.get(
-                'action_debug', self._action_debug)
-            self._hide_non_standard_entities = user_input.get(
-                'hide_non_standard_entities', self._hide_non_standard_entities)
+            # Check if advanced options should be shown
+            show_advanced_options = user_input.get(
+                'show_advanced_options', False)
             # Storage device list
             devices_list: dict[str, dict] = {
                 did: dev_info
@@ -525,6 +524,10 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         'auth_info': self._auth_info
                     })):
                 raise MIoTError('miot_storage.update_user_config_async error')
+            # If advanced options should be shown, go to the advanced step
+            if show_advanced_options:
+                return await self.async_step_advanced_options()
+            # If not, create the entry directly
             return self.async_create_entry(
                 title=(
                     f'{self._nick_name}: {self._uid} '
@@ -564,16 +567,54 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required('home_infos'): cv.multi_select(self._home_list),
                 vol.Required('area_name_rule', default='room'): vol.In(
                     self._miot_i18n.translate(key='config.room_name_rule')),
-                vol.Required('action_debug', default=self._action_debug): bool,
-                vol.Required(
-                    'hide_non_standard_entities',
-                    default=self._hide_non_standard_entities): bool,
+                vol.Required('show_advanced_options', default=False): bool,
             }),
             errors={'base': reason},
             description_placeholders={
                 'nick_name': self._nick_name,
             },
             last_step=False,
+        )
+
+    async def async_step_advanced_options(self, user_input=None):
+        if user_input is not None:
+            # Advanced options, the default values are specified alongside
+            # the definition of each variable
+            self._action_debug = user_input.get(
+                'action_debug', self._action_debug)
+            self._hide_non_standard_entities = user_input.get(
+                'hide_non_standard_entities', self._hide_non_standard_entities)
+            return self.async_create_entry(
+                title=(
+                    f'{self._nick_name}: {self._uid} '
+                    f'[{CLOUD_SERVERS[self._cloud_server]}]'),
+                data={
+                    'virtual_did': self._virtual_did,
+                    'uuid': self._uuid,
+                    'integration_language': self._integration_language,
+                    'storage_path': self._storage_path,
+                    'uid': self._uid,
+                    'nick_name': self._nick_name,
+                    'cloud_server': self._cloud_server,
+                    'oauth_redirect_url': self._oauth_redirect_url,
+                    'ctrl_mode': self._ctrl_mode,
+                    'home_selected': self._home_selected,
+                    'area_name_rule': self._area_name_rule,
+                    'action_debug': self._action_debug,
+                    'hide_non_standard_entities':
+                        self._hide_non_standard_entities,
+                }
+            )
+
+        return self.async_show_form(
+            step_id='advanced_options',
+            data_schema=vol.Schema({
+                vol.Required('action_debug', default=self._action_debug): bool,
+                vol.Required(
+                    'hide_non_standard_entities',
+                    default=self._hide_non_standard_entities): bool,
+            }),
+            last_step=True,
         )
 
     @staticmethod
