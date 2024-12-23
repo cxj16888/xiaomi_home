@@ -196,6 +196,17 @@ class MIoTDeviceState(Enum):
     OFFLINE = auto()
     ONLINE = auto()
 
+@dataclass
+class MipsDeviceState:
+    """MIoT Pub/Sub device state."""
+    did: str | None = None
+    """handler
+    str: did
+    MIoTDeviceState: online/offline/disable
+    Any: ctx
+    """
+    handler: Callable[[str, MIoTDeviceState, Any], None] | None = None
+    handler_ctx: Any = None
 
 class _MipsClient(ABC):
     """MIoT Pub/Sub client."""
