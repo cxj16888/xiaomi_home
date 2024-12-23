@@ -227,7 +227,7 @@ class _MipsClient(ABC):
     _event_connect: asyncio.Event
     _event_disconnect: asyncio.Event
     _internal_loop: asyncio.AbstractEventLoop
-    _mips_thread: threading.Thread
+    _mips_thread: threading.Thread | None = None
     _mips_reconnect_tag: bool
     _mips_reconnect_interval: float
     _mips_reconnect_timer: Optional[asyncio.TimerHandle]
@@ -302,20 +302,23 @@ class _MipsClient(ABC):
         """
         return self._mqtt and self._mqtt.is_connected()
 
-    @final
-    def connect(self) -> None:
+    def connect(self, thread_name: Optional[str] = None) -> None:
         """mips connect."""
         # Start mips thread
+        if self._mips_thread:
+            return
         self._internal_loop = asyncio.new_event_loop()
         self._mips_thread = threading.Thread(target=self.__mips_loop_thread)
         self._mips_thread.daemon = True
-        self._mips_thread.name = self._client_id
+        self._mips_thread.name = \
+            self._client_id if thread_name is None else thread_name
         self._mips_thread.start()
 
     @final
     def close(self) -> None:
         self._internal_loop.call_soon_threadsafe(self.__mips_close)
-        self._mips_thread.join()
+        if self._mips_thread:
+            self._mips_thread.join()
         self._internal_loop.close()
 
         self._logger = None
@@ -1066,8 +1069,6 @@ class MipsLocalClient(_MipsClient):
         super().__init__(
             client_id=did, host=host, port=port,
             ca_file=ca_file, cert_file=cert_file, key_file=key_file, loop=loop)
-        # MIPS local thread name use group_id
-        self._mips_thread.name = self._group_id
 
     @property
     def group_id(self) -> str:
@@ -1084,6 +1085,11 @@ class MipsLocalClient(_MipsClient):
     def log_error(self, msg, *args, **kwargs) -> None:
         if self._logger:
             self._logger.error(f'{self._home_name}, '+msg, *args, **kwargs)
+
+    @final
+    def connect(self, thread_name: Optional[str] = None) -> None:
+        # MIPS local thread name use group_id
+        super().connect(self._group_id)
 
     @final
     def disconnect(self) -> None:
