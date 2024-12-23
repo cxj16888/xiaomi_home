@@ -114,8 +114,24 @@
                 "title": "Huis en Apparaten opnieuw selecteren",
                 "description": "## Gebruiksinstructies\r\n### Controlemodus\r\n- Auto: Wanneer er een beschikbare Xiaomi centrale hubgateway in het lokale netwerk is, geeft Home Assistant de voorkeur aan het verzenden van apparaatbedieningscommando's via de centrale hubgateway om lokale controle te bereiken. Als er geen centrale hubgateway in het lokale netwerk is, zal het proberen bedieningscommando's te verzenden via de Xiaomi LAN-controlefunctie. Alleen wanneer de bovenstaande lokale controlevoorwaarden niet zijn vervuld, worden de apparaatbedieningscommando's via de cloud verzonden.\r\n- Cloud: Alle bedieningscommando's worden via de cloud verzonden.\r\n### Apparaten importeren vanuit huis\r\nDe integratie voegt apparaten toe van de geselecteerde huizen.\r\n&emsp;\r\n### Hallo {nick_name}, selecteer alstublieft de integratie controlemethodiek en het huis waar het apparaat dat u wilt importeren zich bevindt.",
                 "data": {
-                    "ctrl_mode": "Controlemodus",
-                    "home_infos": "Importeer apparaten uit huis"
+                    "home_infos": "Importeer apparaten uit huis",
+                    "devices_filter": "Apparaten filteren",
+                    "ctrl_mode": "Controlemodus"
+                }
+            },
+            "devices_filter": {
+                "title": "Apparaten filteren",
+                "description": "## Inleiding\r\n- Ondersteunt het filteren van apparaten op basis van kamer- en apparaattypen, en ondersteunt ook apparaatdimensiefiltering.\r\n- U kunt ook naar de overeenkomstige integratie-item [Configuratie>Apparaatlijst bijwerken] pagina gaan om opnieuw te filteren.",
+                "data": {
+                    "statistics_logic": "Statistische logica",
+                    "room_filter_mode": "Kamerfiltermodus",
+                    "room_list": "Kamers",
+                    "type_filter_mode": "Apparaattypen filteren",
+                    "type_list": "Apparaattypen",
+                    "model_filter_mode": "Apparaatmodel filteren",
+                    "model_list": "Apparaatmodellen",
+                    "devices_filter_mode": "Apparaten filteren",
+                    "device_list": "Apparaatlijst"
                 }
             },
             "update_trans_rules": {

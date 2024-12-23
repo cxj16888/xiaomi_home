@@ -114,8 +114,24 @@
                 "title": "Selecionar novamente a Casa e os Dispositivos",
                 "description": "## Instruções de Utilização\r\n### Modo de Controlo\r\n- Automático: Quando houver um gateway central Xiaomi disponível na rede local, o Home Assistant priorizará o envio de comandos através dele para obter controlo local. Se não existir um gateway central, tentará enviar comandos através da função de controlo LAN da Xiaomi. Apenas se estas condições não forem satisfeitas, os comandos serão enviados pela nuvem.\r\n- Nuvem: Todos os comandos de controlo são enviados através da nuvem.\r\n### Importar dispositivos da casa\r\nA integração adicionará dispositivos das casas selecionadas.\r\n&emsp;\r\n### Olá {nick_name}, selecione o modo de controlo da integração e a casa da qual pretende importar dispositivos.",
                 "data": {
-                    "ctrl_mode": "Modo de Controlo",
-                    "home_infos": "Importar dispositivos da casa"
+                    "home_infos": "Importar dispositivos da casa",
+                    "devices_filter": "Filtrar Dispositivos",
+                    "ctrl_mode": "Modo de Controlo"
+                }
+            },
+            "devices_filter": {
+                "title": "Filtrar Dispositivos",
+                "description": "## Introdução\r\n- Suporta a filtragem de dispositivos por nome de sala e tipo de dispositivo, bem como a filtragem por família.\r\n- Pode também aceder à página de configuração correspondente da integração [Configuração > Atualizar Lista de Dispositivos] para refazer a filtragem.",
+                "data": {
+                    "statistics_logic": "Lógica de Estatísticas",
+                    "room_filter_mode": "Filtrar por Sala",
+                    "room_list": "Salas",
+                    "type_filter_mode": "Filtrar por Tipo de Dispositivo",
+                    "type_list": "Tipos de Dispositivo",
+                    "model_filter_mode": "Filtrar por Modelo de Dispositivo",
+                    "model_list": "Modelos de Dispositivo",
+                    "devices_filter_mode": "Filtrar Dispositivos",
+                    "device_list": "Lista de Dispositivos"
                 }
             },
             "update_trans_rules": {
