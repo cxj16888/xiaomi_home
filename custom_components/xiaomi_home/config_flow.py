@@ -365,6 +365,13 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 except (MIoTOauthError, json.JSONDecodeError):
                     self._nick_name = DEFAULT_NICK_NAME
                     _LOGGER.error('get nick name failed')
+                # Save auth_info
+                if not (await self._miot_storage.update_user_config_async(
+                        uid=self._uid, cloud_server=self._cloud_server, config={
+                            'auth_info': self._auth_info
+                        })):
+                    raise MIoTError(
+                        'miot_storage.update_user_config_async error')
             except Exception as err:
                 _LOGGER.error(
                     'get_access_token, %s, %s', err, traceback.format_exc())
@@ -607,7 +614,7 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     self._device_list_filter = {
                         did: dev_info
                         for did, dev_info in self._device_list_sorted.items()
-                        if dev_info['connect_type'] in type_list_in}
+                        if str(dev_info['connect_type']) in type_list_in}
             # Model filter
             model_list_in: list = user_input.get('model_list', [])
             if model_list_in:
@@ -640,9 +647,15 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         if did in device_list_in}
                 else:
                     raise MIoTError('invalid devices_filter_mode')
+            if self._device_list_filter:
+                raise AbortFlow(
+                    reason='config_flow_error',
+                    description_placeholders={
+                        'error': 'invalid devices_filter'})
             self._device_list_sorted = dict(sorted(
                 self._device_list_filter.items(), key=lambda item:
                     item[1].get('home_id', '')+item[1].get('room_id', '')))
+            # Save devices
             if not await self._miot_storage.save_async(
                     domain='miot_devices',
                     name=f'{self._uid}_{self._cloud_server}',
@@ -724,11 +737,6 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def config_flow_done(self):
-        if not (await self._miot_storage.update_user_config_async(
-                uid=self._uid, cloud_server=self._cloud_server, config={
-                    'auth_info': self._auth_info
-                })):
-            raise MIoTError('miot_storage.update_user_config_async error')
         return self.async_create_entry(
             title=(
                 f'{self._nick_name}: {self._uid} '
