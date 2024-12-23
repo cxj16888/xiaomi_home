@@ -76,6 +76,8 @@ HACS > 右上角三个点 > Custom repositories > Repository: https://github.com
 
 米家集成及其使用的云端接口由小米官方提供。您需要使用小米账号登录以获取设备列表。米家集成使用 OAuth 2.0 的登录方式，不会在 Home Assistant 中保存您的小米账号密码。但由于 Home Assistant 平台的限制，登录成功后，您的小米用户信息（包括设备信息、证书、 token 等）会明文保存在 Home Assistant 的配置文件中。因此，您需要保管好自己 Home Assistant 配置文件。一旦该文件泄露，其他人可能会冒用您的身份登录。
 
+> 如果您怀疑您的 OAuth 2.0 令牌已泄露，您可以通过以下步骤取消小米账号的登录授权： 米家 APP -> 我的 -> 点击用户名进入小米账号页面 -> 应用授权 -> Xiaomi Home (Home Assistant Integration) -> 取消授权
+
 ## 常见问题
 
 - 米家集成是否支持所有的小米米家设备？
