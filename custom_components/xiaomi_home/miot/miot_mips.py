@@ -305,9 +305,6 @@ class _MipsClient(ABC):
     @final
     def connect(self) -> None:
         """mips connect."""
-        # TODO: make this more precise
-        # Mark as not closed, though also not connected yet
-        self._is_closed = False
         # Start mips thread
         self._internal_loop = asyncio.new_event_loop()
         self._mips_thread = threading.Thread(target=self.__mips_loop_thread)
@@ -317,8 +314,6 @@ class _MipsClient(ABC):
 
     @final
     def close(self) -> None:
-        self._is_connected = False
-
         self._internal_loop.call_soon_threadsafe(self.__mips_close)
         self._mips_thread.join()
         self._internal_loop.close()
@@ -362,21 +357,18 @@ class _MipsClient(ABC):
         else:
             self._mqtt.disable_logger()
 
-    @final
-    async def mips_connect_async(self) -> None:
+    async def connect_async(self) -> None:
         """mips connect async."""
         self.connect()
         await self._event_connect.wait()
 
-    @final
-    def mips_disconnect(self) -> None:
+    def disconnect(self) -> None:
         """mips disconnect."""
         self._internal_loop.call_soon_threadsafe(self.__mips_disconnect)
 
-    @final
-    async def mips_disconnect_async(self) -> None:
+    async def disconnect_async(self) -> None:
         """mips disconnect async."""
-        self.mips_disconnect()
+        self.disconnect()
         await self._event_disconnect.wait()
 
     @final
@@ -798,17 +790,8 @@ class MipsCloudClient(_MipsClient):
             port=port, username=app_id, password=token, loop=loop)
 
     @final
-    async def connect_async(self) -> None:
-        await self.mips_connect_async()
-
-    @final
     def disconnect(self) -> None:
-        self.mips_disconnect()
-        self._msg_matcher = MIoTMatcher()
-
-    @final
-    async def disconnect_async(self) -> None:
-        await self.mips_disconnect_async()
+        super().disconnect()
         self._msg_matcher = MIoTMatcher()
 
     def update_access_token(self, access_token: str) -> bool:
@@ -1103,18 +1086,8 @@ class MipsLocalClient(_MipsClient):
             self._logger.error(f'{self._home_name}, '+msg, *args, **kwargs)
 
     @final
-    async def connect_async(self) -> None:
-        await self.mips_connect_async()
-
-    @final
     def disconnect(self) -> None:
-        self.mips_disconnect()
-        self._request_map = {}
-        self._msg_matcher = MIoTMatcher()
-
-    @final
-    async def disconnect_async(self) -> None:
-        await self.mips_disconnect_async()
+        super().disconnect()
         self._request_map = {}
         self._msg_matcher = MIoTMatcher()
 
