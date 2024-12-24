@@ -49,7 +49,7 @@ import asyncio
 import json
 import platform
 import time
-from typing import Optional
+from typing import Any, Optional
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 import logging
@@ -78,10 +78,10 @@ class MIoTSpecBase:
 
     # External params
     platform: str
-    device_class: any
-    state_class: any
+    device_class: Any
+    state_class: Any
     icon: str
-    external_unit: any
+    external_unit: Any
 
     spec_id: str
 
@@ -168,7 +168,7 @@ class MIoTSpecProperty(MIoTSpecBase):
     def notifiable(self):
         return self._notifiable
 
-    def value_format(self, value: any) -> any:
+    def value_format(self, value: Any) -> Any:
         if value is None:
             return None
         if self.format_ == 'int':
@@ -298,7 +298,7 @@ class MIoTSpecInstance:
 
     # External params
     platform: str
-    device_class: any
+    device_class: Any
     icon: str
 
     def __init__(

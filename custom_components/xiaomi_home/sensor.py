@@ -47,6 +47,7 @@ Sensor entities for Xiaomi Home.
 """
 from __future__ import annotations
 import logging
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -110,7 +111,7 @@ class Sensor(MIoTPropertyEntity, SensorEntity):
             self._attr_state_class = spec.state_class
 
     @property
-    def native_value(self) -> any:
+    def native_value(self) -> Any:
         """Return the current value of the sensor."""
         if self._value_range and isinstance(self._value, (int, float)):
             if (

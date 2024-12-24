@@ -23,9 +23,10 @@
         "paho-mqtt<=2.0.0",
         "numpy",
         "cryptography",
-        "psutil"
+        "psutil",
+        "aiohttp[speedups]"
     ],
-    "version": "v0.1.0",
+    "version": "v0.1.4b0",
     "zeroconf": [
         "_miot-central._tcp.local."
     ]

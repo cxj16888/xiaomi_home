@@ -8,7 +8,7 @@ Xiaomi Home Integration is an integrated component of Home Assistant supported b
 
 > Home Assistant version requirement:
 >
-> - Core $\geq$ 2024.11.0
+> - Core $\geq$ 2024.4.4
 > - Operating System $\geq$ 13.0
 
 ### Method 1: Git clone from GitHub
@@ -32,7 +32,7 @@ git checkout v1.0.0
 
 ### Method 2: [HACS](https://hacs.xyz/)
 
-HACS > Overflow Menu > Custom repositories > Repository: https://github.com/XiaoMi/ha_xiaomi_home.git & Category: Integration > ADD
+HACS > Overflow Menu > Custom repositories > Repository: https://github.com/XiaoMi/ha_xiaomi_home.git & Category: Integration > ADD > Xiaomi Home in New or Available for download section of HACS > DOWNLOAD
 
 > Xiaomi Home has not been added to the HACS store as a default yet. It's coming soon.
 
@@ -75,6 +75,8 @@ Method: [Settings > Devices & services > Configured > Xiaomi Home](https://my.ho
 ## Security
 
 Xiaomi Home Integration and the affiliated cloud interface is provided by Xiaomi officially. You need to use your Xiaomi account to login to get your device list. Xiaomi Home Integration implements OAuth 2.0 login process, which does not keep your account password in the Home Assistant application. However, due to the limitation of the Home Assistant platform, the user information (including device information, certificates, tokens, etc.) of your Xiaomi account will be saved in the Home Assistant configuration file in clear text after successful login. You need to ensure that your Home Assistant configuration file is properly stored. The exposure of your configuration file may result in others logging in with your identity.
+
+> If you suspect that your OAuth 2.0 token has been leaked, you can revoke the login authorization of your Xiaomi account by the following steps: Xiaomi Home APP -> Profile -> Click your username and get into Xiaomi Account management page -> Basic info: Apps -> Xiaomi Home (Home Assistant Integration) -> Remove
 
 ## FAQ
 
@@ -323,7 +325,7 @@ Device information service (urn:miot-spec-v2:service:device-information:00007801
 
 ## Multiple Language Support
 
-There are 8 languages available for selection in the config flow language option of Xiaomi Home, including Simplified Chinese, Traditional Chinese, English, Spanish, Russian, French, German, and Japanese. The config flow page in Simplified Chinese and English has been manually reviewed by the developer. Other languages are translated by machine translation. If you want to modify the words and sentences in the config flow page, you need to modify the json file of the certain language in `custom_components/xiaomi_home/translations/` directory.
+There are 8 languages available for selection in the config flow language option of Xiaomi Home, including Simplified Chinese, Traditional Chinese, English, Spanish, Russian, French, German, and Japanese. The config flow page in Simplified Chinese and English has been manually reviewed by the developer. Other languages are translated by machine translation. If you want to modify the words and sentences in the config flow page, you need to modify the json file of the certain language in `custom_components/xiaomi_home/translations/` and `custom_components/xiaomi_home/miot/i18n/` directory.
 
 When displaying Home Assistant entity name, Xiaomi Home downloads the multiple language file configured by the device vendor from MIoT Cloud, which contains translations for MIoT-Spec-V2 instances of the device. `multi_lang.json` is a locally maintained multiple language dictionary, which has a higher priority than the multiple language file obtained from the cloud and can be used to supplement or modify the multiple language translation of devices.
 
@@ -376,8 +378,8 @@ Example:
 ## Documents
 
 - [License](./LICENSE.md)
-- Contribution Guidelines: [English](./doc/CONTRIBUTING.md) | [简体中文](./doc/CONTRIBUTING_zh.md)
-- [ChangeLog](./doc/CHANGELOG.md)
+- Contribution Guidelines: [English](./CONTRIBUTING.md) | [简体中文](./doc/CONTRIBUTING_zh.md)
+- [ChangeLog](./CHANGELOG.md)
 - Development Documents: https://developers.home-assistant.io/docs/creating_component_index
 
 ## Directory Structure
