@@ -1,7 +1,52 @@
 # -*- coding: utf-8 -*-
-"""MIoT client instance."""
+"""
+Copyright (C) 2024 Xiaomi Corporation.
+
+The ownership and intellectual property rights of Xiaomi Home Assistant
+Integration and related Xiaomi cloud service API interface provided under this
+license, including source code and object code (collectively, "Licensed Work"),
+are owned by Xiaomi. Subject to the terms and conditions of this License, Xiaomi
+hereby grants you a personal, limited, non-exclusive, non-transferable,
+non-sublicensable, and royalty-free license to reproduce, use, modify, and
+distribute the Licensed Work only for your use of Home Assistant for
+non-commercial purposes. For the avoidance of doubt, Xiaomi does not authorize
+you to use the Licensed Work for any other purpose, including but not limited
+to use Licensed Work to develop applications (APP), Web services, and other
+forms of software.
+
+You may reproduce and distribute copies of the Licensed Work, with or without
+modifications, whether in source or object form, provided that you must give
+any other recipients of the Licensed Work a copy of this License and retain all
+copyright and disclaimers.
+
+Xiaomi provides the Licensed Work on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied, including, without
+limitation, any warranties, undertakes, or conditions of TITLE, NO ERROR OR
+OMISSION, CONTINUITY, RELIABILITY, NON-INFRINGEMENT, MERCHANTABILITY, or
+FITNESS FOR A PARTICULAR PURPOSE. In any event, you are solely responsible
+for any direct, indirect, special, incidental, or consequential damages or
+losses arising from the use or inability to use the Licensed Work.
+
+Xiaomi reserves all rights not expressly granted to you in this License.
+Except for the rights expressly granted by Xiaomi under this License, Xiaomi
+does not authorize you in any form to use the trademarks, copyrights, or other
+forms of intellectual property rights of Xiaomi and its affiliates, including,
+without limitation, without obtaining other written permission from Xiaomi, you
+shall not use "Xiaomi", "Mijia" and other words related to Xiaomi or words that
+may make the public associate with Xiaomi in any form to publicize or promote
+the software or hardware devices that use the Licensed Work.
+
+Xiaomi has the right to immediately terminate all your authorization under this
+License in the event:
+1. You assert patent invalidation, litigation, or other claims against patents
+or other intellectual property rights of Xiaomi or its affiliates; or,
+2. You make, have made, manufacture, sell, or offer to sell products that knock
+off Xiaomi or its affiliates' products.
+
+MIoT client instance.
+"""
 from copy import deepcopy
-from typing import Callable, Optional, final
+from typing import Any, Callable, Optional, final
 import asyncio
 import json
 import logging
@@ -36,9 +81,9 @@ _LOGGER = logging.getLogger(__name__)
 @dataclass
 class MIoTClientSub:
     """MIoT client subscription."""
-    topic: str = None
-    handler: Callable[[dict, any], None] = None
-    handler_ctx: any = None
+    topic: Optional[str]
+    handler: Callable[[dict, Any], None]
+    handler_ctx: Any = None
 
     def __str__(self) -> str:
         return f'{self.topic}, {id(self.handler)}, {id(self.handler_ctx)}'
@@ -119,9 +164,11 @@ class MIoTClient:
     _refresh_props_retry_count: int
 
     # Persistence notify handler, params: notify_id, title, message
-    _persistence_notify: Callable[[str, str, str], None]
+    _persistence_notify: Callable[[str, Optional[str], Optional[str]], None]
     # Device list changed notify
     _show_devices_changed_notify_timer: Optional[asyncio.TimerHandle]
+    # Display devices changed notify
+    _display_devs_notify: list[str]
 
     def __init__(
             self,
@@ -186,6 +233,9 @@ class MIoTClient:
         self._persistence_notify = None
         self._show_devices_changed_notify_timer = None
 
+        self._display_devs_notify = entry_data.get(
+            'display_devices_changed_notify', ['add', 'del', 'offline'])
+
     async def init_async(self) -> None:
         # Load user config and check
         self._user_config = await self._storage.load_user_config_async(
@@ -194,14 +244,14 @@ class MIoTClient:
             # Integration need to be add again
             raise MIoTClientError('load_user_config_async error')
         _LOGGER.debug('user config, %s', json.dumps(self._user_config))
-        # Load cache device list
-        await self.__load_cache_device_async()
         # MIoT i18n client
         self._i18n = MIoTI18n(
             lang=self._entry_data.get(
                 'integration_language', DEFAULT_INTEGRATION_LANGUAGE),
             loop=self._main_loop)
         await self._i18n.init_async()
+        # Load cache device list
+        await self.__load_cache_device_async()
         # MIoT oauth client instance
         self._oauth = MIoTOauthClient(
             client_id=OAUTH2_CLIENT_ID,
@@ -345,6 +395,8 @@ class MIoTClient:
         if self._show_devices_changed_notify_timer:
             self._show_devices_changed_notify_timer.cancel()
             self._show_devices_changed_notify_timer = None
+        await self._oauth.deinit_async()
+        await self._http.deinit_async()
         # Remove notify
         self._persistence_notify(
             self.__gen_notify_key('dev_list_changed'), None, None)
@@ -411,6 +463,21 @@ class MIoTClient:
     def hide_non_standard_entities(self) -> bool:
         return self._entry_data.get(
             'hide_non_standard_entities', False)
+
+    @property
+    def display_devices_changed_notify(self) -> list[str]:
+        return self._display_devs_notify
+
+    @display_devices_changed_notify.setter
+    def display_devices_changed_notify(self, value: list[str]) -> None:
+        if set(value) == set(self._display_devs_notify):
+            return
+        self._display_devs_notify = value
+        if value:
+            self.__request_show_devices_changed_notify()
+        else:
+            self._persistence_notify(
+                self.__gen_notify_key('dev_list_changed'), None, None)
 
     @property
     def device_list(self) -> dict:
@@ -526,7 +593,7 @@ class MIoTClient:
         return False
 
     async def set_prop_async(
-        self, did: str, siid: int, piid: int, value: any
+        self, did: str, siid: int, piid: int, value: Any
     ) -> bool:
         if did not in self._device_list_cache:
             raise MIoTClientError(f'did not exist, {did}')
@@ -612,7 +679,7 @@ class MIoTClient:
             0.2, lambda: self._main_loop.create_task(
                 self.__refresh_props_handler()))
 
-    async def get_prop_async(self, did: str, siid: int, piid: int) -> any:
+    async def get_prop_async(self, did: str, siid: int, piid: int) -> Any:
         if did not in self._device_list_cache:
             raise MIoTClientError(f'did not exist, {did}')
 
@@ -717,8 +784,8 @@ class MIoTClient:
         return None
 
     def sub_prop(
-        self, did: str, handler: Callable[[dict, any], None],
-        siid: int = None, piid: int = None, handler_ctx: any = None
+        self, did: str, handler: Callable[[dict, Any], None],
+        siid: int = None, piid: int = None, handler_ctx: Any = None
     ) -> bool:
         if did not in self._device_list_cache:
             raise MIoTClientError(f'did not exist, {did}')
@@ -741,8 +808,8 @@ class MIoTClient:
         return True
 
     def sub_event(
-        self, did: str, handler: Callable[[dict, any], None],
-        siid: int = None, eiid: int = None, handler_ctx: any = None
+        self, did: str, handler: Callable[[dict, Any], None],
+        siid: int = None, eiid: int = None, handler_ctx: Any = None
     ) -> bool:
         if did not in self._device_list_cache:
             raise MIoTClientError(f'did not exist, {did}')
@@ -764,8 +831,8 @@ class MIoTClient:
         return True
 
     def sub_device_state(
-        self, did: str, handler: Callable[[str, MIoTDeviceState, any], None],
-        handler_ctx: any = None
+        self, did: str, handler: Callable[[str, MIoTDeviceState, Any], None],
+        handler_ctx: Any = None
     ) -> bool:
         """Call callback handler in main loop"""
         if did not in self._device_list_cache:
@@ -1060,7 +1127,7 @@ class MIoTClient:
 
     @final
     def __on_cloud_device_state_changed(
-        self, did: str, state: MIoTDeviceState, ctx: any
+        self, did: str, state: MIoTDeviceState, ctx: Any
     ) -> None:
         _LOGGER.info('cloud device state changed, %s, %s', did, state)
         cloud_device = self._device_list_cloud.get(did, None)
@@ -1110,7 +1177,7 @@ class MIoTClient:
 
     @final
     async def __on_lan_device_state_changed(
-        self, did: str, state: dict, ctx: any
+        self, did: str, state: dict, ctx: Any
     ) -> None:
         _LOGGER.info('lan device state changed, %s, %s', did, state)
         lan_state_new: bool = state.get('online', False)
@@ -1146,7 +1213,7 @@ class MIoTClient:
         self.__request_show_devices_changed_notify()
 
     @final
-    def __on_prop_msg(self, params: dict, ctx: any) -> None:
+    def __on_prop_msg(self, params: dict, ctx: Any) -> None:
         """params MUST contain did, siid, piid, value"""
         # BLE device has no online/offline msg
         try:
@@ -1158,7 +1225,7 @@ class MIoTClient:
             _LOGGER.error('on prop msg error, %s, %s', params, err)
 
     @final
-    def __on_event_msg(self, params: dict, ctx: any) -> None:
+    def __on_event_msg(self, params: dict, ctx: Any) -> None:
         try:
             subs: list[MIoTClientSub] = list(self._sub_tree.iter_match(
                 f'{params["did"]}/e/{params["siid"]}/{params["eiid"]}'))
@@ -1669,15 +1736,16 @@ class MIoTClient:
         count_offline: int = 0
 
         # New devices
-        for did, info in {
-                **self._device_list_gateway, **self._device_list_cloud
-        }.items():
-            if did in self._device_list_cache:
-                continue
-            count_add += 1
-            message_add += (
-                f'- {info.get("name", "unknown")} ({did}, '
-                f'{info.get("model", "unknown")})\n')
+        if 'add' in self._display_devs_notify:
+            for did, info in {
+                    **self._device_list_gateway, **self._device_list_cloud
+            }.items():
+                if did in self._device_list_cache:
+                    continue
+                count_add += 1
+                message_add += (
+                    f'- {info.get("name", "unknown")} ({did}, '
+                    f'{info.get("model", "unknown")})\n')
         # Get unavailable and offline devices
         home_name_del: Optional[str] = None
         home_name_offline: Optional[str] = None
@@ -1687,7 +1755,7 @@ class MIoTClient:
             if online:
                 # Skip online device
                 continue
-            if online is None:
+            if 'del' in self._display_devs_notify and online is None:
                 # Device not exist
                 if home_name_del != home_name_new:
                     message_del += f'\n[{home_name_new}]\n'
@@ -1696,7 +1764,8 @@ class MIoTClient:
                 message_del += (
                     f'- {info.get("name", "unknown")} ({did}, '
                     f'{info.get("room_name", "unknown")})\n')
-            else:
+                continue
+            if 'offline' in self._display_devs_notify:
                 # Device offline
                 if home_name_offline != home_name_new:
                     message_offline += f'\n[{home_name_new}]\n'
@@ -1707,19 +1776,19 @@ class MIoTClient:
                     f'{info.get("room_name", "unknown")})\n')
 
         message = ''
-        if count_add:
+        if 'add' in self._display_devs_notify and count_add:
             message += self._i18n.translate(
                 key='miot.client.device_list_add',
                 replace={
                     'count': count_add,
                     'message': message_add})
-        if count_del:
+        if 'del' in self._display_devs_notify and count_del:
             message += self._i18n.translate(
                 key='miot.client.device_list_del',
                 replace={
                     'count': count_del,
                     'message': message_del})
-        if count_offline:
+        if 'offline' in self._display_devs_notify and count_offline:
             message += self._i18n.translate(
                 key='miot.client.device_list_offline',
                 replace={
@@ -1754,6 +1823,8 @@ class MIoTClient:
     def __request_show_devices_changed_notify(
         self, delay_sec: float = 6
     ) -> None:
+        if not self._display_devs_notify:
+            return
         if not self._mips_cloud and not self._mips_local and not self._miot_lan:
             return
         if self._show_devices_changed_notify_timer:
