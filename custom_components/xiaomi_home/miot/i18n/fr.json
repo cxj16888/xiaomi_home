@@ -3,7 +3,8 @@
         "other": {
             "devices": "appareils",
             "found_central_gateway": ", passerelle centrale locale trouvée",
-            "without_room": "Aucune pièce attribuée"
+            "without_room": "Aucune pièce attribuée",
+            "no_display": "ne pas afficher"
         },
         "control_mode": {
             "auto": "automatique",
@@ -52,6 +53,11 @@
         "option_status": {
             "enable": "activer",
             "disable": "désactiver"
+        },
+        "device_state": {
+            "add": "Ajouter",
+            "del": "Supprimer",
+            "offline": "hors ligne"
         },
         "lan_ctrl_config": {
             "notice_net_dup": "\r\n**[Remarque]** Plusieurs cartes réseau détectées qui peuvent être connectées au même réseau. Veuillez faire attention à la sélection.",

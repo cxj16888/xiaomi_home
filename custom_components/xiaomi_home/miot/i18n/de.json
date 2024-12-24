@@ -3,7 +3,8 @@
         "other": {
             "devices": "Geräte",
             "found_central_gateway": ", lokales zentrales Gateway gefunden",
-            "without_room": "Kein Raum zugewiesen"
+            "without_room": "Kein Raum zugewiesen",
+            "no_display": "nicht anzeigen"
         },
         "control_mode": {
             "auto": "automatisch",
@@ -52,6 +53,11 @@
         "option_status": {
             "enable": "aktivieren",
             "disable": "deaktivieren"
+        },
+        "device_state": {
+            "add": "hinzufügen",
+            "del": "nicht verfügbar",
+            "offline": "offline"
         },
         "lan_ctrl_config": {
             "notice_net_dup": "\r\n**[Hinweis]** Es wurden mehrere Netzwerkkarten erkannt, die möglicherweise mit demselben Netzwerk verbunden sind. Bitte achten Sie auf die Auswahl.",

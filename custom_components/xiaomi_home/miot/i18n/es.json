@@ -3,7 +3,8 @@
         "other": {
             "devices": "dispositivos",
             "found_central_gateway": ", se encontró la puerta de enlace central local",
-            "without_room": "Sin habitación asignada"
+            "without_room": "Sin habitación asignada",
+            "no_display": "no mostrar"
         },
         "control_mode": {
             "auto": "automático",
@@ -52,6 +53,11 @@
         "option_status": {
             "enable": "habilitar",
             "disable": "deshabilitar"
+        },
+        "device_state": {
+            "add": "agregar",
+            "del": "no disponible",
+            "offline": "fuera de línea"
         },
         "lan_ctrl_config": {
             "notice_net_dup": "\r\n**[Aviso]** Se detectaron varias tarjetas de red que pueden estar conectadas a la misma red. Por favor, preste atención a la selección.",

@@ -3,7 +3,8 @@
         "other": {
             "devices": "个设备",
             "found_central_gateway": "，发现本地中枢网关",
-            "without_room": "未分配房间"
+            "without_room": "未分配房间",
+            "no_display": "不显示"
         },
         "control_mode": {
             "auto": "自动",
@@ -52,6 +53,11 @@
         "option_status": {
             "enable": "启用",
             "disable": "禁用"
+        },
+        "device_state": {
+            "add": "新增",
+            "del": "不可用",
+            "offline": "离线"
         },
         "lan_ctrl_config": {
             "notice_net_dup": "\r\n**[提示]** 检测到多个网卡可能连接同一个网络，请注意选择。",

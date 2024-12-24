@@ -3,7 +3,8 @@
         "other": {
             "devices": "Devices",
             "found_central_gateway": ", Found Local Central Hub Gateway",
-            "without_room": "No room assigned"
+            "without_room": "No room assigned",
+            "no_display": "Do not display"
         },
         "control_mode": {
             "auto": "Auto",
@@ -52,6 +53,11 @@
         "option_status": {
             "enable": "Enable",
             "disable": "Disable"
+        },
+        "device_state": {
+            "add": "Add",
+            "del": "Unavailable",
+            "offline": "Offline"
         },
         "lan_ctrl_config": {
             "notice_net_dup": "\r\n**[Notice]** Multiple network cards detected that may be connected to the same network. Please pay attention to the selection.",

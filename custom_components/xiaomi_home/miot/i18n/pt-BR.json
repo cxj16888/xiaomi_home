@@ -3,7 +3,8 @@
         "other": {
             "devices": "dispositivos",
             "found_central_gateway": "encontrado o gateway central local",
-            "without_room": "sem quarto atribuído"
+            "without_room": "sem quarto atribuído",
+            "no_display": "não exibir"
         },
         "control_mode": {
             "auto": "automático",
@@ -52,6 +53,11 @@
         "option_status": {
             "enable": "habilitado",
             "disable": "desabilitado"
+        },
+        "device_state": {
+            "add": "adicionar",
+            "del": "indisponível",
+            "offline": "offline"
         },
         "lan_ctrl_config": {
             "notice_net_dup": "\r\n**[Aviso]** Detectado múltiplas interfaces de rede que podem estar conectando à mesma rede, por favor, selecione a correta.",

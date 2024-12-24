@@ -3,7 +3,8 @@
         "other": {
             "devices": "Apparaten",
             "found_central_gateway": ", Lokale centrale hub-gateway gevonden",
-            "without_room": "Niet toegewezen kamer"
+            "without_room": "Niet toegewezen kamer",
+            "no_display": "Niet weergeven"
         },
         "control_mode": {
             "auto": "Automatisch",
@@ -52,6 +53,11 @@
         "option_status": {
             "enable": "Inschakelen",
             "disable": "Uitschakelen"
+        },
+        "device_state": {
+            "add": "Toevoegen",
+            "del": "Niet beschikbaar",
+            "offline": "Offline"
         },
         "lan_ctrl_config": {
             "notice_net_dup": "\r\n**[Let op]** Meerdere netwerkkaarten gedetecteerd die mogelijk zijn verbonden met hetzelfde netwerk. Let op bij de selectie.",

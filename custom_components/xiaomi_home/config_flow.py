@@ -117,7 +117,7 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     _area_name_rule: str
     _action_debug: bool
     _hide_non_standard_entities: bool
-    _display_devices_changed_notify: bool
+    _display_devices_changed_notify: list[str]
 
     _auth_info: dict
     _nick_name: str
@@ -150,7 +150,7 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._area_name_rule = self.DEFAULT_AREA_NAME_RULE
         self._action_debug = False
         self._hide_non_standard_entities = False
-        self._display_devices_changed_notify = True
+        self._display_devices_changed_notify = ['add', 'del', 'offline']
         self._auth_info = {}
         self._nick_name = DEFAULT_NICK_NAME
         self._home_selected = {}
@@ -614,7 +614,8 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(
                     'display_devices_changed_notify',
                     default=self._display_devices_changed_notify  # type: ignore
-                ): bool,
+                ): cv.multi_select(
+                    self._miot_i18n.translate(key='config.device_state')),
             }),
             last_step=False,
         )
@@ -814,7 +815,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     _home_selected_list: list
     _action_debug: bool
     _hide_non_standard_entities: bool
-    _display_devs_notify: bool
+    _display_devs_notify: list[str]
 
     _oauth_redirect_url_full: str
     _auth_info: dict
@@ -861,7 +862,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         self._hide_non_standard_entities = self._entry_data.get(
             'hide_non_standard_entities', False)
         self._display_devs_notify = self._entry_data.get(
-            'display_devices_changed_notify', True)
+            'display_devices_changed_notify', ['add', 'del', 'offline'])
         self._home_selected_list = list(
             self._entry_data['home_selected'].keys())
 
@@ -1127,7 +1128,8 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                     vol.Required(
                         'display_devices_changed_notify',
                         default=self._display_devs_notify  # type: ignore
-                    ): bool,
+                    ): cv.multi_select(
+                        self._miot_i18n.translate('config.device_state')),
                     vol.Required(
                         'update_trans_rules',
                         default=self._update_trans_rules  # type: ignore
@@ -1545,6 +1547,8 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 key='config.option_status.enable')
             disable_text = self._miot_i18n.translate(
                 key='config.option_status.disable')
+            trans_devs_display: dict = self._miot_i18n.translate(
+                key='config.device_state')
             return self.async_show_form(
                 step_id='config_confirm',
                 data_schema=vol.Schema({
@@ -1566,9 +1570,13 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                     'hide_non_standard_entities': (
                         enable_text if self._hide_non_standard_entities_new
                         else disable_text),
-                    'display_devices_changed_notify': (
-                        enable_text if self._display_devs_notify
-                        else disable_text)
+                    'display_devices_changed_notify': (' '.join(
+                        trans_devs_display[key]
+                        for key in self._display_devs_notify
+                        if key in trans_devs_display)
+                        if self._display_devs_notify
+                        else self._miot_i18n.translate(
+                            key='config.other.no_display'))
                 },  # type: ignore
                 errors={'base': 'not_confirm'} if user_input else {},
                 last_step=True

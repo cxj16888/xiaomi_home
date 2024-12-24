@@ -167,8 +167,8 @@ class MIoTClient:
     _persistence_notify: Callable[[str, Optional[str], Optional[str]], None]
     # Device list changed notify
     _show_devices_changed_notify_timer: Optional[asyncio.TimerHandle]
-
-    _display_devs_notify: bool
+    # Display devices changed notify
+    _display_devs_notify: list[str]
 
     def __init__(
             self,
@@ -234,7 +234,7 @@ class MIoTClient:
         self._show_devices_changed_notify_timer = None
 
         self._display_devs_notify = entry_data.get(
-            'display_devices_changed_notify', True)
+            'display_devices_changed_notify', ['add', 'del', 'offline'])
 
     async def init_async(self) -> None:
         # Load user config and check
@@ -465,12 +465,12 @@ class MIoTClient:
             'hide_non_standard_entities', False)
 
     @property
-    def display_devices_changed_notify(self) -> bool:
+    def display_devices_changed_notify(self) -> list[str]:
         return self._display_devs_notify
 
     @display_devices_changed_notify.setter
-    def display_devices_changed_notify(self, value: bool) -> None:
-        if value == self._display_devs_notify:
+    def display_devices_changed_notify(self, value: list[str]) -> None:
+        if set(value) == set(self._display_devs_notify):
             return
         self._display_devs_notify = value
         if value:
@@ -1736,15 +1736,16 @@ class MIoTClient:
         count_offline: int = 0
 
         # New devices
-        for did, info in {
-                **self._device_list_gateway, **self._device_list_cloud
-        }.items():
-            if did in self._device_list_cache:
-                continue
-            count_add += 1
-            message_add += (
-                f'- {info.get("name", "unknown")} ({did}, '
-                f'{info.get("model", "unknown")})\n')
+        if 'add' in self._display_devs_notify:
+            for did, info in {
+                    **self._device_list_gateway, **self._device_list_cloud
+            }.items():
+                if did in self._device_list_cache:
+                    continue
+                count_add += 1
+                message_add += (
+                    f'- {info.get("name", "unknown")} ({did}, '
+                    f'{info.get("model", "unknown")})\n')
         # Get unavailable and offline devices
         home_name_del: Optional[str] = None
         home_name_offline: Optional[str] = None
@@ -1754,7 +1755,7 @@ class MIoTClient:
             if online:
                 # Skip online device
                 continue
-            if online is None:
+            if 'del' in self._display_devs_notify and online is None:
                 # Device not exist
                 if home_name_del != home_name_new:
                     message_del += f'\n[{home_name_new}]\n'
@@ -1763,7 +1764,8 @@ class MIoTClient:
                 message_del += (
                     f'- {info.get("name", "unknown")} ({did}, '
                     f'{info.get("room_name", "unknown")})\n')
-            else:
+                continue
+            if 'offline' in self._display_devs_notify:
                 # Device offline
                 if home_name_offline != home_name_new:
                     message_offline += f'\n[{home_name_new}]\n'
@@ -1774,19 +1776,19 @@ class MIoTClient:
                     f'{info.get("room_name", "unknown")})\n')
 
         message = ''
-        if count_add:
+        if 'add' in self._display_devs_notify and count_add:
             message += self._i18n.translate(
                 key='miot.client.device_list_add',
                 replace={
                     'count': count_add,
                     'message': message_add})
-        if count_del:
+        if 'del' in self._display_devs_notify and count_del:
             message += self._i18n.translate(
                 key='miot.client.device_list_del',
                 replace={
                     'count': count_del,
                     'message': message_del})
-        if count_offline:
+        if 'offline' in self._display_devs_notify and count_offline:
             message += self._i18n.translate(
                 key='miot.client.device_list_offline',
                 replace={
