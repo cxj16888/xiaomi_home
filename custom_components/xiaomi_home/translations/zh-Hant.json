@@ -38,7 +38,8 @@
                     "devices_filter": "篩選設備",
                     "ctrl_mode": "控制模式",
                     "action_debug": "Action 調試模式",
-                    "hide_non_standard_entities": "隱藏非標準生成實體"
+                    "hide_non_standard_entities": "隱藏非標準生成實體",
+                    "display_devices_changed_notify": "顯示設備狀態變化通知"
                 }
             },
             "devices_filter": {
@@ -99,6 +100,7 @@
                     "update_devices": "更新設備列表",
                     "action_debug": "Action 調試模式",
                     "hide_non_standard_entities": "隱藏非標準生成實體",
+                    "display_devices_changed_notify": "顯示設備狀態變化通知",
                     "update_trans_rules": "更新實體轉換規則",
                     "update_lan_ctrl_config": "更新局域網控制配置"
                 }

@@ -38,7 +38,8 @@
                     "devices_filter": "Filtrar Dispositivos",
                     "ctrl_mode": "Modo de Controle",
                     "action_debug": "Modo de Depuração de Ações",
-                    "hide_non_standard_entities": "Ocultar Entidades Geradas Não Padrão"
+                    "hide_non_standard_entities": "Ocultar Entidades Geradas Não Padrão",
+                    "display_devices_changed_notify": "Exibir notificações de mudança de status do dispositivo",
                 }
             },
             "devices_filter": {
@@ -99,6 +100,7 @@
                     "update_devices": "Atualizar lista de dispositivos",
                     "action_debug": "Modo de depuração para ação",
                     "hide_non_standard_entities": "Ocultar entidades não padrão criadas",
+                    "display_devices_changed_notify": "Exibir notificações de mudança de status do dispositivo",
                     "update_trans_rules": "Atualizar regras de conversão de entidades",
                     "update_lan_ctrl_config": "Atualizar configuração de controle LAN"
                 }

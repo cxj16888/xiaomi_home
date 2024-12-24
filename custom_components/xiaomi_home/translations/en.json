@@ -38,7 +38,8 @@
                     "devices_filter": "Filter Devices",
                     "ctrl_mode": "Control Mode",
                     "action_debug": "Action Debug Mode",
-                    "hide_non_standard_entities": "Hide Non-Standard Generated Entities"
+                    "hide_non_standard_entities": "Hide Non-Standard Generated Entities",
+                    "display_devices_changed_notify": "Display Device Status Change Notification"
                 }
             },
             "devices_filter": {
@@ -99,6 +100,7 @@
                     "update_devices": "Update device list",
                     "action_debug": "Debug mode for action",
                     "hide_non_standard_entities": "Hide non-standard created entities",
+                    "display_devices_changed_notify": "Display device status change notifications",
                     "update_trans_rules": "Update entity conversion rules",
                     "update_lan_ctrl_config": "Update LAN control configuration"
                 }

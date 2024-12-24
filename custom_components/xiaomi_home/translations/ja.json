@@ -38,7 +38,8 @@
                     "devices_filter": "デバイスをフィルタリング",
                     "ctrl_mode": "コントロールモード",
                     "action_debug": "Actionデバッグモード",
-                    "hide_non_standard_entities": "非標準生成エンティティを隠す"
+                    "hide_non_standard_entities": "非標準生成エンティティを隠す",
+                    "display_devices_changed_notify": "デバイスの状態変化通知を表示"
                 }
             },
             "devices_filter": {
@@ -99,8 +100,9 @@
                     "update_devices": "デバイスリストを更新する",
                     "action_debug": "Action デバッグモード",
                     "hide_non_standard_entities": "非標準生成エンティティを非表示にする",
-                    "update_trans_rules": "エンティティ変換ルールを更新する (グローバル設定)",
-                    "update_lan_ctrl_config": "LAN制御構成を更新する（グローバル設定）"
+                    "display_devices_changed_notify": "デバイスの状態変化通知を表示",
+                    "update_trans_rules": "エンティティ変換ルールを更新する",
+                    "update_lan_ctrl_config": "LAN制御構成を更新する"
                 }
             },
             "update_user_info": {

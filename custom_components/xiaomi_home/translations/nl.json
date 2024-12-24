@@ -38,7 +38,8 @@
                     "devices_filter": "Apparaten filteren",
                     "ctrl_mode": "Besturingsmodus",
                     "action_debug": "Actie-debugmodus",
-                    "hide_non_standard_entities": "Niet-standaard entiteiten verbergen"
+                    "hide_non_standard_entities": "Niet-standaard entiteiten verbergen",
+                    "display_devices_changed_notify": "Apparaatstatuswijzigingen weergeven"
                 }
             },
             "devices_filter": {
@@ -99,6 +100,7 @@
                     "update_devices": "Werk apparatenlijst bij",
                     "action_debug": "Debugmodus voor actie",
                     "hide_non_standard_entities": "Verberg niet-standaard gemaakte entiteiten",
+                    "display_devices_changed_notify": "Apparaatstatuswijzigingen weergeven",
                     "update_trans_rules": "Werk entiteitsconversieregels bij",
                     "update_lan_ctrl_config": "Werk LAN controleconfiguratie bij"
                 }
