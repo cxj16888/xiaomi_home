@@ -112,7 +112,7 @@
             },
             "homes_select": {
                 "title": "Selecionar novamente Casa e Dispositivos",
-                "description": "## Instruções de Uso\r\n### Modo de controle\r\n- Auto: Quando houver um gateway central Xiaomi disponível na rede local, o Home Assistant priorizará o envio de comandos através dele para obter controle local. Caso não haja, tentará enviar comandos através da função de controle LAN da Xiaomi. Somente se as condições anteriores não forem atendidas, o controle será feito pela nuvem.\r\n- Nuvem: Todos os comandos de controle são enviados pela nuvem.\r\n### Importar dispositivos da casa\r\nA integração adicionará dispositivos das casas selecionadas.\r\n&emsp;\r\n### Olá {nick_name}, selecione o modo de controle da integração e a casa de onde deseja importar dispositivos.",
+                "description": "## Instruções de Uso\r\n### Importar dispositivos da casa\r\nA integração adicionará dispositivos das casas selecionadas.\r\n### Filtrar Dispositivos\r\nSuporta a filtragem de dispositivos por nome da sala, tipo de acesso do dispositivo e modelo do dispositivo, e também suporta a filtragem por dimensão do dispositivo. **{local_count}** dispositivos foram filtrados.\r\n### Modo de controle\r\n- Auto: Quando houver um gateway central Xiaomi disponível na rede local, o Home Assistant priorizará o envio de comandos através dele para obter controle local. Caso não haja, tentará enviar comandos através da função de controle LAN da Xiaomi. Somente se as condições anteriores não forem atendidas, o controle será feito pela nuvem.\r\n- Nuvem: Todos os comandos de controle são enviados pela nuvem.",
                 "data": {
                     "home_infos": "Importar dispositivos da casa",
                     "devices_filter": "Filtrar Dispositivos",
@@ -123,7 +123,6 @@
                 "title": "Filtrar Dispositivos",
                 "description": "## Introdução\r\n- Suporte para filtrar dispositivos por nome da sala e tipo de dispositivo, bem como filtragem por família.\r\n- Você também pode acessar a página correspondente da integração [Configuração>Atualizar Lista de Dispositivos] para refiltrar.",
                 "data": {
-                    "statistics_logic": "Lógica de Estatísticas",
                     "room_filter_mode": "Filtrar por Sala",
                     "room_list": "Salas",
                     "type_filter_mode": "Filtrar por Tipo de Dispositivo",
@@ -131,7 +130,8 @@
                     "model_filter_mode": "Filtrar por Modelo de Dispositivo",
                     "model_list": "Modelos de Dispositivo",
                     "devices_filter_mode": "Filtrar Dispositivos",
-                    "device_list": "Lista de Dispositivos"
+                    "device_list": "Lista de Dispositivos",
+                    "statistics_logic": "Lógica de Estatísticas"
                 }
             },
             "update_trans_rules": {

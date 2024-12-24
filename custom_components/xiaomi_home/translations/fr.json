@@ -112,7 +112,7 @@
             },
             "homes_select": {
                 "title": "Re-sélectionner une maison et des appareils",
-                "description": "## Instructions d'utilisation\r\n### Mode de contrôle\r\n- Automatique: Lorsqu'il y a une passerelle centrale Xiaomi disponible dans le réseau local, Home Assistant priorisera l'envoi des commandes de contrôle des appareils via la passerelle centrale pour réaliser un contrôle localisé. S'il n'y a pas de passerelle centrale dans le réseau local, il tentera d'envoyer des commandes de contrôle via le protocole Xiaomi OT pour réaliser un contrôle localisé. Ce n'est que lorsque les conditions de contrôle localisé ci-dessus ne sont pas remplies que les commandes de contrôle des appareils seront envoyées via le cloud.\r\n- Cloud: Les commandes de contrôle ne sont envoyées que via le cloud.\r\n### Importer une maison pour les appareils\r\nL'intégration ajoutera les appareils de la maison sélectionnée.\r\n&emsp;\r\n### {nick_name} Bonjour ! Veuillez sélectionner le mode de contrôle de l'intégration et la maison où se trouvent les appareils à ajouter.",
+                "description": "## Instructions d'utilisation\r\n### Importer une maison pour les appareils\r\nL'intégration ajoutera les appareils de la maison sélectionnée.\r\n### Filtrer les appareils\r\nPrend en charge le filtrage des appareils par nom de pièce de la maison, type d'accès de l'appareil et modèle d'appareil, et prend également en charge le filtrage par dimension de l'appareil. **{local_count}** appareils ont été filtrés.\r\n### Mode de contrôle\r\n- Automatique: Lorsqu'il y a une passerelle centrale Xiaomi disponible dans le réseau local, Home Assistant priorisera l'envoi des commandes de contrôle des appareils via la passerelle centrale pour réaliser un contrôle localisé. S'il n'y a pas de passerelle centrale dans le réseau local, il tentera d'envoyer des commandes de contrôle via le protocole Xiaomi OT pour réaliser un contrôle localisé. Ce n'est que lorsque les conditions de contrôle localisé ci-dessus ne sont pas remplies que les commandes de contrôle des appareils seront envoyées via le cloud.\r\n- Cloud: Les commandes de contrôle ne sont envoyées que via le cloud.",
                 "data": {
                     "home_infos": "Importer une maison pour les appareils",
                     "devices_filter": "Filtrer les Appareils",
@@ -123,7 +123,6 @@
                 "title": "Filtrer les Appareils",
                 "description": "## Introduction\r\n- Prend en charge le filtrage des appareils en fonction du nom de la pièce et du type d'appareil, ainsi que le filtrage basé sur les appareils.\r\n- Vous pouvez également accéder à la page de filtrage correspondante de l'intégration [Configuration> Mettre à jour la liste des appareils] pour refiltrer.",
                 "data": {
-                    "statistics_logic": "Logique de Statistiques",
                     "room_filter_mode": "Filtrer les Pièces",
                     "room_list": "Pièces",
                     "type_filter_mode": "Filtrer les Types d'Appareils",
@@ -131,7 +130,8 @@
                     "model_filter_mode": "Filtrer les Modèles d'Appareils",
                     "model_list": "Modèles d'Appareils",
                     "devices_filter_mode": "Filtrer les Appareils",
-                    "device_list": "Liste des Appareils"
+                    "device_list": "Liste des Appareils",
+                    "statistics_logic": "Logique de Statistiques"
                 }
             },
             "update_trans_rules": {

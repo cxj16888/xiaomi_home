@@ -112,7 +112,7 @@
             },
             "homes_select": {
                 "title": "Familie und Geräte neu auswählen",
-                "description": "## Gebrauchsanweisung\r\n### Steuerungsmodus\r\n- Automatisch: Wenn im lokalen Netzwerk ein verfügbarer Xiaomi-Zentralgateway vorhanden ist, wird Home Assistant bevorzugt Steuerbefehle über den Zentralgateway senden, um eine lokale Steuerung zu ermöglichen. Wenn im lokalen Netzwerk kein Zentralgateway vorhanden ist, wird versucht, Steuerbefehle über das Xiaomi-OT-Protokoll zu senden, um eine lokale Steuerung zu ermöglichen. Nur wenn die oben genannten Bedingungen für die lokale Steuerung nicht erfüllt sind, werden die Steuerbefehle über die Cloud gesendet.\r\n- Cloud: Steuerbefehle werden nur über die Cloud gesendet.\r\n### Familienimport für importierte Geräte\r\nDie Integration fügt Geräte aus den ausgewählten Familien hinzu.\r\n&emsp;\r\n### Hallo {nick_name}! Bitte wählen Sie den Steuerungsmodus der Integration sowie die Familie aus, in der sich die hinzuzufügenden Geräte befinden.",
+                "description": "## Gebrauchsanweisung\r\n### Familienimport für importierte Geräte\r\nDie Integration fügt Geräte aus den ausgewählten Familien hinzu.\r\n### Geräte filtern\r\nUnterstützt das Filtern von Geräten nach Raumnamen, Gerätezugriffstyp und Gerätemodell, und unterstützt auch das Filtern nach Gerätegröße. Es wurden **{local_count}** Geräte gefiltert.\r\n### Steuerungsmodus\r\n- Automatisch: Wenn im lokalen Netzwerk ein verfügbarer Xiaomi-Zentralgateway vorhanden ist, wird Home Assistant bevorzugt Steuerbefehle über den Zentralgateway senden, um eine lokale Steuerung zu ermöglichen. Wenn im lokalen Netzwerk kein Zentralgateway vorhanden ist, wird versucht, Steuerbefehle über das Xiaomi-OT-Protokoll zu senden, um eine lokale Steuerung zu ermöglichen. Nur wenn die oben genannten Bedingungen für die lokale Steuerung nicht erfüllt sind, werden die Steuerbefehle über die Cloud gesendet.\r\n- Cloud: Steuerbefehle werden nur über die Cloud gesendet.",
                 "data": {
                     "home_infos": "Familienimport für importierte Geräte",
                     "devices_filter": "Geräte filtern",
@@ -123,7 +123,6 @@
                 "title": "Geräte filtern",
                 "description": "## Gebrauchsanweisung\r\n- Unterstützt das Filtern von Geräten nach Raumnamen und Gerätetypen sowie das Filtern nach Gerätedimensionen.\r\n- Sie können auch die entsprechende Integrationsoption \"Konfiguration> Geräteliste aktualisieren\" aufrufen, um die Filterung erneut durchzuführen.",
                 "data": {
-                    "statistics_logic": "Statistiklogik",
                     "room_filter_mode": "Familienraum filtern",
                     "room_list": "Familienraum",
                     "type_filter_mode": "Gerätetyp filtern",
@@ -131,7 +130,8 @@
                     "model_filter_mode": "Gerätemodell filtern",
                     "model_list": "Gerätemodell",
                     "devices_filter_mode": "Geräte filtern",
-                    "device_list": "Geräteliste"
+                    "device_list": "Geräteliste",
+                    "statistics_logic": "Statistiklogik"
                 }
             },
             "update_trans_rules": {

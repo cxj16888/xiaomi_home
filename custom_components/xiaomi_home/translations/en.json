@@ -112,7 +112,7 @@
             },
             "homes_select": {
                 "title": "Re-select Home and Devices",
-                "description": "## Usage Instructions\r\n### Control mode\r\n- Auto: When there is an available Xiaomi central hub gateway in the local area network, Home Assistant will prioritize sending device control commands through the central hub gateway to achieve local control. If there is no central hub gateway in the local area network, it will attempt to send control commands through Xiaomi LAN control function. Only when the above local control conditions are not met, the device control commands will be sent through the cloud.\r\n- Cloud: All control commands are sent through the cloud.\r\n### Import devices from home\r\nThe integration will add devices from the selected homes.\r\n&emsp;\r\n### Hello {nick_name}, please select the integration control mode and the home where the device you want to import.",
+                "description": "## Usage Instructions\r\n### Import devices from home\r\nThe integration will add devices from the selected homes.\r\n### Filter Devices\r\nSupports filtering devices by home room name, device access type, and device model, and also supports device dimension filtering. **{local_count}** devices have been filtered.\r\n### Control mode\r\n- Auto: When there is an available Xiaomi central hub gateway in the local area network, Home Assistant will prioritize sending device control commands through the central hub gateway to achieve local control. If there is no central hub gateway in the local area network, it will attempt to send control commands through Xiaomi LAN control function. Only when the above local control conditions are not met, the device control commands will be sent through the cloud.\r\n- Cloud: All control commands are sent through the cloud.",
                 "data": {
                     "home_infos": "Import devices from home",
                     "devices_filter": "Filter devices",
@@ -123,7 +123,6 @@
                 "title": "Filter Devices",
                 "description": "## Introduction\r\n- Supports filtering devices by room name and device type, and also supports device dimension filtering.\r\n- You can also re-filter on the corresponding integration page [Configuration>Update Device List].",
                 "data": {
-                    "statistics_logic": "Statistics Logic",
                     "room_filter_mode": "Filter Family Rooms",
                     "room_list": "Family Rooms",
                     "type_filter_mode": "Filter Device Connect Type",
@@ -131,7 +130,8 @@
                     "model_filter_mode": "Filter Device Model",
                     "model_list": "Device Model",
                     "devices_filter_mode": "Filter Devices",
-                    "device_list": "Device List"
+                    "device_list": "Device List",
+                    "statistics_logic": "Statistics Logic"
                 }
             },
             "update_trans_rules": {

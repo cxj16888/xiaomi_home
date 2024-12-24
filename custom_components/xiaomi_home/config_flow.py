@@ -818,6 +818,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     _home_info_buffer: dict
     _home_list_show: dict
     _device_list_sorted: dict
+    _devices_local: dict
     _devices_add: list[str]
     _devices_remove: list[str]
 
@@ -864,6 +865,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         self._home_info_buffer = {}
         self._home_list_show = {}
         self._device_list_sorted = {}
+        self._devices_local = {}
         self._devices_add = []
         self._devices_remove = []
 
@@ -1227,8 +1229,13 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             self._home_selected_list = [
                 home_id for home_id in self._home_selected_list
                 if home_id in home_list]
-
             self._home_list_show = dict(sorted(home_list.items()))
+            # Get local devices
+            self._devices_local: dict = await self._miot_storage.load_async(
+                domain='miot_devices',
+                name=f'{self._uid}_{self._cloud_server}',
+                type_=dict) or {}  # type: ignore
+
             return await self.__display_homes_select_form('')
 
         self._home_selected_list = user_input.get('home_infos', [])
@@ -1256,6 +1263,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         return await self.update_devices_done_async()
 
     async def __display_homes_select_form(self, reason: str):
+        devices_local_count: str = str(len(self._devices_local))
         return self.async_show_form(
             step_id='homes_select',
             data_schema=vol.Schema({
@@ -1272,7 +1280,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             }),
             errors={'base': reason},
             description_placeholders={
-                'nick_name': self._nick_name
+                'local_count': devices_local_count
             },
             last_step=False
         )
@@ -1401,8 +1409,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 ): vol.In(trans_statistics_logic),
             }),
             errors={'base': reason},
-            description_placeholders={
-                'devices_count': str(len(self._device_list_sorted))},
             last_step=False
         )
 
@@ -1410,15 +1416,12 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         # Statistics devices changed
         self._devices_add = []
         self._devices_remove = []
-        local_devices: dict = await self._miot_storage.load_async(
-            domain='miot_devices',
-            name=f'{self._uid}_{self._cloud_server}',
-            type_=dict) or {}  # type: ignore
+
         self._devices_add = [
             did for did in list(self._device_list_sorted.keys())
-            if did not in local_devices]
+            if did not in self._devices_local]
         self._devices_remove = [
-            did for did in local_devices.keys()
+            did for did in self._devices_local.keys()
             if did not in self._device_list_sorted]
         _LOGGER.debug(
             'devices update, add->%s, remove->%s',

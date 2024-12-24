@@ -43,9 +43,8 @@
             },
             "devices_filter": {
                 "title": "篩選設備",
-                "description": "## 使用介紹\r\n- 支持按照房間名稱和設備類型篩選設備，同時也支持設備維度篩選。\r\n- 您也可以進入對應集成項【配置>更新設備列表】頁面重新篩選。",
+                "description": "",
                 "data": {
-                    "statistics_logic": "統計邏輯",
                     "room_filter_mode": "篩選家庭房間",
                     "room_list": "家庭房間",
                     "type_filter_mode": "篩選設備接入類型",
@@ -53,7 +52,8 @@
                     "model_filter_mode": "篩選設備型號",
                     "model_list": "設備型號",
                     "devices_filter_mode": "篩選設備",
-                    "device_list": "設備列表"
+                    "device_list": "設備列表",
+                    "statistics_logic": "統計邏輯"
                 }
             }
         },
@@ -112,7 +112,7 @@
             },
             "homes_select": {
                 "title": "重新選擇家庭與設備",
-                "description": "\r\n## 使用介紹\r\n### 控制模式\r\n- 自動：本地局域網內存在可用的小米中樞網關時， Home Assistant 會優先通過中樞網關發送設備控制指令，以實現本地化控制功能。只有當本地化控制條件不滿足時，設備控制指令才會通過雲端發送。\r\n- 雲端：控制指令強制通過雲端發送。\r\n### 導入設備的家庭\r\n集成將添加已選中家庭中的設備。\r\n&emsp;\r\n### {nick_name} 您好！請選擇集成控制模式以及您想要添加的設備所處的家庭。",
+                "description": "## 使用介紹\r\n### 導入設備的家庭\r\n集成將添加已選中家庭中的設備。\r\n### 篩選設備\r\n支持按照家庭房間名稱、設備接入類型、設備型號篩選設備，同時也支持設備維度篩選，已篩選出 **{local_count}** 個設備。\r\n### 控制模式\r\n- 自動：本地局域網內存在可用的小米中樞網關時， Home Assistant 會優先通過中樞網關發送設備控制指令，以實現本地化控制功能。只有當本地化控制條件不滿足時，設備控制指令才會通過雲端發送。\r\n- 雲端：控制指令強制通過雲端發送。",
                 "data": {
                     "home_infos": "導入設備的家庭",
                     "devices_filter": "篩選設備",
@@ -123,7 +123,6 @@
                 "title": "篩選設備",
                 "description": "## 使用介紹\r\n- 支持按照房間名稱和設備類型篩選設備，同時也支持設備維度篩選。\r\n- 您也可以進入對應集成項【配置>更新設備列表】頁面重新篩選。",
                 "data": {
-                    "statistics_logic": "統計邏輯",
                     "room_filter_mode": "篩選家庭房間",
                     "room_list": "家庭房間",
                     "type_filter_mode": "篩選設備接入類型",
@@ -131,7 +130,8 @@
                     "model_filter_mode": "篩選設備型號",
                     "model_list": "設備型號",
                     "devices_filter_mode": "篩選設備",
-                    "device_list": "設備列表"
+                    "device_list": "設備列表",
+                    "statistics_logic": "統計邏輯"
                 }
             },
             "update_trans_rules": {
