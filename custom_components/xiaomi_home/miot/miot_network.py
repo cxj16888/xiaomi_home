@@ -52,7 +52,7 @@ import socket
 from dataclasses import dataclass
 from enum import Enum, auto
 import subprocess
-from typing import Callable, Optional, Coroutine
+from typing import Callable, Coroutine, Optional
 import psutil
 import ipaddress
 

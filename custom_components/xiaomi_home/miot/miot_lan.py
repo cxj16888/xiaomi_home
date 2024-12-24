@@ -58,7 +58,7 @@ import secrets
 import socket
 import struct
 import threading
-from typing import Callable, Optional, final, Coroutine, Any
+from typing import Any, Callable, Coroutine, Optional, final
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
