@@ -299,7 +299,7 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     domain=DOMAIN,
                     name='oauth redirect url webhook',
                     webhook_id=self._virtual_did,
-                    handler=handle_oauth_webhook,
+                    handler=_handle_oauth_webhook,
                     allowed_methods=(METH_GET,),
                 )
                 self._fut_oauth_code = self.hass.data[DOMAIN][
@@ -993,7 +993,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                     domain=DOMAIN,
                     name='oauth redirect url webhook',
                     webhook_id=self._virtual_did,
-                    handler=handle_oauth_webhook,
+                    handler=_handle_oauth_webhook,
                     allowed_methods=(METH_GET,),
                 )
                 self._fut_oauth_code = self.hass.data[DOMAIN][
@@ -1615,7 +1615,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         return self.async_create_entry(title='', data={})
 
 
-async def handle_oauth_webhook(hass, webhook_id, request):
+async def _handle_oauth_webhook(hass, webhook_id, request):
     """Webhook to handle oauth2 callback."""
     # pylint: disable=inconsistent-quotes
     try:
