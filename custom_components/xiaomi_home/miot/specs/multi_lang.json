@@ -154,5 +154,15 @@
             "service:004:event:001": "虛擬事件發生",
             "service:004:property:001": "事件名稱"
         }
+    },
+    "urn:miot-spec-v2:device:switch:0000A003:lumi-acn040:1": {
+        "zh-Hans": {
+            "service:015": "设备确认",
+            "service:015:action:001": "左键确认",
+            "service:016": "设备确认",
+            "service:016:action:001": "中键确认",
+            "service:017": "设备确认",
+            "service:017:action:001": "右键确认"
+        }
     }
 }
