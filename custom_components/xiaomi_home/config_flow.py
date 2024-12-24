@@ -589,6 +589,9 @@ class XiaomiMihomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 'action_debug', self._action_debug)
             self._hide_non_standard_entities = user_input.get(
                 'hide_non_standard_entities', self._hide_non_standard_entities)
+            self._display_devices_changed_notify = user_input.get(
+                'display_devices_changed_notify',
+                self._display_devices_changed_notify)
             # Device filter
             if user_input.get('devices_filter', False):
                 return await self.async_step_devices_filter()
@@ -811,6 +814,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     _home_selected_list: list
     _action_debug: bool
     _hide_non_standard_entities: bool
+    _display_devs_notify: bool
 
     _oauth_redirect_url_full: str
     _auth_info: dict
@@ -856,6 +860,8 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         self._action_debug = self._entry_data.get('action_debug', False)
         self._hide_non_standard_entities = self._entry_data.get(
             'hide_non_standard_entities', False)
+        self._display_devs_notify = self._entry_data.get(
+            'display_devices_changed_notify', True)
         self._home_selected_list = list(
             self._entry_data['home_selected'].keys())
 
@@ -1119,6 +1125,10 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         default=self._hide_non_standard_entities  # type: ignore
                     ): bool,
                     vol.Required(
+                        'display_devices_changed_notify',
+                        default=self._display_devs_notify  # type: ignore
+                    ): bool,
+                    vol.Required(
                         'update_trans_rules',
                         default=self._update_trans_rules  # type: ignore
                     ): bool,
@@ -1149,6 +1159,8 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             'action_debug', self._action_debug)
         self._hide_non_standard_entities_new = user_input.get(
             'hide_non_standard_entities', self._hide_non_standard_entities)
+        self._display_devs_notify = user_input.get(
+            'display_devices_changed_notify', self._display_devs_notify)
         self._update_trans_rules = user_input.get(
             'update_trans_rules', self._update_trans_rules)
         self._update_lan_ctrl_config = user_input.get(
@@ -1554,6 +1566,9 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                     'hide_non_standard_entities': (
                         enable_text if self._hide_non_standard_entities_new
                         else disable_text),
+                    'display_devices_changed_notify': (
+                        enable_text if self._display_devs_notify
+                        else disable_text)
                 },  # type: ignore
                 errors={'base': 'not_confirm'} if user_input else {},
                 last_step=True
@@ -1590,6 +1605,11 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             self._entry_data['hide_non_standard_entities'] = (
                 self._hide_non_standard_entities_new)
             self._need_reload = True
+        # Update display_devices_changed_notify
+        self._entry_data['display_devices_changed_notify'] = (
+            self._display_devs_notify)
+        self._miot_client.display_devices_changed_notify = (
+            self._display_devs_notify)
         if (
                 self._devices_remove
                 and not await self._miot_storage.update_user_config_async(

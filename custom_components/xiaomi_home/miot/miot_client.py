@@ -164,9 +164,11 @@ class MIoTClient:
     _refresh_props_retry_count: int
 
     # Persistence notify handler, params: notify_id, title, message
-    _persistence_notify: Callable[[str, str, str], None]
+    _persistence_notify: Callable[[str, Optional[str], Optional[str]], None]
     # Device list changed notify
     _show_devices_changed_notify_timer: Optional[asyncio.TimerHandle]
+
+    _display_devs_notify: bool
 
     def __init__(
             self,
@@ -230,6 +232,9 @@ class MIoTClient:
 
         self._persistence_notify = None
         self._show_devices_changed_notify_timer = None
+
+        self._display_devs_notify = entry_data.get(
+            'display_devices_changed_notify', True)
 
     async def init_async(self) -> None:
         # Load user config and check
@@ -458,6 +463,21 @@ class MIoTClient:
     def hide_non_standard_entities(self) -> bool:
         return self._entry_data.get(
             'hide_non_standard_entities', False)
+
+    @property
+    def display_devices_changed_notify(self) -> bool:
+        return self._display_devs_notify
+
+    @display_devices_changed_notify.setter
+    def display_devices_changed_notify(self, value: bool) -> None:
+        if value == self._display_devs_notify:
+            return
+        self._display_devs_notify = value
+        if value:
+            self.__request_show_devices_changed_notify()
+        else:
+            self._persistence_notify(
+                self.__gen_notify_key('dev_list_changed'), None, None)
 
     @property
     def device_list(self) -> dict:
@@ -1801,6 +1821,8 @@ class MIoTClient:
     def __request_show_devices_changed_notify(
         self, delay_sec: float = 6
     ) -> None:
+        if not self._display_devs_notify:
+            return
         if not self._mips_cloud and not self._mips_local and not self._miot_lan:
             return
         if self._show_devices_changed_notify_timer:
