@@ -43,9 +43,8 @@
             },
             "devices_filter": {
                 "title": "Filtrer les Appareils",
-                "description": "## Introduction\r\n- Prend en charge le filtrage des appareils en fonction du nom de la pièce et du type d'appareil, ainsi que le filtrage basé sur les appareils.\r\n- Vous pouvez également accéder à la page de filtrage correspondante de l'intégration [Configuration> Mettre à jour la liste des appareils] pour refiltrer.",
+                "description": "## Instructions d'utilisation\r\nPrend en charge le filtrage des appareils par nom de pièce de la maison, type d'accès de l'appareil et modèle d'appareil, et prend également en charge le filtrage par dimension de l'appareil. La logique de filtrage est la suivante :\r\n- Tout d'abord, selon la logique statistique, obtenez l'union ou l'intersection de tous les éléments inclus, puis obtenez l'intersection ou l'union des éléments exclus, et enfin soustrayez le [résultat du résumé inclus] du [résultat du résumé exclu] pour obtenir le [résultat du filtre].\r\n- Si aucun élément inclus n'est sélectionné, cela signifie que tous sont inclus.\r\n### Mode de Filtrage\r\n- Exclure : Supprimer les éléments indésirables.\r\n- Inclure : Inclure les éléments souhaités.\r\n### Logique Statistique\r\n- Logique ET : Prendre l'intersection de tous les éléments dans le même mode.\r\n- Logique OU : Prendre l'union de tous les éléments dans le même mode.\r\n\r\nVous pouvez également aller à la page [Configuration > Mettre à jour la liste des appareils] de l'élément d'intégration, cocher [Filtrer les appareils] pour re-filtrer.",
                 "data": {
-                    "statistics_logic": "Logique de Statistiques",
                     "room_filter_mode": "Filtrer les Pièces",
                     "room_list": "Pièces",
                     "type_filter_mode": "Filtrer les Types d'Appareils",
@@ -53,7 +52,8 @@
                     "model_filter_mode": "Filtrer les Modèles d'Appareils",
                     "model_list": "Modèles d'Appareils",
                     "devices_filter_mode": "Filtrer les Appareils",
-                    "device_list": "Liste des Appareils"
+                    "device_list": "Liste des Appareils",
+                    "statistics_logic": "Logique de Statistiques"
                 }
             }
         },
@@ -121,7 +121,7 @@
             },
             "devices_filter": {
                 "title": "Filtrer les Appareils",
-                "description": "## Introduction\r\n- Prend en charge le filtrage des appareils en fonction du nom de la pièce et du type d'appareil, ainsi que le filtrage basé sur les appareils.\r\n- Vous pouvez également accéder à la page de filtrage correspondante de l'intégration [Configuration> Mettre à jour la liste des appareils] pour refiltrer.",
+                "description": "## Instructions d'utilisation\r\nPrend en charge le filtrage des appareils par nom de pièce de la maison, type d'accès de l'appareil et modèle d'appareil, et prend également en charge le filtrage par dimension de l'appareil. La logique de filtrage est la suivante :\r\n- Tout d'abord, selon la logique statistique, obtenez l'union ou l'intersection de tous les éléments inclus, puis obtenez l'intersection ou l'union des éléments exclus, et enfin soustrayez le [résultat du résumé inclus] du [résultat du résumé exclu] pour obtenir le [résultat du filtre].\r\n- Si aucun élément inclus n'est sélectionné, cela signifie que tous sont inclus.\r\n### Mode de Filtrage\r\n- Exclure : Supprimer les éléments indésirables.\r\n- Inclure : Inclure les éléments souhaités.\r\n### Logique Statistique\r\n- Logique ET : Prendre l'intersection de tous les éléments dans le même mode.\r\n- Logique OU : Prendre l'union de tous les éléments dans le même mode.\r\n\r\nVous pouvez également aller à la page [Configuration > Mettre à jour la liste des appareils] de l'élément d'intégration, cocher [Filtrer les appareils] pour re-filtrer.",
                 "data": {
                     "room_filter_mode": "Filtrer les Pièces",
                     "room_list": "Pièces",

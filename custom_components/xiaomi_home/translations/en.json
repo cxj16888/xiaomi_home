@@ -43,9 +43,8 @@
             },
             "devices_filter": {
                 "title": "Filter Devices",
-                "description": "## Introduction\r\n- Supports filtering devices by room name and device type, and also supports device dimension filtering.\r\n- You can also re-filter on the corresponding integration page [Configuration>Update Device List].",
+                "description": "## Usage Instructions\r\nSupports filtering devices by home room name, device access type, and device model, and also supports device dimension filtering. The filtering logic is as follows:\r\n- First, according to the statistical logic, get the union or intersection of all included items, then get the intersection or union of the excluded items, and finally subtract the [included summary result] from the [excluded summary result] to get the [filter result].\r\n- If no included items are selected, it means all are included.\r\n### Filter Mode\r\n- Exclude: Remove unwanted items.\r\n- Include: Include desired items.\r\n### Statistical Logic\r\n- AND logic: Take the intersection of all items in the same mode.\r\n- OR logic: Take the union of all items in the same mode.\r\n\r\nYou can also go to the [Configuration > Update Device List] page of the integration item, check [Filter Devices] to re-filter.",
                 "data": {
-                    "statistics_logic": "Statistics Logic",
                     "room_filter_mode": "Filter Family Rooms",
                     "room_list": "Family Rooms",
                     "type_filter_mode": "Filter Device Connect Type",
@@ -53,7 +52,8 @@
                     "model_filter_mode": "Filter Device Model",
                     "model_list": "Device Model",
                     "devices_filter_mode": "Filter Devices",
-                    "device_list": "Device List"
+                    "device_list": "Device List",
+                    "statistics_logic": "Statistics Logic"
                 }
             }
         },
@@ -121,7 +121,7 @@
             },
             "devices_filter": {
                 "title": "Filter Devices",
-                "description": "## Introduction\r\n- Supports filtering devices by room name and device type, and also supports device dimension filtering.\r\n- You can also re-filter on the corresponding integration page [Configuration>Update Device List].",
+                "description": "## Usage Instructions\r\nSupports filtering devices by home room name, device access type, and device model, and also supports device dimension filtering. The filtering logic is as follows:\r\n- First, according to the statistical logic, get the union or intersection of all included items, then get the intersection or union of the excluded items, and finally subtract the [included summary result] from the [excluded summary result] to get the [filter result].\r\n- If no included items are selected, it means all are included.\r\n### Filter Mode\r\n- Exclude: Remove unwanted items.\r\n- Include: Include desired items.\r\n### Statistical Logic\r\n- AND logic: Take the intersection of all items in the same mode.\r\n- OR logic: Take the union of all items in the same mode.\r\n\r\nYou can also go to the [Configuration > Update Device List] page of the integration item, check [Filter Devices] to re-filter.",
                 "data": {
                     "room_filter_mode": "Filter Family Rooms",
                     "room_list": "Family Rooms",

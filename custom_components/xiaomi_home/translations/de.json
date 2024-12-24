@@ -43,9 +43,8 @@
             },
             "devices_filter": {
                 "title": "Geräte filtern",
-                "description": "## Gebrauchsanweisung\r\n- Unterstützt das Filtern von Geräten nach Raumnamen und Gerätetypen sowie das Filtern nach Gerätedimensionen.\r\n- Sie können auch die entsprechende Integrationsoption \"Konfiguration> Geräteliste aktualisieren\" aufrufen, um die Filterung erneut durchzuführen.",
+                "description": "## Gebrauchsanweisung\r\nUnterstützt das Filtern von Geräten nach Raumnamen, Gerätezugriffstyp und Gerätemodell, und unterstützt auch das Filtern nach Gerätegröße. Die Filterlogik ist wie folgt:\r\n- Zuerst wird gemäß der statistischen Logik die Vereinigung oder der Schnittpunkt aller eingeschlossenen Elemente ermittelt, dann der Schnittpunkt oder die Vereinigung der ausgeschlossenen Elemente, und schließlich wird das [eingeschlossene Gesamtergebnis] vom [ausgeschlossenen Gesamtergebnis] subtrahiert, um das [Filterergebnis] zu erhalten.\r\n- Wenn keine eingeschlossenen Elemente ausgewählt sind, bedeutet dies, dass alle eingeschlossen sind.\r\n### Filtermodus\r\n- Ausschließen: Unerwünschte Elemente entfernen.\r\n- Einschließen: Gewünschte Elemente einschließen.\r\n### Statistische Logik\r\n- UND-Logik: Den Schnittpunkt aller Elemente im gleichen Modus nehmen.\r\n- ODER-Logik: Die Vereinigung aller Elemente im gleichen Modus nehmen.\r\n\r\nSie können auch zur Seite [Konfiguration > Geräteliste aktualisieren] des Integrationselements gehen, [Geräte filtern] auswählen, um erneut zu filtern.",
                 "data": {
-                    "statistics_logic": "Statistiklogik",
                     "room_filter_mode": "Familienraum filtern",
                     "room_list": "Familienraum",
                     "type_filter_mode": "Gerätetyp filtern",
@@ -53,7 +52,8 @@
                     "model_filter_mode": "Gerätemodell filtern",
                     "model_list": "Gerätemodell",
                     "devices_filter_mode": "Geräte filtern",
-                    "device_list": "Geräteliste"
+                    "device_list": "Geräteliste",
+                    "statistics_logic": "Statistiklogik"
                 }
             }
         },
@@ -121,7 +121,7 @@
             },
             "devices_filter": {
                 "title": "Geräte filtern",
-                "description": "## Gebrauchsanweisung\r\n- Unterstützt das Filtern von Geräten nach Raumnamen und Gerätetypen sowie das Filtern nach Gerätedimensionen.\r\n- Sie können auch die entsprechende Integrationsoption \"Konfiguration> Geräteliste aktualisieren\" aufrufen, um die Filterung erneut durchzuführen.",
+                "description": "## Gebrauchsanweisung\r\nUnterstützt das Filtern von Geräten nach Raumnamen, Gerätezugriffstyp und Gerätemodell, und unterstützt auch das Filtern nach Gerätegröße. Die Filterlogik ist wie folgt:\r\n- Zuerst wird gemäß der statistischen Logik die Vereinigung oder der Schnittpunkt aller eingeschlossenen Elemente ermittelt, dann der Schnittpunkt oder die Vereinigung der ausgeschlossenen Elemente, und schließlich wird das [eingeschlossene Gesamtergebnis] vom [ausgeschlossenen Gesamtergebnis] subtrahiert, um das [Filterergebnis] zu erhalten.\r\n- Wenn keine eingeschlossenen Elemente ausgewählt sind, bedeutet dies, dass alle eingeschlossen sind.\r\n### Filtermodus\r\n- Ausschließen: Unerwünschte Elemente entfernen.\r\n- Einschließen: Gewünschte Elemente einschließen.\r\n### Statistische Logik\r\n- UND-Logik: Den Schnittpunkt aller Elemente im gleichen Modus nehmen.\r\n- ODER-Logik: Die Vereinigung aller Elemente im gleichen Modus nehmen.\r\n\r\nSie können auch zur Seite [Konfiguration > Geräteliste aktualisieren] des Integrationselements gehen, [Geräte filtern] auswählen, um erneut zu filtern.",
                 "data": {
                     "room_filter_mode": "Familienraum filtern",
                     "room_list": "Familienraum",

@@ -43,9 +43,8 @@
             },
             "devices_filter": {
                 "title": "Filtrar Dispositivos",
-                "description": "## Introdução\r\n- Suporta a filtragem de dispositivos por nome de sala e tipo de dispositivo, bem como a filtragem por família.\r\n- Pode também aceder à página de configuração correspondente da integração [Configuração > Atualizar Lista de Dispositivos] para refazer a filtragem.",
+                "description": "## Instruções de Utilização\r\nSuporta a filtragem de dispositivos por nome da sala, tipo de acesso do dispositivo e modelo do dispositivo, e também suporta a filtragem por dimensão do dispositivo. A lógica de filtragem é a seguinte:\r\n- Primeiro, de acordo com a lógica estatística, obtenha a união ou interseção de todos os itens incluídos, depois obtenha a interseção ou união dos itens excluídos, e finalmente subtraia o [resultado do resumo incluído] do [resultado do resumo excluído] para obter o [resultado do filtro].\r\n- Se nenhum item incluído for selecionado, significa que todos estão incluídos.\r\n### Modo de Filtragem\r\n- Excluir: Remover itens indesejados.\r\n- Incluir: Incluir itens desejados.\r\n### Lógica Estatística\r\n- Lógica E: Pegue a interseção de todos os itens no mesmo modo.\r\n- Lógica OU: Pegue a união de todos os itens no mesmo modo.\r\n\r\nVocê também pode ir para a página [Configuração > Atualizar Lista de Dispositivos] do item de integração, marcar [Filtrar Dispositivos] para refiltrar.",
                 "data": {
-                    "statistics_logic": "Lógica de Estatísticas",
                     "room_filter_mode": "Filtrar por Sala",
                     "room_list": "Salas",
                     "type_filter_mode": "Filtrar por Tipo de Dispositivo",
@@ -53,7 +52,8 @@
                     "model_filter_mode": "Filtrar por Modelo de Dispositivo",
                     "model_list": "Modelos de Dispositivo",
                     "devices_filter_mode": "Filtrar Dispositivos",
-                    "device_list": "Lista de Dispositivos"
+                    "device_list": "Lista de Dispositivos",
+                    "statistics_logic": "Lógica de Estatísticas"
                 }
             }
         },
@@ -121,7 +121,7 @@
             },
             "devices_filter": {
                 "title": "Filtrar Dispositivos",
-                "description": "## Introdução\r\n- Suporta a filtragem de dispositivos por nome de sala e tipo de dispositivo, bem como a filtragem por família.\r\n- Pode também aceder à página de configuração correspondente da integração [Configuração > Atualizar Lista de Dispositivos] para refazer a filtragem.",
+                "description": "## Instruções de Utilização\r\nSuporta a filtragem de dispositivos por nome da sala, tipo de acesso do dispositivo e modelo do dispositivo, e também suporta a filtragem por dimensão do dispositivo. A lógica de filtragem é a seguinte:\r\n- Primeiro, de acordo com a lógica estatística, obtenha a união ou interseção de todos os itens incluídos, depois obtenha a interseção ou união dos itens excluídos, e finalmente subtraia o [resultado do resumo incluído] do [resultado do resumo excluído] para obter o [resultado do filtro].\r\n- Se nenhum item incluído for selecionado, significa que todos estão incluídos.\r\n### Modo de Filtragem\r\n- Excluir: Remover itens indesejados.\r\n- Incluir: Incluir itens desejados.\r\n### Lógica Estatística\r\n- Lógica E: Pegue a interseção de todos os itens no mesmo modo.\r\n- Lógica OU: Pegue a união de todos os itens no mesmo modo.\r\n\r\nVocê também pode ir para a página [Configuração > Atualizar Lista de Dispositivos] do item de integração, marcar [Filtrar Dispositivos] para refiltrar.",
                 "data": {
                     "room_filter_mode": "Filtrar por Sala",
                     "room_list": "Salas",

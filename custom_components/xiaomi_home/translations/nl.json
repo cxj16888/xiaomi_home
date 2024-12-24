@@ -43,9 +43,8 @@
             },
             "devices_filter": {
                 "title": "Apparaten filteren",
-                "description": "## Inleiding\r\n- Ondersteunt het filteren van apparaten op basis van kamer- en apparaattypen, en ondersteunt ook apparaatdimensiefiltering.\r\n- U kunt ook naar de overeenkomstige integratie-item [Configuratie>Apparaatlijst bijwerken] pagina gaan om opnieuw te filteren.",
+                "description": "## Gebruiksinstructies\r\nOndersteunt het filteren van apparaten op kamernaam, apparaattoegangstype en apparaattype, en ondersteunt ook het filteren op apparaatdimensie. De filterlogica is als volgt:\r\n- Eerst, volgens de statistische logica, de vereniging of doorsnede van alle opgenomen items verkrijgen, vervolgens de doorsnede of vereniging van de uitgesloten items verkrijgen, en ten slotte het [opgenomen samenvattingsresultaat] aftrekken van het [uitgesloten samenvattingsresultaat] om het [filterresultaat] te verkrijgen.\r\n- Als er geen opgenomen items zijn geselecteerd, betekent dit dat alles is opgenomen.\r\n### Filtermodus\r\n- Uitsluiten: Ongewenste items verwijderen.\r\n- Opnemen: Gewenste items opnemen.\r\n### Statistische Logica\r\n- EN-logica: Neem de doorsnede van alle items in dezelfde modus.\r\n- OF-logica: Neem de vereniging van alle items in dezelfde modus.\r\n\r\nU kunt ook naar de pagina [Configuratie > Apparaatlijst bijwerken] van het integratie-item gaan, [Apparaten filteren] aanvinken om opnieuw te filteren.",
                 "data": {
-                    "statistics_logic": "Statistische logica",
                     "room_filter_mode": "Kamerfiltermodus",
                     "room_list": "Kamers",
                     "type_filter_mode": "Apparaattypen filteren",
@@ -53,7 +52,8 @@
                     "model_filter_mode": "Apparaatmodel filteren",
                     "model_list": "Apparaatmodellen",
                     "devices_filter_mode": "Apparaten filteren",
-                    "device_list": "Apparaatlijst"
+                    "device_list": "Apparaatlijst",
+                    "statistics_logic": "Statistische logica"
                 }
             }
         },
@@ -121,7 +121,7 @@
             },
             "devices_filter": {
                 "title": "Apparaten filteren",
-                "description": "## Inleiding\r\n- Ondersteunt het filteren van apparaten op basis van kamer- en apparaattypen, en ondersteunt ook apparaatdimensiefiltering.\r\n- U kunt ook naar de overeenkomstige integratie-item [Configuratie>Apparaatlijst bijwerken] pagina gaan om opnieuw te filteren.",
+                "description": "## Gebruiksinstructies\r\nOndersteunt het filteren van apparaten op kamernaam, apparaattoegangstype en apparaattype, en ondersteunt ook het filteren op apparaatdimensie. De filterlogica is als volgt:\r\n- Eerst, volgens de statistische logica, de vereniging of doorsnede van alle opgenomen items verkrijgen, vervolgens de doorsnede of vereniging van de uitgesloten items verkrijgen, en ten slotte het [opgenomen samenvattingsresultaat] aftrekken van het [uitgesloten samenvattingsresultaat] om het [filterresultaat] te verkrijgen.\r\n- Als er geen opgenomen items zijn geselecteerd, betekent dit dat alles is opgenomen.\r\n### Filtermodus\r\n- Uitsluiten: Ongewenste items verwijderen.\r\n- Opnemen: Gewenste items opnemen.\r\n### Statistische Logica\r\n- EN-logica: Neem de doorsnede van alle items in dezelfde modus.\r\n- OF-logica: Neem de vereniging van alle items in dezelfde modus.\r\n\r\nU kunt ook naar de pagina [Configuratie > Apparaatlijst bijwerken] van het integratie-item gaan, [Apparaten filteren] aanvinken om opnieuw te filteren.",
                 "data": {
                     "room_filter_mode": "Kamerfiltermodus",
                     "room_list": "Kamers",
