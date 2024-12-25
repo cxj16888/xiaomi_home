@@ -138,7 +138,7 @@ def spec_instance_format(d: dict) -> bool:
             if not isinstance(i['value'], int) or not isinstance(i[
                 'description'], str):
                 return False
-            if i['description'].replace(" ","") == '':
+            if i['description'].replace(' ','') == '':
                 return False
     # optional keys for action
     if 'in' in d:
@@ -196,7 +196,7 @@ def custom_service(d: dict) -> bool:
         return False
     for v in d.values():
         for key, value in v.items():
-            if key=="new":
+            if key=='new':
                 if not isinstance(value, list):
                     return False
                 for i in value:
@@ -286,11 +286,11 @@ def sort_spec_filter(file_path: str):
 
 
 def sort_custom_service(file_path: str):
-    custom_service: dict = load_json_file(file_path=file_path)
-    custom_service = dict(sorted(custom_service.items()))
-    for urn, spec in custom_service.items():
-        custom_service[urn] = dict(sorted(spec.items()))
-    return custom_service
+    service_data: dict = load_json_file(file_path=file_path)
+    service_data = dict(sorted(service_data.items()))
+    for urn, spec in service_data.items():
+        service_data[urn] = dict(sorted(spec.items()))
+    return service_data
 
 
 @pytest.mark.github
