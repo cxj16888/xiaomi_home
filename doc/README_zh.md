@@ -8,7 +8,7 @@
 
 > Home Assistant 版本要求：
 >
-> - Core $\geq$ 2024.11.0
+> - Core $\geq$ 2024.4.4
 > - Operating System $\geq$ 13.0
 
 ### 方法 1：使用 git clone 命令从 GitHub 下载
@@ -32,7 +32,7 @@ git checkout v1.0.0
 
 ### 方法 2: [HACS](https://hacs.xyz/)
 
-HACS > Overflow Menu > Custom repositories > Repository: https://github.com/XiaoMi/ha_xiaomi_home.git & Category: Integration > ADD
+HACS > 右上角三个点 > Custom repositories > Repository: https://github.com/XiaoMi/ha_xiaomi_home.git & Category or Type: Integration > ADD > 点击 HACS 的 New 或 Available for download 分类下的 Xiaomi Home ，进入集成详情页  > DOWNLOAD
 
 > 米家集成暂未添加到 HACS 商店，敬请期待。
 
@@ -75,6 +75,8 @@ HACS > Overflow Menu > Custom repositories > Repository: https://github.com/Xiao
 ## 安全性
 
 米家集成及其使用的云端接口由小米官方提供。您需要使用小米账号登录以获取设备列表。米家集成使用 OAuth 2.0 的登录方式，不会在 Home Assistant 中保存您的小米账号密码。但由于 Home Assistant 平台的限制，登录成功后，您的小米用户信息（包括设备信息、证书、 token 等）会明文保存在 Home Assistant 的配置文件中。因此，您需要保管好自己 Home Assistant 配置文件。一旦该文件泄露，其他人可能会冒用您的身份登录。
+
+> 如果您怀疑您的 OAuth 2.0 令牌已泄露，您可以通过以下步骤取消小米账号的登录授权： 米家 APP -> 我的 -> 点击用户名进入小米账号页面 -> 应用授权 -> Xiaomi Home (Home Assistant Integration) -> 取消授权
 
 ## 常见问题
 
@@ -379,7 +381,7 @@ siid、piid、eiid、aiid、value 均为十进制三位整数。
 
 - [许可证](../LICENSE.md)
 - 贡献指南： [English](../CONTRIBUTING.md) | [简体中文](./CONTRIBUTING_zh.md)
-- [更新日志](./CHANGELOG.md)
+- [更新日志](../CHANGELOG.md)
 - 开发文档： https://developers.home-assistant.io/docs/creating_component_index
 
 ## 目录结构
