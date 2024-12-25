@@ -20,6 +20,9 @@ SPEC_MULTI_LANG_FILE = path.join(
 SPEC_FILTER_FILE = path.join(
     ROOT_PATH,
     '../custom_components/xiaomi_home/miot/specs/spec_filter.json')
+CUSTOM_SERVICE_FILE = path.join(
+    ROOT_PATH,
+    '../custom_components/xiaomi_home/miot/specs/custom_service.json')
 
 
 def load_json_file(file_path: str) -> Optional[dict]:
@@ -104,6 +107,111 @@ def spec_filter(d: dict) -> bool:
     return True
 
 
+def spec_instance_format(d: dict) -> bool:
+    """restricted format of MIoT-Spec-V2 instance"""
+    if ('iid' not in d) or ('type' not in d) or ('description' not in d):
+        return False
+    if not isinstance(d['iid'], int) or not isinstance(d['type'], str) or (
+        not isinstance(d['description'], str)):
+        return False
+    # optional keys for property
+    if 'format' in d:
+        if not isinstance(d['format'], str):
+            return False
+    if 'unit' in d:
+        if not isinstance(d['unit'], str):
+            return False
+    if 'access' in d:
+        if not isinstance(d['access'], list):
+            return False
+        for i in d['access']:
+            if not isinstance(i, str):
+                return False
+    if 'value-list' in d:
+        if not isinstance(d['value-list'], list):
+            return False
+        for i in d['value-list']:
+            if not isinstance(i, dict):
+                return False
+            if 'value' not in i or 'description' not in i:
+                return False
+            if not isinstance(i['value'], int) or not isinstance(i[
+                'description'], str):
+                return False
+            if i['description'].replace(" ","") == '':
+                return False
+    # optional keys for action
+    if 'in' in d:
+        if not isinstance(d['in'], list):
+            return False
+        for i in d['in']:
+            if not isinstance(i, int):
+                return False
+    if 'out' in d:
+        if not isinstance(d['out'], list):
+            return False
+        for i in d['out']:
+            if not isinstance(i, int):
+                return False
+    # optional keys for event
+    if 'arguments' in d:
+        if not isinstance(d['arguments'], list):
+            return False
+        for i in d['arguments']:
+            if not isinstance(i, int):
+                return False
+    # optional keys for service
+    if 'properties' in d:
+        if not isinstance(d['properties'], list):
+            return False
+        for i in d['properties']:
+            if not spec_instance_format(i):
+                return False
+    if 'actions' in d:
+        if not isinstance(d['actions'], list):
+            return False
+        for i in d['actions']:
+            if not spec_instance_format(i):
+                return False
+    if 'events' in d:
+        if not isinstance(d['events'], list):
+            return False
+        for i in d['events']:
+            if not spec_instance_format(i):
+                return False
+    return True
+
+
+def is_integer(s: str) -> bool:
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+
+def custom_service(d: dict) -> bool:
+    """restricted format: dict[str, dict[str, Any]]"""
+    if not dict_str_dict(d):
+        return False
+    for v in d.values():
+        for key, value in v.items():
+            if key=="new":
+                if not isinstance(value, list):
+                    return False
+                for i in value:
+                    if not spec_instance_format(i):
+                        return False
+            elif is_integer(key):
+                if not isinstance(value, dict):
+                    return False
+                if not spec_instance_format(value):
+                    return False
+            else:
+                return False
+    return True
+
+
 def bool_trans(d: dict) -> bool:
     """dict[str,  dict[str, str] | dict[str, dict[str, str]] ]"""
     if not isinstance(d, dict):
@@ -177,6 +285,14 @@ def sort_spec_filter(file_path: str):
     return filter_data
 
 
+def sort_custom_service(file_path: str):
+    custom_service: dict = load_json_file(file_path=file_path)
+    custom_service = dict(sorted(custom_service.items()))
+    for urn, spec in custom_service.items():
+        custom_service[urn] = dict(sorted(spec.items()))
+    return custom_service
+
+
 @pytest.mark.github
 def test_bool_trans():
     data: dict = load_json_file(SPEC_BOOL_TRANS_FILE)
@@ -196,6 +312,13 @@ def test_multi_lang():
     data: dict = load_json_file(SPEC_MULTI_LANG_FILE)
     assert data, f'load {SPEC_MULTI_LANG_FILE} failed'
     assert nested_3_dict_str_str(data), f'{SPEC_MULTI_LANG_FILE} format error'
+
+
+@pytest.mark.github
+def test_custom_service():
+    data: dict = load_json_file(CUSTOM_SERVICE_FILE)
+    assert data, f'load {CUSTOM_SERVICE_FILE} failed'
+    assert custom_service(data), f'{CUSTOM_SERVICE_FILE} format error'
 
 
 @pytest.mark.github
@@ -278,6 +401,12 @@ def test_miot_data_sort():
                 f'{SPEC_FILTER_FILE} not sorted, goto project root path'
                 ' and run the following command sorting, ',
                 'pytest -s -v -m update ./test/check_rule_format.py')
+    assert json.dumps(
+        load_json_file(file_path=CUSTOM_SERVICE_FILE)) == json.dumps(
+            sort_custom_service(file_path=CUSTOM_SERVICE_FILE)), (
+                f'{CUSTOM_SERVICE_FILE} not sorted, goto project root path'
+                ' and run the following command sorting, ',
+                'pytest -s -v -m update ./test/check_rule_format.py')
 
 
 @pytest.mark.update
@@ -291,3 +420,6 @@ def test_sort_spec_data():
     sort_data = sort_spec_filter(file_path=SPEC_FILTER_FILE)
     save_json_file(file_path=SPEC_FILTER_FILE, data=sort_data)
     print(SPEC_FILTER_FILE, 'formatted.')
+    sort_data = sort_custom_service(file_path=CUSTOM_SERVICE_FILE)
+    save_json_file(file_path=CUSTOM_SERVICE_FILE, data=sort_data)
+    print(CUSTOM_SERVICE_FILE, 'formatted.')
