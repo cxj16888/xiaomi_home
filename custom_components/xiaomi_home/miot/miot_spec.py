@@ -787,7 +787,8 @@ class MIoTSpecParser:
         urn_strs: list[str] = urn.split(':')
         urn_key: str = ':'.join(urn_strs[:6])
         # Modify the spec instance by custom spec
-        instance = self._custom_service.modify_spec(urn_key=urn_key, spec=instance)
+        instance = self._custom_service.modify_spec(urn_key=urn_key,
+                                                    spec=instance)
         # Check required fields in the device instance
         if (
             not isinstance(instance, dict)
