@@ -784,8 +784,11 @@ class MIoTSpecParser:
         _LOGGER.debug('parse urn, %s', urn)
         # Load spec instance
         instance: dict = await self.__get_instance(urn=urn)
+        urn_strs: list[str] = urn.split(':')
+        urn_key: str = ':'.join(urn_strs[:6])
         # Modify the spec instance by custom spec
-        instance = self._custom_service.modify_spec(urn=urn, spec=instance)
+        instance = self._custom_service.modify_spec(urn_key=urn_key, spec=instance)
+        # Check required fields in the device instance
         if (
             not isinstance(instance, dict)
             or 'type' not in instance
@@ -803,8 +806,6 @@ class MIoTSpecParser:
                 or not isinstance(res_trans['data'], dict)
             ):
                 raise MIoTSpecError('invalid translation data')
-            urn_strs: list[str] = urn.split(':')
-            urn_key: str = ':'.join(urn_strs[:6])
             trans_data: dict[str, str] = None
             if self._lang == 'zh-Hans':
                 # Simplified Chinese

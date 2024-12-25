@@ -1,5 +1,5 @@
 {
-    "urn:miot-spec-v2:device:airer:0000A00D:hyd-lyjpro:1": {
+    "urn:miot-spec-v2:device:airer:0000A00D:hyd-lyjpro": {
         "3": {
             "iid": 3,
             "type": "urn:miot-spec-v2:service:light:00007802:hyd-lyjpro:1",

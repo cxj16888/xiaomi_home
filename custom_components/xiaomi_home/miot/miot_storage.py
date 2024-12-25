@@ -1071,17 +1071,17 @@ class SpecCustomService:
     async def deinit_async(self) -> None:
         self._data = None
 
-    def modify_spec(self, urn: str, spec: dict) -> dict | None:
+    def modify_spec(self, urn_key: str, spec: dict) -> dict | None:
         """MUST call init_async() first."""
         if not self._data:
             _LOGGER.error('self._data is None')
             return spec
-        if urn not in self._data:
+        if urn_key not in self._data:
             return spec
         if 'services' not in spec:
             return spec
         spec_services = spec['services']
-        custom_spec = self._data.get(urn, None)
+        custom_spec = self._data.get(urn_key, None)
         # Replace services by custom defined spec
         for i, service in enumerate(spec_services):
             siid = str(service['iid'])
