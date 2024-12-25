@@ -46,7 +46,6 @@ off Xiaomi or its affiliates' products.
 Notify entities for Xiaomi Home.
 """
 from __future__ import annotations
-import json
 import logging
 from typing import Optional
 
@@ -54,6 +53,8 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.components.notify import NotifyEntity
+from homeassistant.util import yaml
+from homeassistant.exceptions import HomeAssistantError
 
 from .miot.miot_spec import MIoTSpecAction
 from .miot.miot_device import MIoTDevice, MIoTActionEntity
@@ -103,12 +104,15 @@ class Notify(MIoTActionEntity, NotifyEntity):
                 self.name, self.entity_id)
             return
         try:
-            in_list: list = json.loads(message)
-        except json.JSONDecodeError:
+            in_list: list = yaml.parse_yaml(message)
+        except HomeAssistantError:
             _LOGGER.error(
                 'action exec failed, %s(%s), invalid action params format, %s',
                 self.name, self.entity_id, message)
             return
+
+        if isinstance(in_list, str):
+            in_list = [in_list]
 
         if not isinstance(in_list, list) or len(in_list) != len(self.spec.in_):
             _LOGGER.error(
