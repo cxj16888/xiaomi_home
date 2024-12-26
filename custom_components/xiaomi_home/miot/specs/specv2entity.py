@@ -211,6 +211,7 @@ SPEC_DEVICE_TRANS_MAP: dict[str, dict | str] = {
         'entity': 'air-conditioner'
     },
     'air-condition-outlet': 'air-conditioner',
+    'thermostat': 'air-conditioner',
     'heater': {
         'required': {
             'heater': {
