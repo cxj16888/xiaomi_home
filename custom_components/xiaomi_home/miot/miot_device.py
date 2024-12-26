@@ -517,15 +517,12 @@ class MIoTDevice:
             'device_class']
         result = {'platform': platform, 'device_class': device_class}
         # optional:
-        optional = SPEC_PROP_TRANS_MAP['properties'][prop_name].get('optional')
-        if optional:
-            prop_optional_state_class = optional.get('state_class')
-            if prop_optional_state_class:
-                result['state_class'] = prop_optional_state_class
-
-            prop_optional_unit = optional.get('unit_of_measurement')
-            if prop_optional_unit and not prop.unit:
-                result['unit_of_measurement'] = prop_optional_unit
+        if 'optional' in SPEC_PROP_TRANS_MAP['properties'][prop_name]:
+            optional = SPEC_PROP_TRANS_MAP['properties'][prop_name]['optional']
+            if 'state_class' in optional:
+                result['state_class'] = optional['state_class']
+            if not prop.unit and 'unit_of_measurement' in optional:
+                result['unit_of_measurement'] = optional['unit_of_measurement']
         return result
 
     def spec_transform(self) -> None:
