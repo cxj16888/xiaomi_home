@@ -65,7 +65,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
 # pylint: disable=relative-beyond-top-level
-from .miot_error import MIoTErrorCode
+from .miot_error import MIoTError, MIoTLanError, MIoTErrorCode
 from .miot_network import InterfaceStatus, MIoTNetwork, NetworkInfo
 from .miot_mdns import MipsService, MipsServiceState
 from .common import (
@@ -548,6 +548,12 @@ class MIoTLan:
                 0, lambda: self._main_loop.create_task(
                     self.init_async()))
 
+    def __assert_service_ready(self) -> None:
+        if not self._init_done:
+            raise MIoTLanError(
+                'MIoT lan is not ready',
+                MIoTErrorCode.CODE_LAN_UNAVAILABLE)
+
     @property
     def virtual_did(self) -> str:
         return self._virtual_did
@@ -680,12 +686,16 @@ class MIoTLan:
 
     def update_devices(self, devices: dict[str, dict]) -> bool:
         _LOGGER.info('update devices, %s', devices)
+        if not self._init_done:
+            return False
         self._internal_loop.call_soon_threadsafe(
             self.__update_devices, devices)
         return True
 
     def delete_devices(self, devices: list[str]) -> bool:
         _LOGGER.info('delete devices, %s', devices)
+        if not self._init_done:
+            return False
         self._internal_loop.call_soon_threadsafe(
             self.__delete_devices, devices)
         return True
@@ -703,6 +713,8 @@ class MIoTLan:
         self, key: str, handler: Callable[[str, dict, Any], Coroutine],
         handler_ctx: Any = None
     ) -> bool:
+        if not self._init_done:
+            return False
         self._internal_loop.call_soon_threadsafe(
             self.__sub_device_state,
             _MIoTLanSubDeviceData(
@@ -711,6 +723,8 @@ class MIoTLan:
 
     @final
     def unsub_device_state(self, key: str) -> bool:
+        if not self._init_done:
+            return False
         self._internal_loop.call_soon_threadsafe(
             self.__unsub_device_state, _MIoTLanUnsubDeviceData(key=key))
         return True
@@ -724,6 +738,8 @@ class MIoTLan:
         piid: Optional[int] = None,
         handler_ctx: Any = None
     ) -> bool:
+        if not self._init_done:
+            return False
         if not self._enable_subscribe:
             return False
         key = (
@@ -742,6 +758,8 @@ class MIoTLan:
         siid: Optional[int] = None,
         piid: Optional[int] = None
     ) -> bool:
+        if not self._init_done:
+            return False
         if not self._enable_subscribe:
             return False
         key = (
@@ -761,6 +779,8 @@ class MIoTLan:
         eiid: Optional[int] = None,
         handler_ctx: Any = None
     ) -> bool:
+        if not self._init_done:
+            return False
         if not self._enable_subscribe:
             return False
         key = (
@@ -779,6 +799,8 @@ class MIoTLan:
         siid: Optional[int] = None,
         eiid: Optional[int] = None
     ) -> bool:
+        if not self._init_done:
+            return False
         if not self._enable_subscribe:
             return False
         key = (
@@ -793,6 +815,7 @@ class MIoTLan:
     async def get_prop_async(
         self, did: str, siid: int, piid: int, timeout_ms: int = 10000
     ) -> Any:
+        self.__assert_service_ready()
         result_obj = await self.__call_api_async(
             did=did, msg={
                 'method': 'get_properties',
@@ -813,6 +836,7 @@ class MIoTLan:
         self, did: str, siid: int, piid: int, value: Any,
         timeout_ms: int = 10000
     ) -> dict:
+        self.__assert_service_ready()
         result_obj = await self.__call_api_async(
             did=did, msg={
                 'method': 'set_properties',
@@ -830,15 +854,14 @@ class MIoTLan:
                 return result_obj['result'][0]
             if 'code' in result_obj:
                 return result_obj
-        return {
-            'code': MIoTErrorCode.CODE_INTERNAL_ERROR.value,
-            'message': 'Invalid result'}
+        raise MIoTError('Invalid result', MIoTErrorCode.CODE_INTERNAL_ERROR)
 
     @final
     async def action_async(
         self, did: str, siid: int, aiid: int, in_list: list,
         timeout_ms: int = 10000
     ) -> dict:
+        self.__assert_service_ready()
         result_obj = await self.__call_api_async(
             did=did, msg={
                 'method': 'action',
@@ -850,9 +873,7 @@ class MIoTLan:
                 return result_obj['result']
             if 'code' in result_obj:
                 return result_obj
-        return {
-            'code': MIoTErrorCode.CODE_INTERNAL_ERROR.value,
-            'message': 'Invalid result'}
+        raise MIoTError('Invalid result', MIoTErrorCode.CODE_INTERNAL_ERROR)
 
     @final
     async def get_dev_list_async(
