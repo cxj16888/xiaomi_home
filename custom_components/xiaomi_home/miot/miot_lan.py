@@ -910,7 +910,7 @@ class MIoTLan:
             await self.init_async()
             return
         self._internal_loop.call_soon_threadsafe(
-            self.__on_network_info_chnage,
+            self.__on_network_info_change,
             _MIoTLanNetworkUpdateData(status=status, if_name=info.name))
 
     async def __on_mips_service_change(
@@ -1098,7 +1098,7 @@ class MIoTLan:
                 continue
             lan_device.on_delete()
 
-    def __on_network_info_chnage(self, data: _MIoTLanNetworkUpdateData) -> None:
+    def __on_network_info_change(self, data: _MIoTLanNetworkUpdateData) -> None:
         if data.status == InterfaceStatus.ADD:
             self._available_net_ifs.add(data.if_name)
             if data.if_name in self._net_ifs:
