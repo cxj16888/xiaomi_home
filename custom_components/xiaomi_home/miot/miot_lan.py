@@ -925,7 +925,7 @@ class MIoTLan:
             _LOGGER.info('no central service, init miot lan')
             await self.init_async()
 
-# The folowing methods SHOULD ONLY be called in the internal loop
+# The following methods SHOULD ONLY be called in the internal loop
 
     def ping(self, if_name: str | None, target_ip: str) -> None:
         if not target_ip:
